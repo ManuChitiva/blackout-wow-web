@@ -1,0 +1,12 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#14532d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <path d="M270 500c70-90 150-130 260-140l90-110 70 70-60 60c80 10 150 45 220 120l-80 10-60-45-220 30-70 70h-100l40-75-90 10z" fill="#22c55e"/>
+  <circle cx="650" cy="310" r="14" fill="#0f172a"/>
+  <text x="70" y="710" fill="#dcfce7" font-size="64" font-family="Arial, sans-serif" font-weight="700">MONTURAS EXCLUSIVAS</text>
+</svg>

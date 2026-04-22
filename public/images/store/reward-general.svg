@@ -1,0 +1,15 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect x="250" y="190" width="700" height="420" rx="28" fill="#020617" stroke="#94a3b8" stroke-width="8"/>
+  <rect x="320" y="280" width="560" height="26" rx="10" fill="#cbd5e1"/>
+  <rect x="320" y="340" width="480" height="26" rx="10" fill="#94a3b8"/>
+  <rect x="320" y="400" width="410" height="26" rx="10" fill="#94a3b8"/>
+  <rect x="320" y="460" width="520" height="26" rx="10" fill="#94a3b8"/>
+  <text x="70" y="710" fill="#e2e8f0" font-size="64" font-family="Arial, sans-serif" font-weight="700">RECOMPENSAS</text>
+</svg>
