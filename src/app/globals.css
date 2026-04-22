@@ -229,3 +229,38 @@ body {
   pointer-events: none;
   filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.35));
 }
+
+@keyframes embers-rise {
+  0% {
+    transform: translateY(10px);
+    opacity: 0.25;
+    background-position:
+      0% 100%,
+      0% 100%,
+      0% 100%;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-18px);
+    opacity: 0.2;
+    background-position:
+      30% 0%,
+      50% 0%,
+      70% 0%;
+  }
+}
+
+.fire-embers {
+  background-image:
+    radial-gradient(circle, rgba(251, 146, 60, 0.7) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(249, 115, 22, 0.6) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(248, 113, 113, 0.55) 0 1.2px, transparent 2px);
+  background-size:
+    180px 180px,
+    240px 220px,
+    300px 260px;
+  mix-blend-mode: screen;
+  animation: embers-rise 7.5s linear infinite;
+}
