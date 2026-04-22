@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,7 +22,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(username, password, email);
-      router.push("/login?registered=1");
+      setShowWelcomeModal(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error");
     } finally {
@@ -73,7 +74,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-gradient-to-r from-amber-600 to-orange-500 py-2.5 font-semibold text-black disabled:opacity-60"
+            className="w-full rounded bg-linear-to-r from-amber-600 to-orange-500 py-2.5 font-semibold text-black disabled:opacity-60"
           >
             {loading ? "Creando cuenta…" : "Crear cuenta en el reino"}
           </button>
@@ -85,6 +86,36 @@ export default function RegisterPage() {
           </Link>
         </p>
       </div>
+      {showWelcomeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4">
+          <div className="w-full max-w-lg rounded-2xl border border-amber-400/40 bg-zinc-950 p-7 shadow-2xl shadow-black/60">
+            <p className="text-xs uppercase tracking-[0.25em] text-amber-300/85">Blackout WoW</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-zinc-50">
+              Bienvenido al servidor, aventurero.
+            </h2>
+            <p className="mt-4 text-sm text-zinc-300">
+              Tu cuenta fue creada correctamente. Ya puedes iniciar sesión con tus datos y comenzar tu viaje por
+              Northrend.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => router.push("/login?registered=1")}
+                className="rounded bg-linear-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black"
+              >
+                Ir a iniciar sesión
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowWelcomeModal(false)}
+                className="rounded border border-white/20 px-5 py-2.5 text-sm font-medium text-zinc-300 hover:bg-white/5"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </SiteShell>
   );
 }

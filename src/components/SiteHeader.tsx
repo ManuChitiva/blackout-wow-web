@@ -44,14 +44,14 @@ export function SiteHeader() {
           <Link className={baseNavItemClass} href="/#features">
             Servidor
           </Link>
-          <Link className={baseNavItemClass} href="/tienda">
-            Tienda
-          </Link>
-          <Link className={baseNavItemClass} href="/tienda/puntos">
-            Canjear puntos
-          </Link>
           {accessToken ? (
             <>
+              <Link className={baseNavItemClass} href="/tienda">
+                Tienda
+              </Link>
+              <Link className={baseNavItemClass} href="/tienda/puntos">
+                Canjear puntos
+              </Link>
               {canManageDashboard && (
                 <Link className={baseNavItemClass} href="/dashboard/productos">
                   Dashboard
@@ -90,14 +90,14 @@ export function SiteHeader() {
             <Link className={mobileNavItemClass} href="/#features" onClick={() => setMobileOpen(false)}>
               Servidor
             </Link>
-            <Link className={mobileNavItemClass} href="/tienda" onClick={() => setMobileOpen(false)}>
-              Tienda
-            </Link>
-            <Link className={mobileNavItemClass} href="/tienda/puntos" onClick={() => setMobileOpen(false)}>
-              Canjear puntos
-            </Link>
             {accessToken ? (
               <>
+                <Link className={mobileNavItemClass} href="/tienda" onClick={() => setMobileOpen(false)}>
+                  Tienda
+                </Link>
+                <Link className={mobileNavItemClass} href="/tienda/puntos" onClick={() => setMobileOpen(false)}>
+                  Canjear puntos
+                </Link>
                 {canManageDashboard && (
                   <Link className={mobileNavItemClass} href="/dashboard/productos" onClick={() => setMobileOpen(false)}>
                     Dashboard
