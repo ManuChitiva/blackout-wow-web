@@ -8,24 +8,24 @@ export function SiteHeader() {
   const { accessToken, canManageDashboard, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const baseNavItemClass =
-    "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-white/15 hover:bg-white/5 hover:text-white";
+    "rounded px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-300/90 transition-all duration-200 hover:text-amber-200";
   const mobileNavItemClass =
     "rounded-md border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-medium text-zinc-200 transition-all hover:border-white/20 hover:bg-white/5";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3">
+    <header className="navbar-aura sticky top-0 z-40 border-b border-white/10 bg-black/75 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
         <Link
           href="/"
-          className="shrink-0 rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2 shadow-lg shadow-black/30 transition-all hover:border-amber-400/50 hover:bg-zinc-900/70"
+          className="shrink-0 rounded-md border border-white/10 bg-zinc-950/50 px-2.5 py-1.5 transition-all hover:border-amber-400/40 hover:bg-zinc-900/70"
           onClick={() => setMobileOpen(false)}
         >
           <span className="flex flex-col leading-none">
-            <span className="font-display text-lg font-bold tracking-[0.04em] text-transparent bg-linear-to-r from-amber-300 via-orange-400 to-red-500 bg-clip-text sm:text-xl md:text-2xl">
+            <span className="font-display text-sm font-bold tracking-[0.08em] text-transparent bg-linear-to-r from-amber-300 via-orange-400 to-red-500 bg-clip-text sm:text-base">
               BLACKOUT
             </span>
-            <span className="font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-200/85 sm:text-sm sm:tracking-[0.24em] md:text-base">
-              WotLK Northrend
+            <span className="font-display text-[9px] font-semibold uppercase tracking-[0.2em] text-sky-200/80 sm:text-[10px]">
+              WotLK
             </span>
           </span>
         </Link>
@@ -40,7 +40,7 @@ export function SiteHeader() {
           Menú
         </button>
 
-        <nav className="hidden items-center gap-2 rounded-lg border border-white/10 bg-zinc-950/50 p-1 shadow-lg shadow-black/30 md:flex">
+        <nav className="hidden items-center gap-1 border-y border-white/10 px-2 py-1 md:flex">
           <Link className={baseNavItemClass} href="/#features">
             Servidor
           </Link>
@@ -63,7 +63,7 @@ export function SiteHeader() {
               <button
                 type="button"
                 onClick={() => logout()}
-                className="rounded-md border border-red-300/30 bg-red-950/20 px-3 py-2 text-sm font-medium text-red-100 transition-all duration-200 hover:border-red-200/40 hover:bg-red-900/30"
+                className="ml-1 rounded border border-red-300/30 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-red-200 transition-all hover:border-red-200/50 hover:bg-red-900/20"
               >
                 Salir
               </button>
@@ -71,7 +71,7 @@ export function SiteHeader() {
           ) : (
             <>
               <Link
-                className="rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-4 py-2 text-sm font-semibold text-black shadow-md shadow-orange-900/40 transition-all duration-200 hover:from-amber-500 hover:to-orange-400"
+                className="rounded border border-amber-400/40 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200 transition-all hover:bg-amber-500/10"
                 href="/registro"
               >
                 Registro

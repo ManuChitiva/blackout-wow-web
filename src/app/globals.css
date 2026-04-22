@@ -114,3 +114,118 @@ body {
     animation: none;
   }
 }
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-drift {
+  0% {
+    transform: translate3d(-2%, 0, 0) scale(1.02);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate3d(2%, -1%, 0) scale(1.05);
+    opacity: 0.42;
+  }
+  100% {
+    transform: translate3d(-2%, 0, 0) scale(1.02);
+    opacity: 0.25;
+  }
+}
+
+.reveal-up {
+  animation: reveal-up 700ms ease-out both;
+}
+
+.hero-drift {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(56, 189, 248, 0.22), transparent 32%),
+    radial-gradient(circle at 82% 38%, rgba(249, 115, 22, 0.2), transparent 30%),
+    radial-gradient(circle at 55% 80%, rgba(14, 165, 233, 0.16), transparent 35%);
+  animation: hero-drift 9s ease-in-out infinite;
+}
+
+@keyframes navbar-aura {
+  0% {
+    background-position:
+      0% 100%,
+      100% 100%;
+    opacity: 0.45;
+  }
+  50% {
+    background-position:
+      100% 100%,
+      0% 100%;
+    opacity: 0.85;
+  }
+  100% {
+    background-position:
+      0% 100%,
+      100% 100%;
+    opacity: 0.45;
+  }
+}
+
+.navbar-aura::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background-image:
+    linear-gradient(90deg, rgba(56, 189, 248, 0), rgba(56, 189, 248, 0.8), rgba(56, 189, 248, 0)),
+    linear-gradient(90deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.75), rgba(249, 115, 22, 0));
+  background-size:
+    200% 100%,
+    220% 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.35)) drop-shadow(0 0 7px rgba(249, 115, 22, 0.25));
+  animation: navbar-aura 6.5s ease-in-out infinite;
+}
+
+@keyframes section-fire-aura {
+  0% {
+    background-position: 0% 100%;
+    opacity: 0.4;
+  }
+  50% {
+    background-position: 100% 100%;
+    opacity: 0.85;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.4;
+  }
+}
+
+.section-fire-aura {
+  position: relative;
+}
+
+.section-fire-aura::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background-image: linear-gradient(
+    90deg,
+    rgba(239, 68, 68, 0),
+    rgba(249, 115, 22, 0.9),
+    rgba(220, 38, 38, 0)
+  );
+  background-size: 220% 100%;
+  animation: section-fire-aura 7s ease-in-out infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.35));
+}
