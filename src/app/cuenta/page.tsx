@@ -11,6 +11,7 @@ type GameAccountSummary = {
   username: string;
   email: string;
   accountId: number;
+  portalRole: string;
   online: boolean;
   joinDate: string | null;
   lastLogin: string | null;

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export function SiteHeader() {
-  const { accessToken, logout } = useAuth();
+  const { accessToken, canManageDashboard, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const baseNavItemClass =
     "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-white/15 hover:bg-white/5 hover:text-white";
@@ -52,6 +52,11 @@ export function SiteHeader() {
           </Link>
           {accessToken ? (
             <>
+              {canManageDashboard && (
+                <Link className={baseNavItemClass} href="/dashboard/productos">
+                  Dashboard
+                </Link>
+              )}
               <Link className={baseNavItemClass} href="/cuenta">
                 Mi cuenta
               </Link>
@@ -93,6 +98,11 @@ export function SiteHeader() {
             </Link>
             {accessToken ? (
               <>
+                {canManageDashboard && (
+                  <Link className={mobileNavItemClass} href="/dashboard/productos" onClick={() => setMobileOpen(false)}>
+                    Dashboard
+                  </Link>
+                )}
                 <Link className={mobileNavItemClass} href="/cuenta" onClick={() => setMobileOpen(false)}>
                   Mi cuenta
                 </Link>

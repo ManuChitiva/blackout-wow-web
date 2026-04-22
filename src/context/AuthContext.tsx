@@ -15,10 +15,12 @@ const STORAGE_KEY = "blackout_wow_auth";
 type AuthState = {
   accessToken: string | null;
   refreshToken: string | null;
+  portalRole: string | null;
 };
 
 type AuthContextValue = AuthState & {
   isAuthReady: boolean;
+  canManageDashboard: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string, email: string) => Promise<void>;
   logout: () => void;
@@ -29,37 +31,65 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function loadStored(): AuthState {
-  if (typeof window === "undefined") return { accessToken: null, refreshToken: null };
+  if (typeof window === "undefined") return { accessToken: null, refreshToken: null, portalRole: null };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { accessToken: null, refreshToken: null };
+    if (!raw) return { accessToken: null, refreshToken: null, portalRole: null };
     const parsed = JSON.parse(raw) as AuthState;
     return {
       accessToken: parsed.accessToken ?? null,
       refreshToken: parsed.refreshToken ?? null,
+      portalRole: parsed.portalRole ?? inferRoleFromToken(parsed.accessToken ?? null),
     };
   } catch {
-    return { accessToken: null, refreshToken: null };
+    return { accessToken: null, refreshToken: null, portalRole: null };
+  }
+}
+
+function inferRoleFromToken(token: string | null): string | null {
+  if (!token) return null;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+    const decoded = atob(padded);
+    const payload = JSON.parse(decoded) as { role?: string };
+    if (!payload.role || typeof payload.role !== "string") return null;
+    return payload.role.toUpperCase();
+  } catch {
+    return null;
   }
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [portalRole, setPortalRole] = useState<string | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
   useEffect(() => {
     const s = loadStored();
     setAccessToken(s.accessToken);
     setRefreshToken(s.refreshToken);
+    setPortalRole(s.portalRole);
     setIsAuthReady(true);
   }, []);
 
   const persist = useCallback((tokens: AuthState) => {
+    const resolvedRole = tokens.portalRole ?? inferRoleFromToken(tokens.accessToken);
     setAccessToken(tokens.accessToken);
     setRefreshToken(tokens.refreshToken);
+    setPortalRole(resolvedRole);
     if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tokens));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+          portalRole: resolvedRole,
+        } satisfies AuthState)
+      );
     }
   }, []);
 
@@ -72,6 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       persist({
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
+        portalRole: inferRoleFromToken(data.accessToken),
       });
     },
     [persist]
@@ -88,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    persist({ accessToken: null, refreshToken: null });
+    persist({ accessToken: null, refreshToken: null, portalRole: null });
   }, [persist]);
 
   const refreshSession = useCallback(async () => {
@@ -101,24 +132,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     persist({
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
+      portalRole: inferRoleFromToken(data.accessToken),
     });
   }, [persist, refreshToken]);
 
   const getAccessToken = useCallback(() => accessToken, [accessToken]);
+  const canManageDashboard = portalRole === "ADMIN" || portalRole === "MANAGER";
 
   const value = useMemo(
     () =>
       ({
         accessToken,
         refreshToken,
+        portalRole,
         isAuthReady,
+        canManageDashboard,
         login,
         register,
         logout,
         refreshSession,
         getAccessToken,
       }) satisfies AuthContextValue,
-    [accessToken, refreshToken, isAuthReady, login, register, logout, refreshSession, getAccessToken]
+    [
+      accessToken,
+      refreshToken,
+      portalRole,
+      isAuthReady,
+      canManageDashboard,
+      login,
+      register,
+      logout,
+      refreshSession,
+      getAccessToken,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

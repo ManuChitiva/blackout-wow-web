@@ -22,6 +22,12 @@ type RewardCatalogResponse = {
   pointsBalance: number;
 };
 
+type CharacterOption = {
+  id: number;
+  name: string;
+  level: number;
+};
+
 type RedeemResponse = {
   message: string;
   pointsBalance: number;
@@ -46,6 +52,8 @@ export default function RewardShopPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todas");
   const [page, setPage] = useState(1);
+  const [characters, setCharacters] = useState<CharacterOption[]>([]);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isAuthReady) return;
@@ -58,8 +66,13 @@ export default function RewardShopPage() {
         const data = await apiJson<RewardCatalogResponse>("/api/v1/rewards/products", {
           token: accessToken,
         });
+        const chars = await apiJson<CharacterOption[]>("/api/v1/me/characters", {
+          token: accessToken,
+        });
         setProducts(data.products);
         setPointsBalance(data.pointsBalance);
+        setCharacters(chars);
+        setSelectedCharacterId(chars.length > 0 ? chars[0].id : null);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Error");
       }
@@ -97,6 +110,10 @@ export default function RewardShopPage() {
 
   async function redeem(rewardProductId: number) {
     if (!accessToken) return;
+    if (!selectedCharacterId) {
+      setError("Selecciona un personaje destino para el canje.");
+      return;
+    }
     setBusyId(rewardProductId);
     setError(null);
     setMsg(null);
@@ -104,7 +121,7 @@ export default function RewardShopPage() {
       const data = await apiJson<RedeemResponse>("/api/v1/rewards/redeem", {
         method: "POST",
         token: accessToken,
-        body: JSON.stringify({ rewardProductId }),
+        body: JSON.stringify({ rewardProductId, characterId: selectedCharacterId }),
       });
       setPointsBalance(data.pointsBalance);
       setMsg(data.message);
@@ -121,15 +138,50 @@ export default function RewardShopPage() {
         <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
           <h1 className="font-display text-3xl font-semibold text-zinc-50">Tienda de canje</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-            Usa tus puntos para desbloquear servicios y recompensas exclusivas del servidor.
+            Selecciona un personaje destino, busca la recompensa y canjea tus puntos en segundos.
           </p>
+          <div className="mt-5 grid gap-3 text-xs text-zinc-300 md:grid-cols-3">
+            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
+              <span className="text-amber-300">Paso 1:</span> Elige personaje
+            </div>
+            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
+              <span className="text-amber-300">Paso 2:</span> Filtra y busca recompensa
+            </div>
+            <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
+              <span className="text-amber-300">Paso 3:</span> Canjea con tus puntos
+            </div>
+          </div>
         </div>
 
-        <div className="mt-6 rounded-xl border border-amber-400/30 bg-amber-950/20 p-4">
-          <p className="text-xs uppercase tracking-widest text-amber-300/80">Saldo disponible</p>
-          <p className="mt-1 text-2xl font-bold text-amber-200">{pointsBalance} puntos</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-amber-400/30 bg-amber-950/20 p-4">
+            <p className="text-xs uppercase tracking-widest text-amber-300/80">Saldo disponible</p>
+            <p className="mt-1 text-2xl font-bold text-amber-200">{pointsBalance} puntos</p>
+            <p className="mt-1 text-sm text-zinc-400">Solo podrás canjear recompensas con saldo suficiente.</p>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
+            <p className="text-xs uppercase tracking-widest text-zinc-500">Personaje destino del canje</p>
+            <div className="mt-2">
+              <select
+                value={selectedCharacterId ?? ""}
+                onChange={(e) => setSelectedCharacterId(e.target.value ? Number(e.target.value) : null)}
+                className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
+              >
+                {characters.length === 0 && <option value="">Sin personajes disponibles</option>}
+                {characters.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} (Lvl {c.level})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="mt-2 text-xs text-zinc-500">
+              El item o servicio se enviará al personaje seleccionado.
+            </p>
+          </div>
         </div>
-        <div className="mt-6 grid gap-3 md:grid-cols-[2fr,1fr]">
+
+        <div className="mt-6 grid gap-3 rounded-xl border border-white/10 bg-zinc-950/60 p-4 md:grid-cols-[2fr,1fr]">
           <input
             type="text"
             value={search}
@@ -152,6 +204,12 @@ export default function RewardShopPage() {
 
         {msg && <p className="mt-6 text-emerald-400">{msg}</p>}
         {error && <p className="mt-6 text-red-400">{error}</p>}
+        {!error && (
+          <p className="mt-4 text-sm text-zinc-500">
+            Mostrando <span className="text-zinc-300">{filtered.length}</span> recompensas para{" "}
+            <span className="text-zinc-300">{category}</span>.
+          </p>
+        )}
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {pageItems.map((p) => {
@@ -179,6 +237,7 @@ export default function RewardShopPage() {
                       {busyId === p.id ? "Canjeando..." : canRedeem ? "Canjear" : "Sin puntos"}
                     </button>
                   </div>
+                  {!canRedeem && <p className="mt-2 text-xs text-red-300/80">Te faltan puntos para este canje.</p>}
                 </div>
               </div>
             );
