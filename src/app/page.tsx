@@ -3,6 +3,8 @@ import Image from "next/image";
 import { SiteShell } from "@/components/SiteShell";
 
 export default function HomePage() {
+  const dragonModelSrc = "";
+
   return (
     <SiteShell>
       <section className="section-fire-aura relative overflow-hidden border-b border-white/10">
@@ -116,6 +118,73 @@ export default function HomePage() {
               <p className="mt-3 text-sm leading-relaxed text-zinc-400">{f.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <div className="reveal-up rounded-2xl border border-white/10 bg-zinc-950/55 p-5 md:p-8">
+          <p className="font-display text-xs uppercase tracking-[0.2em] text-amber-300/85">Visual Demo</p>
+          <h2 className="font-display mt-2 text-2xl font-semibold text-zinc-100 md:text-3xl">
+            Descarga el cliente oficial
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm text-zinc-400 md:text-base">
+            Instala BLACKOUT WoW 3.3.5a en minutos. Descarga el cliente completo y entra al reino con la configuracion
+            recomendada para una experiencia estable desde el primer login.
+          </p>
+
+          <div className="dragon-modal-shell mt-6">
+            <div
+              className="dragon-modal-bg"
+              style={{ backgroundImage: "url('https://wowcircle.me/dragonflight/en/assets/img/ui/tab/bg3.webp')" }}
+            />
+            <div className="dragon-modal-vignette" />
+            {dragonModelSrc ? (
+              <model-viewer
+                className="dragon-modal-model"
+                src={dragonModelSrc}
+                camera-controls
+                disable-zoom
+                disable-pan
+                auto-rotate
+                rotation-per-second="12deg"
+                interaction-prompt="none"
+                camera-orbit="-10deg 70deg 3.7m"
+                min-camera-orbit="-30deg 55deg 3.2m"
+                max-camera-orbit="20deg 85deg 4.2m"
+                field-of-view="22deg"
+                shadow-intensity="0.55"
+                exposure="1.05"
+                environment-image="neutral"
+                poster="https://wowcircle.me/dragonflight/en/assets/img/iridikron.webp"
+                alt="Iridikron 3D model preview"
+              />
+            ) : null}
+            <img
+              src="https://wowcircle.me/dragonflight/en/assets/img/iridikron.webp"
+              alt="Iridikron fallback"
+              className="dragon-modal-fallback"
+              loading="lazy"
+            />
+            <div className="dragon-modal-content">
+              <p className="text-xs uppercase tracking-[0.2em] text-amber-200/90">Cliente recomendado</p>
+              <h3 className="font-display mt-2 text-2xl text-zinc-100 md:text-3xl">Comienza Tu Aventura En Blackout</h3>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-300 md:text-base">
+                Descarga el cliente completo de Wrath of the Lich King 3.3.5a, conecta con tu cuenta y entra
+                directamente al reino sin configuraciones complejas.
+              </p>
+              <p className="mt-2 text-xs text-zinc-400/90">
+                Si no inicia la descarga, verifica tu bloqueador del navegador o prueba desde otro mirror.
+              </p>
+              <div className="mt-6">
+                <Link
+                  href="/downloads/blackout-wow-3.3.5a-client.zip"
+                  className="inline-flex rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
+                >
+                  Descargar cliente
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

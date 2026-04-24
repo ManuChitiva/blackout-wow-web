@@ -264,3 +264,143 @@ body {
   mix-blend-mode: screen;
   animation: embers-rise 7.5s linear infinite;
 }
+
+@keyframes dragon-modal-bg-pan {
+  0% {
+    transform: scale(1.05) translate3d(-2.5%, 0.5%, 0);
+  }
+  50% {
+    transform: scale(1.08) translate3d(2%, -1%, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(-2.5%, 0.5%, 0);
+  }
+}
+
+@keyframes dragon-modal-character-float {
+  0% {
+    transform: translate3d(0, 8px, 0) scale(1.01);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, 8px, 0) scale(1.01);
+  }
+}
+
+@keyframes dragon-modal-vignette-pulse {
+  0%,
+  100% {
+    opacity: 0.58;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.dragon-modal-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  min-height: 360px;
+  background: #08080b;
+}
+
+.dragon-modal-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6;
+  will-change: transform;
+  animation: dragon-modal-bg-pan 12s ease-in-out infinite;
+}
+
+.dragon-modal-model {
+  position: absolute;
+  right: -2%;
+  bottom: -4%;
+  width: min(52%, 560px);
+  height: 110%;
+  max-width: 100%;
+  opacity: 0.96;
+  background: transparent;
+  --poster-color: transparent;
+}
+
+.dragon-modal-fallback {
+  position: absolute;
+  right: -1%;
+  bottom: -3%;
+  width: min(52%, 560px);
+  height: 108%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0.9;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+  display: block;
+}
+
+.dragon-modal-model:defined + .dragon-modal-fallback {
+  display: none;
+}
+
+.dragon-modal-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(0, 0, 0, 0.86) 12%, rgba(0, 0, 0, 0.5) 42%, rgba(0, 0, 0, 0.2) 65%, rgba(0, 0, 0, 0.55) 100%),
+    radial-gradient(circle at 16% 28%, rgba(249, 115, 22, 0.2), transparent 35%),
+    radial-gradient(circle at 76% 34%, rgba(56, 189, 248, 0.18), transparent 36%);
+  animation: dragon-modal-vignette-pulse 7s ease-in-out infinite;
+}
+
+.dragon-modal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 58%;
+  padding: 2.2rem 1.4rem;
+}
+
+@media (max-width: 900px) {
+  .dragon-modal-shell {
+    min-height: 460px;
+  }
+
+  .dragon-modal-model {
+    width: min(88%, 520px);
+    height: 62%;
+    right: 50%;
+    bottom: -2%;
+    transform: translateX(50%);
+    opacity: 0.58;
+  }
+
+  .dragon-modal-fallback {
+    width: min(88%, 520px);
+    height: 62%;
+    right: 50%;
+    bottom: -2%;
+    transform: translateX(50%);
+    object-position: center bottom;
+    opacity: 0.56;
+  }
+
+  .dragon-modal-content {
+    max-width: 100%;
+    padding: 1.2rem 1rem 12.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dragon-modal-bg,
+  .dragon-modal-model,
+  .dragon-modal-fallback,
+  .dragon-modal-vignette {
+    animation: none;
+  }
+}
