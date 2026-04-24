@@ -28,19 +28,22 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <nav className="absolute left-1/2 top-8 z-10 w-[min(1100px,92%)] -translate-x-1/2 border-y border-amber-200/20 bg-black/38 px-4 py-3 shadow-[0_10px_28px_rgba(0,0,0,0.55)] backdrop-blur-[1.5px] md:top-10 md:px-7">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-100 md:gap-x-7 md:text-sm">
               <Link href="/#features" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                News & Updates
-              </Link>
-              <Link href="/registro" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                Rules & Policies
+                Servidor
               </Link>
               <Link href="/tienda" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                Realms & Services
+                Tienda
+              </Link>
+              <Link href="/tienda/puntos" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
+                Canjear puntos
+              </Link>
+              <Link href="/registro" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
+                Registro
               </Link>
               <Link href="/login" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                Game Overview
+                Entrar
               </Link>
-              <Link href="/cuenta" className="transition-colors hover:text-amber-100">
-                Support & Reports
+              <Link href="/terminos-y-condiciones" className="transition-colors hover:text-amber-100">
+                Terminos y condiciones
               </Link>
             </div>
           </nav>

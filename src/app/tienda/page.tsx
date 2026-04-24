@@ -14,6 +14,7 @@ type Product = {
   name: string;
   description: string | null;
   category: string;
+  imageUrl: string | null;
   priceUsd: number;
   donationPoints: number;
 };
@@ -92,7 +93,9 @@ export default function ShopPage() {
       if (typeof window !== "undefined" && r.paypalOrderId) {
         sessionStorage.setItem("blackout_pending_paypal", r.paypalOrderId);
       }
-      window.location.href = r.approvalUrl;
+      if (typeof window !== "undefined") {
+        window.open(r.approvalUrl, "_blank", "noopener,noreferrer");
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
     } finally {
@@ -137,6 +140,11 @@ export default function ShopPage() {
           </select>
         </div>
         {error && <p className="mt-6 text-red-400">{error}</p>}
+        {!error && filtered.length > 0 && (
+          <p className="mt-4 text-sm text-zinc-500">
+            Mostrando <span className="text-zinc-300">{filtered.length}</span> productos.
+          </p>
+        )}
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {pageItems.map((p) => (
             <div
@@ -144,15 +152,15 @@ export default function ShopPage() {
               className="metal-border overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70"
             >
               <div className="relative h-44 w-full">
-                <Image src={imageForProduct(p.category)} alt={p.name} fill className="object-cover" />
+                <Image src={p.imageUrl || imageForProduct(p.category)} alt={p.name} fill className="object-cover" />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/20" />
                 <p className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-xs uppercase tracking-wider text-zinc-100">
                   {p.category}
                 </p>
               </div>
               <div className="flex h-[250px] flex-col p-5">
-                <h2 className="font-display text-lg font-semibold text-amber-300">{p.name}</h2>
-                <p className="mt-2 flex-1 text-sm text-zinc-400">{p.description}</p>
+                <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-amber-300">{p.name}</h2>
+                <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
                 <p className="mt-3 text-sm font-semibold text-amber-300">{p.donationPoints} puntos</p>
                 <div className="mt-4 flex items-center justify-between">
                   <p className="text-2xl font-bold text-sky-200">${p.priceUsd}</p>

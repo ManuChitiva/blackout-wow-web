@@ -256,7 +256,8 @@ export default function HomePage() {
 
       <section className="border-t border-white/10 bg-black/20">
         <div className="mx-auto max-w-6xl px-4 py-14">
-          <div className="reveal-up rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center">
+          <div className="reveal-up cta-fire-border rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center">
+            <div className="cta-fire-particles fire-embers pointer-events-none absolute -inset-x-10 -inset-y-12 opacity-75" />
             <h2 className="font-display text-3xl font-semibold text-zinc-50">Tu aventura empieza hoy</h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-zinc-400">
               Crea tu cuenta y forma parte del reino BLACKOUT. El Lich King no espera.

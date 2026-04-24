@@ -2,15 +2,27 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export function SiteHeader() {
   const { accessToken, canManageDashboard, logout } = useAuth();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const baseNavItemClass =
     "rounded px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-300/90 transition-all duration-200 hover:text-amber-200";
+  const activeNavItemClass = "border border-amber-400/40 !text-amber-200 hover:bg-amber-500/10 hover:!text-amber-200";
   const mobileNavItemClass =
     "rounded-md border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-medium text-zinc-200 transition-all hover:border-white/20 hover:bg-white/5";
+  const getNavItemClass = (href: string, options?: { exact?: boolean }) => {
+    const exact = options?.exact ?? false;
+    const cleanHref = href.split("#")[0] || "/";
+    const isActive = exact
+      ? pathname === cleanHref
+      : pathname === cleanHref || (cleanHref !== "/" && pathname.startsWith(`${cleanHref}/`));
+
+    return `${baseNavItemClass} ${isActive ? activeNavItemClass : ""}`.trim();
+  };
 
   return (
     <header className="navbar-aura sticky top-0 z-40 border-b border-white/10 bg-black/75 backdrop-blur-xl">
@@ -41,23 +53,23 @@ export function SiteHeader() {
         </button>
 
         <nav className="hidden items-center gap-1 border-y border-white/10 px-2 py-1 md:flex">
-          <Link className={baseNavItemClass} href="/#features">
+          <Link className={getNavItemClass("/")} href="/#features">
             Servidor
           </Link>
           {accessToken ? (
             <>
-              <Link className={baseNavItemClass} href="/tienda">
+              <Link className={getNavItemClass("/tienda", { exact: true })} href="/tienda">
                 Tienda
               </Link>
-              <Link className={baseNavItemClass} href="/tienda/puntos">
+              <Link className={getNavItemClass("/tienda/puntos")} href="/tienda/puntos">
                 Canjear puntos
               </Link>
               {canManageDashboard && (
-                <Link className={baseNavItemClass} href="/dashboard/productos">
+                <Link className={getNavItemClass("/dashboard/productos")} href="/dashboard/productos">
                   Dashboard
                 </Link>
               )}
-              <Link className={baseNavItemClass} href="/cuenta">
+              <Link className={getNavItemClass("/cuenta")} href="/cuenta">
                 Mi cuenta
               </Link>
               <button
@@ -71,12 +83,12 @@ export function SiteHeader() {
           ) : (
             <>
               <Link
-                className="rounded border border-amber-400/40 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200 transition-all hover:bg-amber-500/10"
+                className={getNavItemClass("/registro")}
                 href="/registro"
               >
                 Registro
               </Link>
-              <Link className={baseNavItemClass} href="/login">
+              <Link className={getNavItemClass("/login")} href="/login">
                 Entrar
               </Link>
             </>

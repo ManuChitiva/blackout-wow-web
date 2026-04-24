@@ -14,6 +14,7 @@ type RewardProduct = {
   name: string;
   description: string | null;
   category: string;
+  imageUrl: string | null;
   costPoints: number;
 };
 
@@ -38,6 +39,15 @@ function imageForReward(category: string) {
   if (c.includes("monturas")) return "/images/store/reward-mounts.svg";
   if (c.includes("servicios")) return "/images/store/reward-services.svg";
   return "/images/store/reward-general.svg";
+}
+
+function resolveRewardImage(imageUrl: string | null, category: string) {
+  const candidate = imageUrl?.trim();
+  if (!candidate) return imageForReward(category);
+  if (candidate.startsWith("/") || candidate.startsWith("http://") || candidate.startsWith("https://")) {
+    return candidate;
+  }
+  return imageForReward(category);
 }
 
 export default function RewardShopPage() {
@@ -217,15 +227,21 @@ export default function RewardShopPage() {
             return (
               <div key={p.id} className="overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70">
                 <div className="relative h-44 w-full">
-                  <Image src={imageForReward(p.category)} alt={p.name} fill className="object-cover" />
+                  <Image
+                    src={resolveRewardImage(p.imageUrl, p.category)}
+                    alt={p.name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
                   <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-black/20" />
                   <p className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-xs uppercase tracking-wider text-zinc-100">
                     {p.category}
                   </p>
                 </div>
                 <div className="flex h-[250px] flex-col p-5">
-                  <h2 className="font-display text-lg font-semibold text-sky-200">{p.name}</h2>
-                  <p className="mt-2 flex-1 text-sm text-zinc-400">{p.description}</p>
+                  <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-sky-200">{p.name}</h2>
+                  <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <p className="text-xl font-bold text-amber-300">{p.costPoints} puntos</p>
                     <button

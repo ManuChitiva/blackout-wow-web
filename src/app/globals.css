@@ -265,6 +265,95 @@ body {
   animation: embers-rise 7.5s linear infinite;
 }
 
+@keyframes cta-fire-ring {
+  0% {
+    background-position:
+      0% 50%,
+      100% 50%;
+    opacity: 0.7;
+  }
+  50% {
+    background-position:
+      100% 50%,
+      0% 50%;
+    opacity: 1;
+  }
+  100% {
+    background-position:
+      0% 50%,
+      100% 50%;
+    opacity: 0.7;
+  }
+}
+
+@keyframes cta-fire-flicker {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(251, 146, 60, 0.4),
+      0 0 14px rgba(249, 115, 22, 0.35),
+      0 0 30px rgba(220, 38, 38, 0.2);
+  }
+  35% {
+    box-shadow:
+      0 0 0 1px rgba(251, 146, 60, 0.55),
+      0 0 22px rgba(249, 115, 22, 0.5),
+      0 0 42px rgba(220, 38, 38, 0.35);
+  }
+  70% {
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.45),
+      0 0 18px rgba(249, 115, 22, 0.42),
+      0 0 34px rgba(185, 28, 28, 0.28);
+  }
+}
+
+.cta-fire-border {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  animation: cta-fire-flicker 2.2s ease-in-out infinite;
+}
+
+.cta-fire-particles {
+  z-index: -1;
+  filter: blur(0.25px) drop-shadow(0 0 10px rgba(249, 115, 22, 0.35));
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 40%, transparent 78%);
+}
+
+.cta-fire-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(120deg, rgba(251, 191, 36, 0.35), rgba(249, 115, 22, 1), rgba(220, 38, 38, 0.5)),
+    linear-gradient(300deg, rgba(253, 224, 71, 0.25), rgba(249, 115, 22, 0.8), rgba(185, 28, 28, 0.38));
+  background-size:
+    220% 220%,
+    260% 260%;
+  animation: cta-fire-ring 3.4s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.cta-fire-border::after {
+  content: "";
+  position: absolute;
+  inset: -16% -6% -24% -6%;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 120%, rgba(249, 115, 22, 0.24), transparent 58%);
+  filter: blur(22px);
+  opacity: 0.75;
+  z-index: -1;
+}
+
 @keyframes dragon-modal-bg-pan {
   0% {
     transform: scale(1.05) translate3d(-2.5%, 0.5%, 0);
@@ -400,7 +489,9 @@ body {
   .dragon-modal-bg,
   .dragon-modal-model,
   .dragon-modal-fallback,
-  .dragon-modal-vignette {
+  .dragon-modal-vignette,
+  .cta-fire-border,
+  .cta-fire-border::before {
     animation: none;
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
@@ -11,12 +11,19 @@ const LOGIN_BG_VIDEO =
   "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, accessToken, isAuthReady } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthReady || !accessToken) return;
+    const next = searchParams.get("next");
+    router.replace(next && next.startsWith("/") ? next : "/cuenta");
+  }, [isAuthReady, accessToken, searchParams, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +31,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(username, password);
-      router.push("/cuenta");
+      const next = searchParams.get("next");
+      router.push(next && next.startsWith("/") ? next : "/cuenta");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error");
     } finally {
