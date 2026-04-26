@@ -94,18 +94,6 @@ export default function HomePage() {
               >
                 Ver tienda
               </Link>
-              <Link
-                href="/downloads/blackout-wow-3.3.5a-client.zip"
-                className="metal-border rounded-md border border-amber-400/35 bg-amber-950/30 px-6 py-3 text-sm font-semibold text-amber-100 hover:bg-amber-900/45 sm:px-8 sm:text-base"
-              >
-                Descarga el cliente oficial
-              </Link>
-              <Link
-                href="#fases-actualizaciones"
-                className="metal-border rounded-md border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/10 sm:px-8 sm:text-base"
-              >
-                Fases y actualizaciones
-              </Link>
             </div>
             <p className="mt-4 text-sm text-zinc-400">
               Consulta las reglas del servidor en{" "}
@@ -160,7 +148,7 @@ export default function HomePage() {
           {contentBlocks.map((f, idx) => (
             <div
               key={f.title}
-              className="feature-card reveal-up metal-border rounded-xl border border-white/10 bg-zinc-950/70 p-6"
+              className="home-card feature-card reveal-up metal-border rounded-xl border border-white/10 bg-zinc-950/70 p-6"
               style={{ animationDelay: `${idx * 120}ms` }}
             >
               <h3 className="feature-card-title font-display mt-2 text-lg font-semibold text-amber-400">
@@ -183,7 +171,7 @@ export default function HomePage() {
         id="fases-actualizaciones"
         className="mx-auto max-w-6xl px-4 pb-14"
       >
-        <div className="reveal-up rounded-2xl border border-white/10 bg-zinc-950/55 p-5 md:p-8">
+        <div className="home-card reveal-up rounded-2xl border border-white/10 bg-zinc-950/55 p-5 md:p-8">
           <p className="font-display text-xs uppercase tracking-[0.2em] text-amber-300/85">
             Visual Demo
           </p>
@@ -262,100 +250,125 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
-        <div className="reveal-up rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
-          <h2 className="font-display text-2xl font-semibold text-zinc-100">
-            Fases y actualizaciones
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400 md:text-base">
-            El servidor evoluciona por fases. Cada 3 meses llega contenido nuevo
-            con mejoras importantes, nuevos retos y recompensas para mantener la
-            experiencia activa para jugadores nuevos y veteranos.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            {[
-              { phase: "Fase 1", name: "Lanzamiento", status: "Activa" },
-              {
-                phase: "Fase 2",
-                name: "Expansion de contenido",
-                status: "Proxima",
-              },
-              { phase: "Fase 3", name: "Nuevos retos", status: "Programada" },
-              {
-                phase: "Fase 4",
-                name: "Actualizacion mayor",
-                status: "Programada",
-              },
-            ].map((p) => (
-              <div
-                key={p.phase}
-                className="rounded-lg border border-white/10 bg-black/35 p-4"
-              >
-                <p className="text-xs uppercase tracking-wider text-zinc-500">
-                  {p.phase}
-                </p>
-                <h3 className="mt-2 font-display text-base text-zinc-100">
-                  {p.name}
-                </h3>
-                <p
-                  className={`mt-2 text-xs font-semibold ${
-                    p.status === "Activa"
-                      ? "text-emerald-400"
-                      : p.status === "Proxima"
-                        ? "text-sky-300"
-                        : "text-zinc-500"
-                  }`}
+        <div className="home-card reveal-up relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
+          <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-42" />
+          <div className="relative z-10">
+            <h2 className="font-display text-2xl font-semibold text-zinc-100">
+              Fases y actualizaciones
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400 md:text-base">
+              El servidor evoluciona por fases. Cada 3 meses llega contenido
+              nuevo con mejoras importantes, nuevos retos y recompensas para
+              mantener la experiencia activa para jugadores nuevos y veteranos.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-4">
+              {[
+                { phase: "Fase 1", name: "Lanzamiento", status: "Activa" },
+                {
+                  phase: "Fase 2",
+                  name: "Expansion de contenido",
+                  status: "Proxima",
+                },
+                { phase: "Fase 3", name: "Nuevos retos", status: "Programada" },
+                {
+                  phase: "Fase 4",
+                  name: "Actualizacion mayor",
+                  status: "Programada",
+                },
+              ].map((p) => (
+                <div
+                  key={p.phase}
+                  className="home-card phase-card rounded-lg border border-white/10 bg-black/35 p-4"
                 >
-                  {p.status}
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">
+                    {p.phase}
+                  </p>
+                  <h3 className="mt-2 font-display text-base text-zinc-100">
+                    {p.name}
+                  </h3>
+                  <p
+                    className={`mt-2 text-xs font-semibold ${
+                      p.status === "Activa"
+                        ? "text-emerald-400"
+                        : p.status === "Proxima"
+                          ? "text-sky-300"
+                          : "text-zinc-500"
+                    }`}
+                  >
+                    {p.status}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pointer-events-none relative mx-auto max-w-6xl px-4 pb-10">
+        <Image
+          src="https://static.wixstatic.com/media/5dd8a0_345e699c01dd473894066e4b14870640~mv2.png"
+          alt="Emblema decorativo izquierdo"
+          width={900}
+          height={900}
+          className="absolute -left-2 top-1/2 hidden h-auto w-[120px] -translate-y-1/2 opacity-35 md:block lg:w-[150px]"
+          priority={false}
+        />
+        <Image
+          src="https://static.wixstatic.com/media/5dd8a0_f4846f95bf2443d5ab7f02ae4e0f7b9a~mv2.png"
+          alt="Emblema decorativo derecho"
+          width={900}
+          height={900}
+          className="absolute -right-2 top-1/2 hidden h-auto w-[120px] -translate-y-1/2 opacity-35 md:block lg:w-[150px]"
+          priority={false}
+        />
+      </section>
+
+      <section className="relative mx-auto max-w-6xl overflow-hidden px-4 pb-14">
+        <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-38" />
+        <div className="relative z-10">
+          <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
+            Nuestra vision
+          </h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                title: "Comunidad activa",
+                body: "Queremos un entorno estable y divertido donde todos puedan progresar, competir y cooperar.",
+                tag: "Comunidad",
+              },
+              {
+                title: "Progreso real",
+                body: "El enfoque no pay to win permite avanzar jugando, aprendiendo y participando.",
+                tag: "Progreso",
+              },
+              {
+                title: "Personalizacion total",
+                body: "Transfiguraciones masivas, monturas, pets y morphs para crear tu propio estilo.",
+                tag: "Identidad",
+              },
+            ].map((n, idx) => (
+              <article
+                key={n.title}
+                className="home-card reveal-up rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+                style={{ animationDelay: `${idx * 120}ms` }}
+              >
+                <p className="text-xs uppercase tracking-[0.2em] text-sky-300/80">
+                  {n.tag}
                 </p>
-              </div>
+                <h3 className="font-display mt-2 text-lg text-zinc-100">
+                  {n.title}
+                </h3>
+                <p className="mt-3 text-sm text-zinc-400">{n.body}</p>
+                <p className="mt-4 text-xs text-zinc-500">Blackout-WoW 3.3.5</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-14">
-        <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
-          Nuestra vision
-        </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {[
-            {
-              title: "Comunidad activa",
-              body: "Queremos un entorno estable y divertido donde todos puedan progresar, competir y cooperar.",
-              tag: "Comunidad",
-            },
-            {
-              title: "Progreso real",
-              body: "El enfoque no pay to win permite avanzar jugando, aprendiendo y participando.",
-              tag: "Progreso",
-            },
-            {
-              title: "Personalizacion total",
-              body: "Transfiguraciones masivas, monturas, pets y morphs para crear tu propio estilo.",
-              tag: "Identidad",
-            },
-          ].map((n, idx) => (
-            <article
-              key={n.title}
-              className="reveal-up rounded-xl border border-white/10 bg-zinc-950/65 p-5"
-              style={{ animationDelay: `${idx * 120}ms` }}
-            >
-              <p className="text-xs uppercase tracking-[0.2em] text-sky-300/80">
-                {n.tag}
-              </p>
-              <h3 className="font-display mt-2 text-lg text-zinc-100">
-                {n.title}
-              </h3>
-              <p className="mt-3 text-sm text-zinc-400">{n.body}</p>
-              <p className="mt-4 text-xs text-zinc-500">Blackout-WoW 3.3.5</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <section className="border-t border-white/10 bg-black/20">
         <div className="mx-auto max-w-6xl px-4 py-14">
-          <div className="reveal-up cta-fire-border rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center">
+          <div className="home-card reveal-up cta-fire-border rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center">
             <div className="cta-fire-particles fire-embers pointer-events-none absolute -inset-x-10 -inset-y-12 opacity-75" />
             <h2 className="font-display text-3xl font-semibold text-zinc-50">
               Tu aventura empieza hoy
