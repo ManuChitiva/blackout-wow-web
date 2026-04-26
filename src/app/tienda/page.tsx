@@ -166,7 +166,7 @@ export default function ShopPage() {
           {pageItems.map((p) => (
             <div
               key={p.id}
-              className="metal-border overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70"
+              className="store-card metal-border overflow-hidden rounded-xl border border-white/10 bg-zinc-950/70"
             >
               <div className="relative h-44 w-full">
                 <Image src={p.imageUrl || imageForProduct(p.category)} alt={p.name} fill className="object-cover" />
@@ -175,10 +175,18 @@ export default function ShopPage() {
                   {p.category}
                 </p>
               </div>
-              <div className="flex h-[250px] flex-col p-5">
+              <div className="flex h-[270px] flex-col p-5">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-sky-300/80">
+                  SKU: {p.sku}
+                </p>
                 <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-amber-300">{p.name}</h2>
                 <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
-                <p className="mt-3 text-sm font-semibold text-amber-300">{p.donationPoints} puntos</p>
+                <div className="mt-3 flex items-center justify-between">
+                  <p className="text-sm font-semibold text-amber-300">{p.donationPoints} puntos</p>
+                  <span className="rounded-full border border-sky-400/35 bg-sky-500/10 px-2 py-0.5 text-[11px] font-semibold text-sky-200">
+                    Entrega automática
+                  </span>
+                </div>
                 <div className="mt-4 flex items-center justify-between">
                   <p className="text-2xl font-bold text-sky-200">${p.priceUsd}</p>
                   <button

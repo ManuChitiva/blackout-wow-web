@@ -80,6 +80,55 @@ type RewardRedemptionTraceListResponse = {
   redemptions: RewardRedemptionTrace[];
 };
 
+type AnalyticsOverview = {
+  portalUsers: number;
+  gameAccounts: number;
+  onlineAccounts: number;
+  totalCharacters: number;
+  shopOrdersTotal: number;
+  shopOrdersPaid: number;
+  shopOrdersPending: number;
+  shopOrdersFailed: number;
+  redemptionsTotal: number;
+  redemptionsCompleted: number;
+  redemptionsPending: number;
+  redemptionsFailed: number;
+  totalWalletPoints: string;
+};
+
+function formatBigIntGrouped(value: string): string {
+  const digits = value.replace(/[^\d-]/g, "");
+  if (!digits) return "0";
+  const negative = digits.startsWith("-");
+  const abs = negative ? digits.slice(1) : digits;
+  const grouped = abs.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return `${negative ? "-" : ""}${grouped}`;
+}
+
+function formatBigIntCompact(value: string): string {
+  const digits = value.replace(/[^\d-]/g, "");
+  if (!digits || digits === "-") return "0";
+  const n = BigInt(digits);
+  const zero = BigInt(0);
+  const ten = BigInt(10);
+  const abs = n < zero ? -n : n;
+  const sign = n < zero ? "-" : "";
+  const units = [
+    { divisor: BigInt("1000000000000"), suffix: "T" },
+    { divisor: BigInt("1000000000"), suffix: "B" },
+    { divisor: BigInt("1000000"), suffix: "M" },
+    { divisor: BigInt("1000"), suffix: "K" },
+  ] as const;
+  for (const unit of units) {
+    if (abs >= unit.divisor) {
+      const intPart = abs / unit.divisor;
+      const decimalPart = (abs % unit.divisor) / (unit.divisor / ten);
+      return `${sign}${intPart}.${decimalPart}${unit.suffix}`;
+    }
+  }
+  return `${n}`;
+}
+
 type ProductForm = {
   sku: string;
   name: string;
@@ -105,11 +154,12 @@ type RewardForm = {
   active: boolean;
 };
 
-type CatalogMode = "shop" | "rewards" | "orders";
+type CatalogMode = "shop" | "rewards" | "orders" | "analytics";
 type TraceViewMode = "orders" | "redemptions";
 const REWARD_ADMIN_ENDPOINT = "/api/v1/admin/rewards/products";
 const ORDER_TRACE_ENDPOINT = "/api/v1/admin/shop/orders";
 const REDEMPTION_TRACE_ENDPOINT = "/api/v1/admin/rewards/redemptions";
+const ANALYTICS_ENDPOINT = "/api/v1/admin/analytics/overview";
 const DASHBOARD_ITEMS_PER_PAGE = 5;
 
 const emptyForm: ProductForm = {
@@ -146,12 +196,14 @@ export default function DashboardProductsPage() {
   const [redemptionTrace, setRedemptionTrace] = useState<RewardRedemptionTrace[]>(
     [],
   );
+  const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingRewards, setLoadingRewards] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [loadingRedemptions, setLoadingRedemptions] = useState(true);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingReward, setSavingReward] = useState(false);
   const [togglingShopId, setTogglingShopId] = useState<number | null>(null);
@@ -180,6 +232,7 @@ export default function DashboardProductsPage() {
       loadRewardProducts(accessToken),
       loadOrderTrace(accessToken),
       loadRedemptionTrace(accessToken),
+      loadAnalytics(accessToken),
     ]);
   }, [isAuthReady, accessToken, router]);
 
@@ -189,6 +242,7 @@ export default function DashboardProductsPage() {
   );
   const isShopMode = catalogMode === "shop";
   const isOrdersMode = catalogMode === "orders";
+  const isAnalyticsMode = catalogMode === "analytics";
   const totalShopPages = Math.max(
     1,
     Math.ceil(products.length / DASHBOARD_ITEMS_PER_PAGE),
@@ -326,6 +380,21 @@ export default function DashboardProductsPage() {
       );
     } finally {
       setLoadingRedemptions(false);
+    }
+  }
+
+  async function loadAnalytics(token: string) {
+    setLoadingAnalytics(true);
+    setError(null);
+    try {
+      const data = await apiJson<AnalyticsOverview>(ANALYTICS_ENDPOINT, { token });
+      setAnalytics(data);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "No se pudo cargar la analítica.",
+      );
+    } finally {
+      setLoadingAnalytics(false);
     }
   }
 
@@ -613,6 +682,17 @@ export default function DashboardProductsPage() {
               >
                 Trazabilidad ({orderTrace.length})
               </button>
+              <button
+                type="button"
+                onClick={() => setCatalogMode("analytics")}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                  isAnalyticsMode
+                    ? "bg-fuchsia-500/20 text-fuchsia-200"
+                    : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
+                }`}
+              >
+                Analítica
+              </button>
             </div>
           </div>
           {msg && <p className="mt-3 text-sm text-emerald-400">{msg}</p>}
@@ -856,7 +936,7 @@ export default function DashboardProductsPage() {
                   </div>
                 </form>
               </>
-            ) : (
+            ) : catalogMode === "orders" ? (
               <>
                 <h2 className="font-display text-xl text-zinc-100">
                   Trazabilidad de pedidos
@@ -943,6 +1023,22 @@ export default function DashboardProductsPage() {
                   )}
                 </div>
               </>
+            ) : (
+              <>
+                <h2 className="font-display text-xl text-zinc-100">
+                  Analítica general
+                </h2>
+                <p className="mt-2 text-xs text-zinc-500">
+                  Resumen global del servidor y la economía del portal.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => accessToken && void loadAnalytics(accessToken)}
+                  className="mt-4 rounded border border-fuchsia-400/40 px-4 py-2 text-sm text-fuchsia-200 hover:bg-fuchsia-500/10"
+                >
+                  Actualizar analítica
+                </button>
+              </>
             )}
           </section>
 
@@ -952,9 +1048,11 @@ export default function DashboardProductsPage() {
                 ? "Productos existentes"
                 : catalogMode === "rewards"
                   ? "Canjes existentes"
-                  : traceViewMode === "orders"
-                    ? "Órdenes y estado de entrega"
-                    : "Canjes y débito de puntos"}
+                  : catalogMode === "orders"
+                    ? traceViewMode === "orders"
+                      ? "Órdenes y estado de entrega"
+                      : "Canjes y débito de puntos"
+                    : "Analítica y KPIs"}
             </h2>
             {isShopMode ? (
               loading ? (
@@ -1148,7 +1246,7 @@ export default function DashboardProductsPage() {
                 )}
               </div>
               </div>
-            ) : loadingOrders ? (
+            ) : catalogMode === "orders" ? loadingOrders ? (
               <p className="mt-4 text-zinc-400">Cargando...</p>
             ) : (
               <div className="mt-4 space-y-8">
@@ -1358,6 +1456,52 @@ export default function DashboardProductsPage() {
                 </div>
                 ) : null}
               </div>
+            ) : loadingAnalytics ? (
+              <p className="mt-4 text-zinc-400">Cargando...</p>
+            ) : analytics ? (
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas del portal</p>
+                  <p className="mt-2 text-2xl font-bold text-zinc-100">{analytics.portalUsers}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas de juego</p>
+                  <p className="mt-2 text-2xl font-bold text-zinc-100">{analytics.gameAccounts}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas online</p>
+                  <p className="mt-2 text-2xl font-bold text-emerald-300">{analytics.onlineAccounts}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Personajes totales</p>
+                  <p className="mt-2 text-2xl font-bold text-sky-200">{analytics.totalCharacters}</p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Órdenes pagadas</p>
+                  <p className="mt-2 text-2xl font-bold text-emerald-300">{analytics.shopOrdersPaid}</p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Totales: {analytics.shopOrdersTotal} · Pendientes: {analytics.shopOrdersPending} · Fallidas: {analytics.shopOrdersFailed}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">Canjes completados</p>
+                  <p className="mt-2 text-2xl font-bold text-amber-300">{analytics.redemptionsCompleted}</p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Totales: {analytics.redemptionsTotal} · Pendientes: {analytics.redemptionsPending} · Fallidos: {analytics.redemptionsFailed}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-fuchsia-400/25 bg-fuchsia-950/20 p-4 sm:col-span-2 lg:col-span-3">
+                  <p className="text-xs uppercase tracking-wider text-fuchsia-200/80">Saldo global en wallets</p>
+                  <p className="mt-2 text-3xl font-bold text-fuchsia-100">
+                    {formatBigIntGrouped(analytics.totalWalletPoints)} pts
+                  </p>
+                  <p className="mt-1 text-xs text-fuchsia-200/80">
+                    Vista compacta: {formatBigIntCompact(analytics.totalWalletPoints)} pts
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-4 text-zinc-400">No hay datos de analítica disponibles.</p>
             )}
           </section>
         </div>

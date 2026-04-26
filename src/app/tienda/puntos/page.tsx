@@ -16,6 +16,7 @@ type RewardProduct = {
   category: string;
   imageUrl: string | null;
   costPoints: number;
+  deliveryType?: string;
 };
 
 type RewardCatalogResponse = {
@@ -225,7 +226,7 @@ export default function RewardShopPage() {
           {pageItems.map((p) => {
             const canRedeem = pointsBalance >= p.costPoints;
             return (
-              <div key={p.id} className="overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70">
+              <div key={p.id} className="store-card overflow-hidden rounded-xl border border-white/10 bg-zinc-950/70">
                 <div className="relative h-44 w-full">
                   <Image
                     src={resolveRewardImage(p.imageUrl, p.category)}
@@ -239,9 +240,17 @@ export default function RewardShopPage() {
                     {p.category}
                   </p>
                 </div>
-                <div className="flex h-[250px] flex-col p-5">
+                <div className="flex h-[280px] flex-col p-5">
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-sky-300/80">
+                    SKU: {p.sku}
+                  </p>
                   <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-sky-200">{p.name}</h2>
                   <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
+                  <div className="mt-3">
+                    <span className="rounded-full border border-amber-400/35 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-200">
+                      {p.deliveryType ?? "REWARD"}
+                    </span>
+                  </div>
                   <div className="mt-4 flex items-center justify-between">
                     <p className="text-xl font-bold text-amber-300">{p.costPoints} puntos</p>
                     <button
