@@ -56,6 +56,9 @@ export function SiteHeader() {
           <Link className={getNavItemClass("/")} href="/#features">
             Servidor
           </Link>
+          <Link className={getNavItemClass("/terminos-y-condiciones")} href="/terminos-y-condiciones">
+            Reglas
+          </Link>
           {accessToken ? (
             <>
               <Link className={getNavItemClass("/tienda", { exact: true })} href="/tienda">
@@ -101,6 +104,13 @@ export function SiteHeader() {
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-2">
             <Link className={mobileNavItemClass} href="/#features" onClick={() => setMobileOpen(false)}>
               Servidor
+            </Link>
+            <Link
+              className={mobileNavItemClass}
+              href="/terminos-y-condiciones"
+              onClick={() => setMobileOpen(false)}
+            >
+              Reglas
             </Link>
             {accessToken ? (
               <>
