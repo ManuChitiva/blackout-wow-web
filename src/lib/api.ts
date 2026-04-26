@@ -1,4 +1,18 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+import { publicEnv } from "@/config/public-env";
+
+const API_BASE = publicEnv.apiUrl;
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly endpoint: string,
+    public readonly detail?: string
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
 
 export type TokenBundle = {
   accessToken: string;
@@ -23,15 +37,34 @@ export async function apiJson<T>(
     headers,
   });
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
+    }
+  }
   if (!res.ok) {
+    const payload = (data && typeof data === "object" ? data : null) as
+      | { error?: unknown; message?: unknown; detail?: unknown }
+      | null;
+
     const msg =
-      typeof data?.error === "string"
-        ? data.error
-        : typeof data?.message === "string"
-          ? data.message
-          : res.statusText;
-    throw new Error(msg || "Error de API");
+      typeof payload?.error === "string"
+        ? payload.error
+        : typeof payload?.message === "string"
+          ? payload.message
+          : typeof data === "string"
+            ? data
+            : res.statusText;
+
+    const detail =
+      typeof payload?.detail === "string"
+        ? payload.detail
+        : undefined;
+
+    throw new ApiError(msg || "Error de API", res.status, path, detail);
   }
   return data as T;
 }

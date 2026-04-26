@@ -2,20 +2,22 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
+import { ApiError } from "@/lib/api";
 
 const LOGIN_BG_VIDEO =
   "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const { login, accessToken, isAuthReady } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,15 +36,32 @@ export default function LoginPage() {
       const next = searchParams.get("next");
       router.push(next && next.startsWith("/") ? next : "/cuenta");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error");
+      if (err instanceof ApiError) {
+        const rawMessage = `${err.message} ${err.detail ?? ""}`.toLowerCase();
+        const looksLikeInvalidCredentials =
+          rawMessage.includes("bad credentials") ||
+          rawMessage.includes("credenciales inválidas") ||
+          rawMessage.includes("credenciales invalidas");
+
+        const friendlyMessage =
+          err.status === 401 || looksLikeInvalidCredentials
+            ? "No pudimos iniciar sesión con esos datos. Revisa tu usuario y contraseña."
+            : err.status === 429
+              ? "Has hecho varios intentos. Espera un momento y vuelve a intentarlo."
+              : err.status >= 500
+                ? "Nuestros servidores están ocupados en este momento. Intenta de nuevo en unos minutos."
+                : "No pudimos iniciar sesión por ahora. Intenta nuevamente.";
+        setError(friendlyMessage);
+      } else {
+        setError("No pudimos iniciar sesión por ahora. Intenta nuevamente.");
+      }
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <SiteShell>
-      <div className="relative isolate min-h-[min(780px,calc(100dvh-220px))] overflow-hidden bg-black">
+    <div className="relative isolate min-h-[min(780px,calc(100dvh-220px))] overflow-hidden bg-black">
         <video
           className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
           autoPlay
@@ -78,14 +97,24 @@ export default function LoginPage() {
             </div>
             <div>
               <label className="block text-sm text-zinc-400">Contraseña</label>
-              <input
-                type="password"
-                className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-              />
+              <div className="relative mt-1">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 pr-11 text-zinc-100 outline-none focus:border-amber-500/60"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute inset-y-0 right-0 inline-flex w-10 items-center justify-center text-zinc-400 transition-colors hover:text-zinc-200"
+                >
+                  {showPassword ? "🙈" : "👁"}
+                </button>
+              </div>
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}
             <button
@@ -102,7 +131,16 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <SiteShell>
+      <Suspense fallback={<div className="mx-auto max-w-md px-4 py-16 text-sm text-zinc-400">Cargando login...</div>}>
+        <LoginPageContent />
+      </Suspense>
     </SiteShell>
   );
 }

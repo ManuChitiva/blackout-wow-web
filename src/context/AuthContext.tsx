@@ -22,7 +22,7 @@ type AuthContextValue = AuthState & {
   isAuthReady: boolean;
   canManageDashboard: boolean;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string, email: string) => Promise<void>;
+  register: (username: string, password: string, email: string, recaptchaToken?: string) => Promise<void>;
   logout: () => void;
   refreshSession: () => Promise<void>;
   getAccessToken: () => string | null;
@@ -109,10 +109,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const register = useCallback(
-    async (username: string, password: string, email: string) => {
+    async (username: string, password: string, email: string, recaptchaToken?: string) => {
       await apiJson<{ message: string }>("/api/v1/auth/register", {
         method: "POST",
-        body: JSON.stringify({ username, password, email }),
+        body: JSON.stringify({
+          username,
+          password,
+          email,
+          recaptchaToken,
+          recaptcha: recaptchaToken,
+          "g-recaptcha-response": recaptchaToken,
+        }),
       });
     },
     []

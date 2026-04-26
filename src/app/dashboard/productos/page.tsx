@@ -41,6 +41,45 @@ type RewardProductListResponse = {
   products: RewardProduct[];
 };
 
+type OrderTrace = {
+  id: number;
+  portalUserId: number;
+  portalUsername: string | null;
+  productId: number;
+  productName: string | null;
+  paypalOrderId: string | null;
+  creditedPoints: number;
+  status: string;
+  createdAt: string;
+  lastCheckedAt: string | null;
+  checkAttempts: number;
+};
+
+type OrderTraceListResponse = {
+  orders: OrderTrace[];
+};
+
+type RewardRedemptionTrace = {
+  id: number;
+  portalUserId: number;
+  portalUsername: string | null;
+  rewardProductId: number;
+  rewardName: string | null;
+  costPoints: number;
+  deliveryType: string;
+  status: string;
+  deliveryAttempts: number;
+  pointsDebited: boolean;
+  lastError: string | null;
+  createdAt: string;
+  lastAttemptAt: string | null;
+  deliveredAt: string | null;
+};
+
+type RewardRedemptionTraceListResponse = {
+  redemptions: RewardRedemptionTrace[];
+};
+
 type ProductForm = {
   sku: string;
   name: string;
@@ -66,8 +105,11 @@ type RewardForm = {
   active: boolean;
 };
 
-type CatalogMode = "shop" | "rewards";
+type CatalogMode = "shop" | "rewards" | "orders";
+type TraceViewMode = "orders" | "redemptions";
 const REWARD_ADMIN_ENDPOINT = "/api/v1/admin/rewards/products";
+const ORDER_TRACE_ENDPOINT = "/api/v1/admin/shop/orders";
+const REDEMPTION_TRACE_ENDPOINT = "/api/v1/admin/rewards/redemptions";
 const DASHBOARD_ITEMS_PER_PAGE = 5;
 
 const emptyForm: ProductForm = {
@@ -100,10 +142,16 @@ export default function DashboardProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [rewardProducts, setRewardProducts] = useState<RewardProduct[]>([]);
+  const [orderTrace, setOrderTrace] = useState<OrderTrace[]>([]);
+  const [redemptionTrace, setRedemptionTrace] = useState<RewardRedemptionTrace[]>(
+    [],
+  );
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingRewards, setLoadingRewards] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [loadingRedemptions, setLoadingRedemptions] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingReward, setSavingReward] = useState(false);
   const [togglingShopId, setTogglingShopId] = useState<number | null>(null);
@@ -113,8 +161,13 @@ export default function DashboardProductsPage() {
   const [form, setForm] = useState<ProductForm>(emptyForm);
   const [rewardForm, setRewardForm] = useState<RewardForm>(emptyRewardForm);
   const [catalogMode, setCatalogMode] = useState<CatalogMode>("shop");
+  const [traceViewMode, setTraceViewMode] = useState<TraceViewMode>("orders");
+  const [orderStatusFilter, setOrderStatusFilter] = useState("ALL");
+  const [redemptionStatusFilter, setRedemptionStatusFilter] = useState("ALL");
   const [shopPage, setShopPage] = useState(1);
   const [rewardPage, setRewardPage] = useState(1);
+  const [orderPage, setOrderPage] = useState(1);
+  const [redemptionPage, setRedemptionPage] = useState(1);
 
   useEffect(() => {
     if (!isAuthReady) return;
@@ -125,6 +178,8 @@ export default function DashboardProductsPage() {
     void Promise.all([
       loadProducts(accessToken),
       loadRewardProducts(accessToken),
+      loadOrderTrace(accessToken),
+      loadRedemptionTrace(accessToken),
     ]);
   }, [isAuthReady, accessToken, router]);
 
@@ -133,6 +188,7 @@ export default function DashboardProductsPage() {
     [editingId],
   );
   const isShopMode = catalogMode === "shop";
+  const isOrdersMode = catalogMode === "orders";
   const totalShopPages = Math.max(
     1,
     Math.ceil(products.length / DASHBOARD_ITEMS_PER_PAGE),
@@ -149,6 +205,22 @@ export default function DashboardProductsPage() {
     (rewardPage - 1) * DASHBOARD_ITEMS_PER_PAGE,
     rewardPage * DASHBOARD_ITEMS_PER_PAGE,
   );
+  const totalOrderPages = Math.max(
+    1,
+    Math.ceil(orderTrace.length / DASHBOARD_ITEMS_PER_PAGE),
+  );
+  const pagedOrderTrace = orderTrace.slice(
+    (orderPage - 1) * DASHBOARD_ITEMS_PER_PAGE,
+    orderPage * DASHBOARD_ITEMS_PER_PAGE,
+  );
+  const totalRedemptionPages = Math.max(
+    1,
+    Math.ceil(redemptionTrace.length / DASHBOARD_ITEMS_PER_PAGE),
+  );
+  const pagedRedemptionTrace = redemptionTrace.slice(
+    (redemptionPage - 1) * DASHBOARD_ITEMS_PER_PAGE,
+    redemptionPage * DASHBOARD_ITEMS_PER_PAGE,
+  );
 
   useEffect(() => {
     if (shopPage > totalShopPages) setShopPage(totalShopPages);
@@ -157,6 +229,25 @@ export default function DashboardProductsPage() {
   useEffect(() => {
     if (rewardPage > totalRewardPages) setRewardPage(totalRewardPages);
   }, [rewardPage, totalRewardPages]);
+
+  useEffect(() => {
+    if (orderPage > totalOrderPages) setOrderPage(totalOrderPages);
+  }, [orderPage, totalOrderPages]);
+
+  useEffect(() => {
+    if (redemptionPage > totalRedemptionPages)
+      setRedemptionPage(totalRedemptionPages);
+  }, [redemptionPage, totalRedemptionPages]);
+
+  useEffect(() => {
+    if (!accessToken || !isAuthReady) return;
+    void loadOrderTrace(accessToken);
+  }, [orderStatusFilter]);
+
+  useEffect(() => {
+    if (!accessToken || !isAuthReady) return;
+    void loadRedemptionTrace(accessToken);
+  }, [redemptionStatusFilter]);
 
   async function loadProducts(token: string) {
     setLoading(true);
@@ -191,6 +282,50 @@ export default function DashboardProductsPage() {
       );
     } finally {
       setLoadingRewards(false);
+    }
+  }
+
+  async function loadOrderTrace(token: string) {
+    setLoadingOrders(true);
+    setError(null);
+    try {
+      const query =
+        orderStatusFilter === "ALL"
+          ? ORDER_TRACE_ENDPOINT
+          : `${ORDER_TRACE_ENDPOINT}?status=${encodeURIComponent(orderStatusFilter)}`;
+      const data = await apiJson<OrderTraceListResponse>(query, { token });
+      setOrderTrace(data.orders);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "No se pudo cargar la trazabilidad de pedidos.",
+      );
+    } finally {
+      setLoadingOrders(false);
+    }
+  }
+
+  async function loadRedemptionTrace(token: string) {
+    setLoadingRedemptions(true);
+    setError(null);
+    try {
+      const query =
+        redemptionStatusFilter === "ALL"
+          ? REDEMPTION_TRACE_ENDPOINT
+          : `${REDEMPTION_TRACE_ENDPOINT}?status=${encodeURIComponent(redemptionStatusFilter)}`;
+      const data = await apiJson<RewardRedemptionTraceListResponse>(query, {
+        token,
+      });
+      setRedemptionTrace(data.redemptions);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "No se pudo cargar la trazabilidad de canjes.",
+      );
+    } finally {
+      setLoadingRedemptions(false);
     }
   }
 
@@ -460,12 +595,23 @@ export default function DashboardProductsPage() {
                 type="button"
                 onClick={() => setCatalogMode("rewards")}
                 className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-                  !isShopMode
+                  catalogMode === "rewards"
                     ? "bg-sky-500/20 text-sky-200"
                     : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                 }`}
               >
                 Tienda canje ({rewardProducts.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setCatalogMode("orders")}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                  isOrdersMode
+                    ? "bg-emerald-500/20 text-emerald-200"
+                    : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
+                }`}
+              >
+                Trazabilidad ({orderTrace.length})
               </button>
             </div>
           </div>
@@ -566,7 +712,7 @@ export default function DashboardProductsPage() {
                   </div>
                 </form>
               </>
-            ) : (
+            ) : catalogMode === "rewards" ? (
               <>
                 <h2 className="font-display text-xl text-zinc-100">
                   Catálogo de canje
@@ -710,12 +856,105 @@ export default function DashboardProductsPage() {
                   </div>
                 </form>
               </>
+            ) : (
+              <>
+                <h2 className="font-display text-xl text-zinc-100">
+                  Trazabilidad de pedidos
+                </h2>
+                <p className="mt-2 text-xs text-zinc-500">
+                  Revisa qué orden se envió, en qué estado quedó y si los puntos
+                  fueron entregados correctamente.
+                </p>
+                <div className="mt-4 space-y-3">
+                  <div className="inline-flex rounded-lg border border-white/10 bg-black/40 p-1">
+                    <button
+                      type="button"
+                      onClick={() => setTraceViewMode("orders")}
+                      className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                        traceViewMode === "orders"
+                          ? "bg-emerald-500/20 text-emerald-200"
+                          : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
+                      }`}
+                    >
+                      Compras
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTraceViewMode("redemptions")}
+                      className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                        traceViewMode === "redemptions"
+                          ? "bg-sky-500/20 text-sky-200"
+                          : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
+                      }`}
+                    >
+                      Canjes
+                    </button>
+                  </div>
+                  {traceViewMode === "orders" ? (
+                    <>
+                  <label className="block text-sm text-zinc-400">
+                    Filtrar por estado
+                  </label>
+                  <select
+                    value={orderStatusFilter}
+                    onChange={(e) => setOrderStatusFilter(e.target.value)}
+                    className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
+                  >
+                    <option value="ALL">Todos</option>
+                    <option value="PENDING_PAYPAL">Pendiente PayPal</option>
+                    <option value="PAID">Pagado / Entregado</option>
+                    <option value="FAILED">Fallido</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => accessToken && void loadOrderTrace(accessToken)}
+                    className="rounded border border-emerald-400/40 px-4 py-2 text-sm text-emerald-300 hover:bg-emerald-500/10"
+                  >
+                    Actualizar trazabilidad
+                  </button>
+                    </>
+                  ) : (
+                    <>
+                  <label className="block pt-2 text-sm text-zinc-400">
+                    Estado de canjes
+                  </label>
+                  <select
+                    value={redemptionStatusFilter}
+                    onChange={(e) => setRedemptionStatusFilter(e.target.value)}
+                    className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
+                  >
+                    <option value="ALL">Todos</option>
+                    <option value="PENDING_DELIVERY">Pendiente entrega</option>
+                    <option value="DELIVERY_FAILED">Entrega fallida</option>
+                    <option value="DELIVERED">Entregado</option>
+                    <option value="POINTS_DEBIT_FAILED">Falló débito</option>
+                    <option value="COMPLETED">Completado</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      accessToken && void loadRedemptionTrace(accessToken)
+                    }
+                    className="rounded border border-sky-400/40 px-4 py-2 text-sm text-sky-300 hover:bg-sky-500/10"
+                  >
+                    Actualizar canjes
+                  </button>
+                    </>
+                  )}
+                </div>
+              </>
             )}
           </section>
 
           <section className="rounded-xl border border-white/10 bg-zinc-950/60 p-5">
             <h2 className="font-display text-xl text-zinc-100">
-              {isShopMode ? "Productos existentes" : "Canjes existentes"}
+              {isShopMode
+                ? "Productos existentes"
+                : catalogMode === "rewards"
+                  ? "Canjes existentes"
+                  : traceViewMode === "orders"
+                    ? "Órdenes y estado de entrega"
+                    : "Canjes y débito de puntos"}
             </h2>
             {isShopMode ? (
               loading ? (
@@ -815,10 +1054,11 @@ export default function DashboardProductsPage() {
                   )}
                 </div>
               )
-            ) : loadingRewards ? (
+            ) : catalogMode === "rewards" ? loadingRewards ? (
               <p className="mt-4 text-zinc-400">Cargando...</p>
             ) : (
-              <div className="mt-4 overflow-x-auto">
+              <div className="mt-4 space-y-8">
+                <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm">
                   <thead className="text-zinc-500">
                     <tr>
@@ -906,6 +1146,217 @@ export default function DashboardProductsPage() {
                     </button>
                   </div>
                 )}
+              </div>
+              </div>
+            ) : loadingOrders ? (
+              <p className="mt-4 text-zinc-400">Cargando...</p>
+            ) : (
+              <div className="mt-4 space-y-8">
+                {traceViewMode === "orders" ? (
+                <div className="overflow-x-auto">
+                <table className="min-w-full text-left text-sm">
+                  <thead className="text-zinc-500">
+                    <tr>
+                      <th className="pb-2 pr-4">Orden</th>
+                      <th className="pb-2 pr-4">Usuario</th>
+                      <th className="pb-2 pr-4">Producto</th>
+                      <th className="pb-2 pr-4">PayPal</th>
+                      <th className="pb-2 pr-4">Estado</th>
+                      <th className="pb-2 pr-4">Puntos</th>
+                      <th className="pb-2 pr-4">Intentos</th>
+                      <th className="pb-2">Último check</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pagedOrderTrace.map((o) => (
+                      <tr
+                        key={o.id}
+                        className="border-t border-white/5 text-zinc-300"
+                      >
+                        <td className="py-3 pr-4 font-mono text-xs">#{o.id}</td>
+                        <td className="py-3 pr-4">
+                          <div className="flex flex-col">
+                            <span>{o.portalUsername ?? "Sin username"}</span>
+                            <span className="text-xs text-zinc-500">ID #{o.portalUserId}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          {o.productName ?? `Producto #${o.productId}`}
+                        </td>
+                        <td className="py-3 pr-4 font-mono text-xs">
+                          {o.paypalOrderId ?? "-"}
+                        </td>
+                        <td
+                          className={`py-3 pr-4 text-xs ${
+                            o.status === "PAID"
+                              ? "text-emerald-300"
+                              : o.status === "FAILED"
+                                ? "text-red-300"
+                                : "text-amber-300"
+                          }`}
+                        >
+                          {o.status}
+                        </td>
+                        <td className="py-3 pr-4">{o.creditedPoints}</td>
+                        <td className="py-3 pr-4">{o.checkAttempts}</td>
+                        <td className="py-3 text-xs text-zinc-400">
+                          {o.lastCheckedAt
+                            ? new Date(o.lastCheckedAt).toLocaleString()
+                            : "Sin revisar"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {orderTrace.length === 0 && (
+                  <p className="pt-4 text-sm text-zinc-500">
+                    No hay órdenes para el filtro seleccionado.
+                  </p>
+                )}
+                {orderTrace.length > DASHBOARD_ITEMS_PER_PAGE && (
+                  <div className="mt-4 flex items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      disabled={orderPage === 1}
+                      onClick={() => setOrderPage((p) => Math.max(1, p - 1))}
+                      className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                    >
+                      Anterior
+                    </button>
+                    <p className="text-xs text-zinc-400">
+                      Página {orderPage} de {totalOrderPages}
+                    </p>
+                    <button
+                      type="button"
+                      disabled={orderPage === totalOrderPages}
+                      onClick={() =>
+                        setOrderPage((p) => Math.min(totalOrderPages, p + 1))
+                      }
+                      className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                    >
+                      Siguiente
+                    </button>
+                  </div>
+                )}
+                </div>
+                ) : null}
+
+                {traceViewMode === "redemptions" ? (
+                <div>
+                  <h3 className="font-display text-lg text-zinc-100">
+                    Canjes de puntos
+                  </h3>
+                  {loadingRedemptions ? (
+                    <p className="mt-3 text-zinc-400">Cargando...</p>
+                  ) : (
+                    <div className="mt-3 overflow-x-auto">
+                      <table className="min-w-full text-left text-sm">
+                        <thead className="text-zinc-500">
+                          <tr>
+                            <th className="pb-2 pr-4">Canje</th>
+                            <th className="pb-2 pr-4">Usuario</th>
+                            <th className="pb-2 pr-4">Recompensa</th>
+                            <th className="pb-2 pr-4">Estado</th>
+                            <th className="pb-2 pr-4">Puntos</th>
+                            <th className="pb-2 pr-4">Débito</th>
+                            <th className="pb-2 pr-4">Intentos</th>
+                            <th className="pb-2 pr-4">Error</th>
+                            <th className="pb-2">Último intento</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pagedRedemptionTrace.map((r) => (
+                            <tr
+                              key={r.id}
+                              className="border-t border-white/5 text-zinc-300"
+                            >
+                              <td className="py-3 pr-4 font-mono text-xs">
+                                #{r.id}
+                              </td>
+                              <td className="py-3 pr-4">
+                                <div className="flex flex-col">
+                                  <span>{r.portalUsername ?? "Sin username"}</span>
+                                  <span className="text-xs text-zinc-500">ID #{r.portalUserId}</span>
+                                </div>
+                              </td>
+                              <td className="py-3 pr-4">
+                                {r.rewardName ?? `Recompensa #${r.rewardProductId}`}
+                              </td>
+                              <td
+                                className={`py-3 pr-4 text-xs ${
+                                  r.status === "COMPLETED"
+                                    ? "text-emerald-300"
+                                    : r.status.includes("FAILED")
+                                      ? "text-red-300"
+                                      : "text-amber-300"
+                                }`}
+                              >
+                                {r.status}
+                              </td>
+                              <td className="py-3 pr-4">{r.costPoints}</td>
+                              <td
+                                className={`py-3 pr-4 text-xs ${
+                                  r.pointsDebited
+                                    ? "text-emerald-300"
+                                    : "text-red-300"
+                                }`}
+                              >
+                                {r.pointsDebited ? "Descontado" : "Pendiente"}
+                              </td>
+                              <td className="py-3 pr-4">{r.deliveryAttempts}</td>
+                              <td
+                                className="max-w-[220px] truncate py-3 pr-4 text-xs text-zinc-400"
+                                title={r.lastError ?? ""}
+                              >
+                                {r.lastError ?? "-"}
+                              </td>
+                              <td className="py-3 text-xs text-zinc-400">
+                                {r.lastAttemptAt
+                                  ? new Date(r.lastAttemptAt).toLocaleString()
+                                  : "Sin intento"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {redemptionTrace.length === 0 && (
+                        <p className="pt-4 text-sm text-zinc-500">
+                          No hay canjes para el filtro seleccionado.
+                        </p>
+                      )}
+                      {redemptionTrace.length > DASHBOARD_ITEMS_PER_PAGE && (
+                        <div className="mt-4 flex items-center justify-center gap-3">
+                          <button
+                            type="button"
+                            disabled={redemptionPage === 1}
+                            onClick={() =>
+                              setRedemptionPage((p) => Math.max(1, p - 1))
+                            }
+                            className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                          >
+                            Anterior
+                          </button>
+                          <p className="text-xs text-zinc-400">
+                            Página {redemptionPage} de {totalRedemptionPages}
+                          </p>
+                          <button
+                            type="button"
+                            disabled={redemptionPage === totalRedemptionPages}
+                            onClick={() =>
+                              setRedemptionPage((p) =>
+                                Math.min(totalRedemptionPages, p + 1),
+                              )
+                            }
+                            className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                          >
+                            Siguiente
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                ) : null}
               </div>
             )}
           </section>

@@ -30,20 +30,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               <Link href="/#features" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
                 Servidor
               </Link>
-              <Link href="/tienda" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                Tienda
-              </Link>
-              <Link href="/tienda/puntos" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
-                Canjear puntos
+              <Link href="/terminos-y-condiciones" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
+                Terminos y condiciones
               </Link>
               <Link href="/registro" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
                 Registro
               </Link>
-              <Link href="/login" className="relative pr-4 transition-colors hover:text-amber-100 md:pr-7 after:pointer-events-none after:absolute after:right-0 after:top-1/2 after:h-3 after:w-px after:-translate-y-1/2 after:bg-amber-200/30">
+              <Link href="/login" className="transition-colors hover:text-amber-100">
                 Entrar
-              </Link>
-              <Link href="/terminos-y-condiciones" className="transition-colors hover:text-amber-100">
-                Terminos y condiciones
               </Link>
             </div>
           </nav>

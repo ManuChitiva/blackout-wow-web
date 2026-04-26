@@ -8,6 +8,9 @@ import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
 
+const SHOP_BG_VIDEO =
+  "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
+
 type Product = {
   id: number;
   sku: string;
@@ -106,11 +109,25 @@ export default function ShopPage() {
   return (
     <SiteShell>
       <div className="mx-auto max-w-5xl px-4 py-16">
-        <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
+          <video
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+          >
+            <source src={SHOP_BG_VIDEO} type="video/mp4" />
+          </video>
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/70 via-black/55 to-black/72" />
+          <div className="relative z-10">
           <h1 className="font-display text-3xl font-semibold text-zinc-50">Tienda de donación</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
             Elige tu paquete de puntos y accede a ventajas premium dentro del servidor.
           </p>
+          </div>
         </div>
         <p className="mt-3 text-sm text-zinc-400">
           ¿Ya tienes puntos?{" "}
