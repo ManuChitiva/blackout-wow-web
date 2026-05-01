@@ -1,6 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { SiteShell } from "@/components/SiteShell";
+import { SITE_NAME } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Servidor WoW Custom 3.3.5a",
+  description:
+    "Explora BLACKOUT WOW: servidor WotLK custom con progresion 1-100, raids, PvP activo y contenido nuevo por fases.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: `${SITE_NAME} - Servidor WoW Custom 3.3.5a`,
+    description:
+      "Servidor WotLK con progresion custom, eventos, tienda y comunidad activa.",
+    url: "/",
+  },
+};
 
 export default function HomePage() {
   const dragonModelSrc = "";

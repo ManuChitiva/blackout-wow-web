@@ -1,4 +1,21 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
+import { SITE_NAME } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Terminos y condiciones",
+  description:
+    "Consulta las reglas oficiales de BLACKOUT WOW para comunidad, PvP, cuentas, comercio y uso del servidor.",
+  alternates: {
+    canonical: "/terminos-y-condiciones",
+  },
+  openGraph: {
+    title: `Terminos y condiciones | ${SITE_NAME}`,
+    description:
+      "Normas y politicas del servidor BLACKOUT WOW para una experiencia justa y estable.",
+    url: "/terminos-y-condiciones",
+  },
+};
 
 export default function TermsPage() {
   const communityRules = [

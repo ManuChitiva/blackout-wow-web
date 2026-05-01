@@ -11,7 +11,8 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const baseNavItemClass =
     "rounded px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-300/90 transition-all duration-200 hover:text-amber-200";
-  const activeNavItemClass = "border border-amber-400/40 !text-amber-200 hover:bg-amber-500/10 hover:!text-amber-200";
+  const activeNavItemClass =
+    "border border-amber-400/40 !text-amber-200 hover:bg-amber-500/10 hover:!text-amber-200";
   const mobileNavItemClass =
     "rounded-md border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-medium text-zinc-200 transition-all hover:border-white/20 hover:bg-white/5";
   const getNavItemClass = (href: string, options?: { exact?: boolean }) => {
@@ -19,7 +20,8 @@ export function SiteHeader() {
     const cleanHref = href.split("#")[0] || "/";
     const isActive = exact
       ? pathname === cleanHref
-      : pathname === cleanHref || (cleanHref !== "/" && pathname.startsWith(`${cleanHref}/`));
+      : pathname === cleanHref ||
+        (cleanHref !== "/" && pathname.startsWith(`${cleanHref}/`));
 
     return `${baseNavItemClass} ${isActive ? activeNavItemClass : ""}`.trim();
   };
@@ -56,19 +58,31 @@ export function SiteHeader() {
           <Link className={getNavItemClass("/")} href="/#features">
             Servidor
           </Link>
-          <Link className={getNavItemClass("/terminos-y-condiciones")} href="/terminos-y-condiciones">
+          <Link
+            className={getNavItemClass("/terminos-y-condiciones")}
+            href="/terminos-y-condiciones"
+          >
             Reglas
           </Link>
           {accessToken ? (
             <>
-              <Link className={getNavItemClass("/tienda", { exact: true })} href="/tienda">
+              <Link
+                className={getNavItemClass("/tienda", { exact: true })}
+                href="/tienda"
+              >
                 Tienda
               </Link>
-              <Link className={getNavItemClass("/tienda/puntos")} href="/tienda/puntos">
+              <Link
+                className={getNavItemClass("/tienda/puntos")}
+                href="/tienda/puntos"
+              >
                 Canjear puntos
               </Link>
               {canManageDashboard && (
-                <Link className={getNavItemClass("/dashboard/productos")} href="/dashboard/productos">
+                <Link
+                  className={getNavItemClass("/dashboard/productos")}
+                  href="/dashboard/productos"
+                >
                   Dashboard
                 </Link>
               )}
@@ -85,10 +99,7 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              <Link
-                className={getNavItemClass("/registro")}
-                href="/registro"
-              >
+              <Link className={getNavItemClass("/registro")} href="/registro">
                 Registro
               </Link>
               <Link className={getNavItemClass("/login")} href="/login">
@@ -102,7 +113,11 @@ export function SiteHeader() {
       {mobileOpen ? (
         <div className="border-t border-white/10 bg-black/80 px-4 pb-4 pt-3 md:hidden">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-2">
-            <Link className={mobileNavItemClass} href="/#features" onClick={() => setMobileOpen(false)}>
+            <Link
+              className={mobileNavItemClass}
+              href="/#features"
+              onClick={() => setMobileOpen(false)}
+            >
               Servidor
             </Link>
             <Link
@@ -114,18 +129,34 @@ export function SiteHeader() {
             </Link>
             {accessToken ? (
               <>
-                <Link className={mobileNavItemClass} href="/tienda" onClick={() => setMobileOpen(false)}>
+                <Link
+                  className={mobileNavItemClass}
+                  href="/tienda"
+                  onClick={() => setMobileOpen(false)}
+                >
                   Tienda
                 </Link>
-                <Link className={mobileNavItemClass} href="/tienda/puntos" onClick={() => setMobileOpen(false)}>
+                <Link
+                  className={mobileNavItemClass}
+                  href="/tienda/puntos"
+                  onClick={() => setMobileOpen(false)}
+                >
                   Canjear puntos
                 </Link>
                 {canManageDashboard && (
-                  <Link className={mobileNavItemClass} href="/dashboard/productos" onClick={() => setMobileOpen(false)}>
+                  <Link
+                    className={mobileNavItemClass}
+                    href="/dashboard/productos"
+                    onClick={() => setMobileOpen(false)}
+                  >
                     Dashboard
                   </Link>
                 )}
-                <Link className={mobileNavItemClass} href="/cuenta" onClick={() => setMobileOpen(false)}>
+                <Link
+                  className={mobileNavItemClass}
+                  href="/cuenta"
+                  onClick={() => setMobileOpen(false)}
+                >
                   Mi cuenta
                 </Link>
                 <button
@@ -148,7 +179,11 @@ export function SiteHeader() {
                 >
                   Registro
                 </Link>
-                <Link className={mobileNavItemClass} href="/login" onClick={() => setMobileOpen(false)}>
+                <Link
+                  className={mobileNavItemClass}
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                >
                   Entrar
                 </Link>
               </>
