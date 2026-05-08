@@ -21,6 +21,66 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const dragonModelSrc = "";
+  const quickHighlights = [
+    {
+      label: "Nivel maximo",
+      value: "100",
+      note: "Progresion custom",
+    },
+    {
+      label: "Contenido",
+      value: "100% custom",
+      note: "PvE, PvP y sistemas",
+    },
+    {
+      label: "Fases",
+      value: "Cada 3 meses",
+      note: "Actualizaciones activas",
+    },
+    {
+      label: "Modelo",
+      value: "No pay to win",
+      note: "Progreso real jugando",
+    },
+  ];
+  const serverInfoColumns = [
+    [
+      "Nivel maximo 100.",
+      "Leveo personalizado desde nivel 1 hasta 100.",
+      "Teleporter custom para facilitar el movimiento.",
+      "Pets personalizados y monturas custom.",
+    ],
+    [
+      "Monturas inspiradas en universos como Dragon Ball Z y Star Wars.",
+      "Morphs especiales para crear una identidad unica.",
+      "Mas de 100.000 items disponibles para transfiguracion.",
+      "Contenido balanceado para jugador casual y competitivo.",
+    ],
+    [
+      "Raids custom con progresion por tiers.",
+      "World Bosses exclusivos y recompensas especiales.",
+      "Duel Zone, Battlegrounds activos y zonas PvP.",
+      "Eventos por fase con recompensas y desafios nuevos.",
+    ],
+  ];
+  const whyBlackoutCards = [
+    {
+      title: "Comunidad activa",
+      body: "Un servidor con jugadores comprometidos para ayudarte, competir y progresar.",
+    },
+    {
+      title: "Progresion constante",
+      body: "Nuevas fases, sistemas y contenido nuevo para desafiarte todo el año.",
+    },
+    {
+      title: "Experiencia custom completa",
+      body: "Contenido diseñado para entregar una experiencia diferente a cualquier otro servidor.",
+    },
+    {
+      title: "Servidor estable",
+      body: "Infraestructura optimizada para ofrecer la mejor experiencia de juego posible.",
+    },
+  ];
   const contentBlocks = [
     {
       title: "Contenido 100% custom",
@@ -181,6 +241,54 @@ export default function HomePage() {
               </ul>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {quickHighlights.map((item) => (
+            <article
+              key={item.label}
+              className="home-card rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+                {item.label}
+              </p>
+              <h3 className="font-display mt-2 text-2xl text-amber-300">
+                {item.value}
+              </h3>
+              <p className="mt-2 text-sm text-zinc-400">{item.note}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <div className="home-card rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
+          <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
+            Informacion general del servidor
+          </h2>
+          <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-zinc-400 md:text-base">
+            Todo lo que necesitas saber de BLACKOUT WoW en un solo vistazo.
+            Progresion custom, sistemas especiales y contenido activo.
+          </p>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {serverInfoColumns.map((column, idx) => (
+              <article
+                key={`server-info-${idx}`}
+                className="rounded-xl border border-white/10 bg-black/30 p-5"
+              >
+                <ul className="space-y-2 text-sm leading-relaxed text-zinc-300">
+                  {column.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-300/80" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -380,6 +488,25 @@ export default function HomePage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
+          ¿Por que Blackout?
+        </h2>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {whyBlackoutCards.map((card) => (
+            <article
+              key={card.title}
+              className="home-card rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+            >
+              <h3 className="font-display text-lg text-zinc-100">{card.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                {card.body}
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 

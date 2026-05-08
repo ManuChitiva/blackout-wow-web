@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { apiJson } from "@/lib/api";
 import { SiteShell } from "@/components/SiteShell";
 
 export default function ForgotPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,6 +25,11 @@ export default function ForgotPage() {
         body: JSON.stringify({ email }),
       });
       setMsg(r.message);
+      setRedirecting(true);
+      const target = `/restablecer?email=${encodeURIComponent(email.trim())}`;
+      window.setTimeout(() => {
+        router.push(target);
+      }, 1100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error");
     } finally {
@@ -47,14 +55,18 @@ export default function ForgotPage() {
               required
             />
           </div>
-          {msg && <p className="text-sm text-sky-300">{msg}</p>}
+          {msg && (
+            <p className="text-sm text-sky-300">
+              {msg} {redirecting ? "Te estamos llevando para ingresar el código..." : ""}
+            </p>
+          )}
           {error && <p className="text-sm text-red-400">{error}</p>}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || redirecting}
             className="w-full rounded border border-sky-500/50 bg-sky-950/50 py-2.5 font-semibold text-sky-100 hover:bg-sky-900/60 disabled:opacity-60"
           >
-            {loading ? "Enviando…" : "Enviar código"}
+            {loading ? "Enviando…" : redirecting ? "Redirigiendo..." : "Enviar código"}
           </button>
         </form>
         <p className="mt-6 text-center text-sm">

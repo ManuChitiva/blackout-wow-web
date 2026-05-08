@@ -1,18 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { apiJson } from "@/lib/api";
 import { SiteShell } from "@/components/SiteShell";
 
 export default function ResetPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const prefilledEmail = searchParams.get("email");
+    if (prefilledEmail) setEmail(prefilledEmail);
+  }, [searchParams]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +61,7 @@ export default function ResetPage() {
               className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
               value={code}
               onChange={(e) => setCode(e.target.value)}
+              autoFocus={Boolean(email)}
               required
             />
           </div>
@@ -73,7 +80,7 @@ export default function ResetPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-gradient-to-r from-amber-600 to-orange-500 py-2.5 font-semibold text-black disabled:opacity-60"
+            className="w-full rounded bg-linear-to-r from-amber-600 to-orange-500 py-2.5 font-semibold text-black disabled:opacity-60"
           >
             {loading ? "Guardando…" : "Guardar nueva contraseña"}
           </button>

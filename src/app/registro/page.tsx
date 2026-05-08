@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { publicEnv } from "@/config/public-env";
 import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
@@ -26,6 +26,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null);
   const isUsernameValid = username.trim().length >= 3;
   const isEmailValid = email.trim().length > 0;
   const isPasswordValid = password.length >= 8;
@@ -38,6 +39,11 @@ export default function RegisterPage() {
     doPasswordsMatch &&
     isRecaptchaValid &&
     !loading;
+
+  function resetRecaptcha() {
+    setRecaptchaToken(null);
+    recaptchaRef.current?.reset();
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,6 +62,8 @@ export default function RegisterPage() {
       setShowWelcomeModal(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error");
+      // Al fallar el backend (usuario/correo ya existe), forzamos un nuevo challenge.
+      if (recaptchaSiteKey) resetRecaptcha();
     } finally {
       setLoading(false);
     }
@@ -153,11 +161,12 @@ export default function RegisterPage() {
             {recaptchaSiteKey ? (
               <div className="pt-1">
                 <ReCAPTCHA
+                  ref={recaptchaRef}
                   sitekey={recaptchaSiteKey}
                   theme="dark"
                   onChange={(token: string | null) => setRecaptchaToken(token)}
-                  onExpired={() => setRecaptchaToken(null)}
-                  onErrored={() => setRecaptchaToken(null)}
+                  onExpired={() => resetRecaptcha()}
+                  onErrored={() => resetRecaptcha()}
                 />
               </div>
             ) : (
