@@ -7,6 +7,7 @@ import { NavHomeAuraText } from "@/components/NavHomeAuraText";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SITE_NAME, SITE_TITLE } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
+import { fetchRealmStatus } from "@/lib/realm-public";
 
 export const metadata: Metadata = {
   title: "Servidor WoW Custom 3.3.5a",
@@ -34,6 +35,8 @@ export default async function HomePage() {
       onlineLabel: "Jugadores en línea",
       serverStatusLabel: "Estado del reino",
       serverStatusValue: "En línea",
+      serverStatusOffline: "Fuera de línea",
+      serverStatusUnknown: "No disponible",
       create: "Crear cuenta",
       connect: "Como conectarme",
       seeRules: "Consulta las reglas del servidor en",
@@ -157,6 +160,8 @@ export default async function HomePage() {
       onlineLabel: "Players online",
       serverStatusLabel: "Realm status",
       serverStatusValue: "Online",
+      serverStatusOffline: "Offline",
+      serverStatusUnknown: "Unavailable",
       create: "Create account",
       connect: "How to connect",
       seeRules: "Check the server rules at",
@@ -253,6 +258,8 @@ export default async function HomePage() {
       onlineLabel: "Jogadores online",
       serverStatusLabel: "Status do reino",
       serverStatusValue: "Online",
+      serverStatusOffline: "Offline",
+      serverStatusUnknown: "Indisponível",
       create: "Criar conta",
       connect: "Como conectar",
       seeRules: "Consulte as regras do servidor em",
@@ -344,11 +351,28 @@ export default async function HomePage() {
       ],
     },
   }[lang];
-  const MOCK_PLAYERS_ONLINE = 20_296;
+  const apiBase =
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8080";
+  const realm = await fetchRealmStatus(apiBase);
+  const realmStatusUpper = realm?.realmStatus?.toUpperCase() ?? "UNKNOWN";
   const onlineLocale =
     lang === "en" ? "en-US" : lang === "pt" ? "pt-BR" : "es-ES";
   const playersOnlineDisplay =
-    MOCK_PLAYERS_ONLINE.toLocaleString(onlineLocale);
+    typeof realm?.playersOnline === "number"
+      ? realm.playersOnline.toLocaleString(onlineLocale)
+      : "—";
+  const serverStatusDisplay =
+    realmStatusUpper === "ONLINE"
+      ? tx.serverStatusValue
+      : realmStatusUpper === "OFFLINE"
+        ? tx.serverStatusOffline
+        : tx.serverStatusUnknown;
+  const serverStatusToneClass =
+    realmStatusUpper === "ONLINE"
+      ? "text-emerald-400/95"
+      : realmStatusUpper === "OFFLINE"
+        ? "text-red-300/95"
+        : "text-zinc-400/95";
   const dragonModelSrc = "";
   const quickHighlights = tx.quickHighlights;
   const serverInfoColumns = tx.serverInfoColumns;
@@ -421,8 +445,10 @@ export default async function HomePage() {
               <p className="mt-2.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-500">
                 {tx.serverStatusLabel}
               </p>
-              <p className="mt-1 text-sm font-semibold text-emerald-400/95">
-                {tx.serverStatusValue}
+              <p
+                className={`mt-1 text-sm font-semibold ${serverStatusToneClass}`}
+              >
+                {serverStatusDisplay}
               </p>
             </div>
 

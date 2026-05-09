@@ -3,7 +3,7 @@ export const resources = {
     translation: {
       nav: {
         home: "Inicio",
-        homeSub: "Mejor servidor",
+        homeSub: "No pay to win",
         homeAria: "Ir al inicio",
         openMenu: "Abrir menú",
         menu: "Menú",
@@ -41,7 +41,8 @@ export const resources = {
         },
         register: {
           title: "Registro",
-          subtitle: "Tu usuario y contraseña son los mismos que usarás en el cliente 3.3.5a.",
+          subtitle:
+            "Tu usuario y contraseña son los mismos que usarás en el cliente 3.3.5a.",
           username: "Usuario",
           email: "Correo",
           password: "Contraseña",
@@ -49,7 +50,8 @@ export const resources = {
           passwordMismatch: "Las contraseñas no coinciden.",
           hidePassword: "Ocultar contraseña",
           showPassword: "Mostrar contraseña",
-          recaptchaHint: "Configura `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` para activar el checkbox de seguridad.",
+          recaptchaHint:
+            "Configura `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` para activar el checkbox de seguridad.",
           submit: "Crear cuenta en el reino",
           submitting: "Creando cuenta…",
           already: "¿Ya tienes cuenta?",
@@ -63,7 +65,8 @@ export const resources = {
         },
         forgot: {
           title: "Recuperar contraseña",
-          subtitle: "Te enviaremos un código OTP al correo asociado a tu cuenta del portal.",
+          subtitle:
+            "Te enviaremos un código OTP al correo asociado a tu cuenta del portal.",
           email: "Correo",
           redirectingHint: "Te estamos llevando para ingresar el código...",
           sending: "Enviando…",
@@ -73,7 +76,8 @@ export const resources = {
         },
         reset: {
           title: "Nueva contraseña",
-          subtitle: "Introduce el código recibido por correo. Se actualizará la clave del juego (SOAP) y la del portal.",
+          subtitle:
+            "Introduce el código recibido por correo. Se actualizará la clave del juego (SOAP) y la del portal.",
           email: "Correo",
           otp: "Código OTP",
           password: "Nueva contraseña",
@@ -126,7 +130,8 @@ export const resources = {
         },
         register: {
           title: "Sign up",
-          subtitle: "Your username and password are the same credentials you will use in the 3.3.5a client.",
+          subtitle:
+            "Your username and password are the same credentials you will use in the 3.3.5a client.",
           username: "Username",
           email: "Email",
           password: "Password",
@@ -134,20 +139,23 @@ export const resources = {
           passwordMismatch: "Passwords do not match.",
           hidePassword: "Hide password",
           showPassword: "Show password",
-          recaptchaHint: "Set `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` to enable the security checkbox.",
+          recaptchaHint:
+            "Set `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` to enable the security checkbox.",
           submit: "Create account in realm",
           submitting: "Creating account…",
           already: "Already have an account?",
           login: "Log in",
           welcomeBrand: "Blackout WoW",
           welcomeTitle: "Welcome to the server, adventurer.",
-          welcomeBody: "Your account was created successfully. You can now log in and begin your journey through Northrend.",
+          welcomeBody:
+            "Your account was created successfully. You can now log in and begin your journey through Northrend.",
           welcomeLogin: "Go to login",
           close: "Close",
         },
         forgot: {
           title: "Recover password",
-          subtitle: "We will send an OTP code to the email linked to your portal account.",
+          subtitle:
+            "We will send an OTP code to the email linked to your portal account.",
           email: "Email",
           redirectingHint: "Taking you to enter your code...",
           sending: "Sending…",
@@ -157,7 +165,8 @@ export const resources = {
         },
         reset: {
           title: "New password",
-          subtitle: "Enter the code sent by email. This will update both game (SOAP) and portal passwords.",
+          subtitle:
+            "Enter the code sent by email. This will update both game (SOAP) and portal passwords.",
           email: "Email",
           otp: "OTP code",
           password: "New password",
@@ -210,7 +219,8 @@ export const resources = {
         },
         register: {
           title: "Registro",
-          subtitle: "Seu usuário e senha são os mesmos que você usará no cliente 3.3.5a.",
+          subtitle:
+            "Seu usuário e senha são os mesmos que você usará no cliente 3.3.5a.",
           username: "Usuário",
           email: "E-mail",
           password: "Senha",
@@ -218,20 +228,23 @@ export const resources = {
           passwordMismatch: "As senhas não coincidem.",
           hidePassword: "Ocultar senha",
           showPassword: "Mostrar senha",
-          recaptchaHint: "Configure `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` para ativar a verificação de segurança.",
+          recaptchaHint:
+            "Configure `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` para ativar a verificação de segurança.",
           submit: "Criar conta no reino",
           submitting: "Criando conta…",
           already: "Já tem conta?",
           login: "Entrar",
           welcomeBrand: "Blackout WoW",
           welcomeTitle: "Bem-vindo ao servidor, aventureiro.",
-          welcomeBody: "Sua conta foi criada com sucesso. Agora você pode entrar e começar sua jornada por Nortúndria.",
+          welcomeBody:
+            "Sua conta foi criada com sucesso. Agora você pode entrar e começar sua jornada por Nortúndria.",
           welcomeLogin: "Ir para login",
           close: "Fechar",
         },
         forgot: {
           title: "Recuperar senha",
-          subtitle: "Enviaremos um código OTP para o e-mail associado à sua conta do portal.",
+          subtitle:
+            "Enviaremos um código OTP para o e-mail associado à sua conta do portal.",
           email: "E-mail",
           redirectingHint: "Levando você para inserir o código...",
           sending: "Enviando…",
@@ -241,7 +254,8 @@ export const resources = {
         },
         reset: {
           title: "Nova senha",
-          subtitle: "Digite o código recebido por e-mail. Isso atualizará a senha do jogo (SOAP) e do portal.",
+          subtitle:
+            "Digite o código recebido por e-mail. Isso atualizará a senha do jogo (SOAP) e do portal.",
           email: "E-mail",
           otp: "Código OTP",
           password: "Nova senha",
