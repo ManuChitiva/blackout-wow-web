@@ -72,7 +72,7 @@ export default function RewardShopPage() {
   useEffect(() => {
     if (!isAuthReady) return;
     if (!accessToken) {
-      router.replace("/login?next=/tienda/puntos");
+      router.replace(`/login?next=${encodeURIComponent("/tienda/puntos")}`);
       return;
     }
     (async () => {
@@ -149,6 +149,16 @@ export default function RewardShopPage() {
     } finally {
       setBusyId(null);
     }
+  }
+
+  if (!isAuthReady || !accessToken) {
+    return (
+      <SiteShell>
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-zinc-400">
+          {!isAuthReady ? t("account.loadingSession") : t("account.redirecting")}
+        </div>
+      </SiteShell>
+    );
   }
 
   return (

@@ -34,7 +34,7 @@ function imageForProduct(category: string) {
 export default function ShopPage() {
   const { t } = useTranslation();
   const ITEMS_PER_PAGE = 6;
-  const { accessToken } = useAuth();
+  const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +44,14 @@ export default function ShopPage() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    if (!isAuthReady) return;
+    if (!accessToken) {
+      router.replace(`/login?next=${encodeURIComponent("/tienda")}`);
+    }
+  }, [isAuthReady, accessToken, router]);
+
+  useEffect(() => {
+    if (!isAuthReady || !accessToken) return;
     (async () => {
       try {
         const r = await apiJson<ProductListResponse>("/api/v1/shop/products");
@@ -52,7 +60,7 @@ export default function ShopPage() {
         setError(e instanceof Error ? e.message : t("common.error"));
       }
     })();
-  }, []);
+  }, [isAuthReady, accessToken, t]);
 
   const categories = useMemo(() => {
     const all = Array.from(
@@ -88,7 +96,7 @@ export default function ShopPage() {
 
   async function buy(productId: number) {
     if (!accessToken) {
-      router.push("/login");
+      router.replace(`/login?next=${encodeURIComponent("/tienda")}`);
       return;
     }
     setBusyId(productId);
@@ -110,6 +118,16 @@ export default function ShopPage() {
     } finally {
       setBusyId(null);
     }
+  }
+
+  if (!isAuthReady || !accessToken) {
+    return (
+      <SiteShell>
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-zinc-400">
+          {!isAuthReady ? t("account.loadingSession") : t("account.redirecting")}
+        </div>
+      </SiteShell>
+    );
   }
 
   return (
@@ -245,14 +263,6 @@ export default function ShopPage() {
               {t("store.donation.next")}
             </button>
           </div>
-        )}
-        {!accessToken && (
-          <p className="mt-10 text-center text-sm text-zinc-500">
-            <Link href="/login" className="text-amber-400 hover:underline">
-              {t("nav.login")}
-            </Link>{" "}
-            {t("store.donation.loginSuffix")}
-          </p>
         )}
       </div>
     </SiteShell>

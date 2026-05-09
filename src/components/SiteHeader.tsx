@@ -63,7 +63,7 @@ export function SiteHeader() {
 
   return (
     <header className="navbar-aura sticky top-0 z-40 border-b border-white/10 bg-black/75 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
+      <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 py-2.5 md:gap-3">
         <Link
           href="/"
           aria-label={t("nav.homeAria")}
@@ -81,17 +81,9 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <button
-          type="button"
-          aria-label={t("nav.openMenu")}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((v) => !v)}
-          className="inline-flex items-center rounded-md border border-white/15 bg-zinc-950/60 px-3 py-2 text-zinc-100 transition-all hover:bg-zinc-900/70 md:hidden"
-        >
-          {t("nav.menu")}
-        </button>
+        <span className="min-w-0 flex-1 md:hidden" aria-hidden />
 
-        <nav className="hidden items-center gap-1 border-y border-white/10 px-2 py-1 md:flex">
+        <nav className="hidden min-w-0 flex-1 items-center justify-start gap-1 border-y border-white/10 px-2 py-1 md:flex">
           <Link
             aria-current={navAriaCurrent("/")}
             className={getNavItemClass("/")}
@@ -171,10 +163,20 @@ export function SiteHeader() {
               </Link>
             </>
           )}
-          <div className="ml-2">
-            <LanguageSwitcher />
-          </div>
         </nav>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            aria-label={t("nav.openMenu")}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+            className="inline-flex items-center rounded-md border border-white/15 bg-zinc-950/60 px-3 py-2 text-zinc-100 transition-all hover:bg-zinc-900/70 md:hidden"
+          >
+            {t("nav.menu")}
+          </button>
+        </div>
       </div>
 
       {mobileOpen ? (
@@ -271,9 +273,6 @@ export function SiteHeader() {
                 </Link>
               </>
             )}
-            <div className="pt-1">
-              <LanguageSwitcher />
-            </div>
           </div>
         </div>
       ) : null}

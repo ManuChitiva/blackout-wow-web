@@ -24,10 +24,21 @@ export const resources = {
       },
       lang: {
         label: "Idioma",
+        localeEs: "Español",
+        localeEn: "Inglés",
+        localePt: "Portugués",
       },
       auth: {
         login: {
           title: "Entrar",
+          subtitle: "Usa las mismas credenciales que en el cliente 3.3.5a.",
+          panelKicker: "Cuenta del reino",
+          panelHeading: "Accede a tu aventura",
+          panelDescription:
+            "Gestiona tu personaje, la tienda y los puntos desde un solo lugar seguro.",
+          bulletGame: "Usuario y contraseña idénticos al juego",
+          bulletAccount: "Tienda, compras y puntos vinculados a tu cuenta",
+          registeredBanner: "Cuenta creada. Ya puedes iniciar sesión con tus datos.",
           noAccount: "¿Sin cuenta?",
           signup: "Regístrate",
           username: "Usuario de juego",
@@ -41,6 +52,12 @@ export const resources = {
         },
         register: {
           title: "Registro",
+          panelKicker: "Únete al reino",
+          panelHeading: "Crea tu cuenta de aventurero",
+          panelDescription:
+            "Registro rápido: mismas credenciales para el portal y el cliente 3.3.5a.",
+          bulletRealm: "Un mismo usuario para el juego y la web",
+          bulletEmail: "Correo para recuperación de acceso y avisos",
           subtitle:
             "Tu usuario y contraseña son los mismos que usarás en el cliente 3.3.5a.",
           username: "Usuario",
@@ -248,10 +265,21 @@ export const resources = {
       },
       lang: {
         label: "Language",
+        localeEs: "Spanish",
+        localeEn: "English",
+        localePt: "Portuguese",
       },
       auth: {
         login: {
           title: "Log in",
+          subtitle: "Use the same credentials as your 3.3.5a game client.",
+          panelKicker: "Realm account",
+          panelHeading: "Continue your journey",
+          panelDescription:
+            "Manage your character, the store, and your points from one secure place.",
+          bulletGame: "Same username and password as the game",
+          bulletAccount: "Store, purchases, and points tied to your account",
+          registeredBanner: "Account created. You can now sign in with your credentials.",
           noAccount: "No account?",
           signup: "Sign up",
           username: "Game username",
@@ -265,6 +293,12 @@ export const resources = {
         },
         register: {
           title: "Sign up",
+          panelKicker: "Join the realm",
+          panelHeading: "Create your adventurer account",
+          panelDescription:
+            "Quick sign-up: one set of credentials for the portal and the 3.3.5a client.",
+          bulletRealm: "One username for both game and website",
+          bulletEmail: "Email for account recovery and notices",
           subtitle:
             "Your username and password are the same credentials you will use in the 3.3.5a client.",
           username: "Username",
@@ -470,10 +504,21 @@ export const resources = {
       },
       lang: {
         label: "Idioma",
+        localeEs: "Espanhol",
+        localeEn: "Inglês",
+        localePt: "Português",
       },
       auth: {
         login: {
           title: "Entrar",
+          subtitle: "Use as mesmas credenciais do cliente 3.3.5a.",
+          panelKicker: "Conta do reino",
+          panelHeading: "Entre na sua aventura",
+          panelDescription:
+            "Gerencie personagem, loja e pontos em um único lugar seguro.",
+          bulletGame: "Mesmo usuário e senha do jogo",
+          bulletAccount: "Loja, compras e pontos vinculados à sua conta",
+          registeredBanner: "Conta criada. Você já pode entrar com seus dados.",
           noAccount: "Sem conta?",
           signup: "Registrar-se",
           username: "Usuário do jogo",
@@ -487,6 +532,12 @@ export const resources = {
         },
         register: {
           title: "Registro",
+          panelKicker: "Entre no reino",
+          panelHeading: "Crie sua conta de aventureiro",
+          panelDescription:
+            "Cadastro rápido: as mesmas credenciais para o portal e o cliente 3.3.5a.",
+          bulletRealm: "Um usuário para o jogo e o site",
+          bulletEmail: "E-mail para recuperação de acesso e avisos",
           subtitle:
             "Seu usuário e senha são os mesmos que você usará no cliente 3.3.5a.",
           username: "Usuário",
