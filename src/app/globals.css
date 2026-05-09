@@ -250,6 +250,77 @@ body {
   z-index: 1;
 }
 
+@keyframes home-card-frost-sheen {
+  0%,
+  100% {
+    opacity: 0.36;
+  }
+  50% {
+    opacity: 0.52;
+  }
+}
+
+/* Halo “tarjeta congelada”: escarcha azul‑hielo, pulso muy lento y casi dormido */
+@keyframes home-card-frost-aura {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.16),
+      inset 0 -8px 20px rgba(56, 189, 248, 0.04),
+      0 12px 28px rgba(2, 6, 23, 0.4),
+      0 0 0 1px rgba(186, 230, 253, 0.14),
+      0 0 22px rgba(125, 211, 252, 0.08),
+      0 0 50px rgba(14, 165, 233, 0.05),
+      0 0 90px rgba(103, 232, 249, 0.03);
+  }
+  38% {
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.24),
+      inset 0 -10px 24px rgba(56, 189, 248, 0.07),
+      0 12px 28px rgba(2, 6, 23, 0.44),
+      0 0 0 1px rgba(224, 242, 254, 0.32),
+      0 0 32px rgba(165, 243, 252, 0.14),
+      0 0 62px rgba(56, 189, 248, 0.08),
+      0 0 110px rgba(125, 211, 252, 0.04);
+  }
+  68% {
+    box-shadow:
+      inset 0 1px 1px rgba(248, 250, 252, 0.2),
+      inset 0 -6px 16px rgba(59, 130, 246, 0.05),
+      0 12px 28px rgba(2, 6, 23, 0.42),
+      0 0 0 1px rgba(191, 219, 254, 0.2),
+      0 0 26px rgba(125, 211, 252, 0.1),
+      0 0 54px rgba(14, 165, 233, 0.06),
+      0 0 92px rgba(165, 243, 254, 0.03);
+  }
+}
+
+.home-card.home-card-aura::after {
+  opacity: 0.4;
+  background:
+    linear-gradient(
+      158deg,
+      rgba(239, 246, 255, 0.16),
+      transparent 26%,
+      transparent 71%,
+      rgba(147, 197, 253, 0.12)
+    );
+  animation: home-card-frost-sheen 9s ease-in-out infinite;
+}
+
+.home-card.home-card-aura:hover {
+  animation-play-state: paused;
+}
+
+.home-card.home-card-aura:hover::after {
+  animation-play-state: paused;
+}
+
+.home-card.home-card-aura {
+  border-color: rgba(125, 211, 252, 0.18);
+  animation: home-card-frost-aura 10.5s ease-in-out infinite;
+}
+
 .home-card:hover {
   transform: translateY(-5px);
   border-color: rgba(125, 211, 252, 0.32);
@@ -257,6 +328,24 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 16px 36px rgba(2, 6, 23, 0.55),
     0 0 26px rgba(56, 189, 248, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card.home-card-aura {
+    animation: none;
+    border-color: rgba(125, 211, 252, 0.2);
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.12),
+      inset 0 -8px 20px rgba(56, 189, 248, 0.04),
+      0 12px 28px rgba(2, 6, 23, 0.4),
+      0 0 0 1px rgba(186, 230, 253, 0.14),
+      0 0 24px rgba(125, 211, 252, 0.1);
+  }
+
+  .home-card.home-card-aura::after {
+    animation: none;
+    opacity: 0.45;
+  }
 }
 
 .store-card {

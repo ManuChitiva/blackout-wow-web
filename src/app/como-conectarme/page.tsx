@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
+import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SITE_NAME } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
@@ -142,9 +143,25 @@ export default async function ComoConectarmePage() {
   }[lang];
   return (
     <SiteShell>
-      <section className="section-fire-aura relative overflow-hidden border-b border-white/10">
+      <section className="section-fire-aura relative min-h-128 overflow-hidden border-b border-white/10">
+        <BackgroundLoopVideo
+          startAtSec={1}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.28]"
+          autoPlay
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden
+        >
+          <source
+            src="https://video.wixstatic.com/video/5dd8a0_00a855e7ddb049518bd8983809fb9a23/720p/mp4/file.mp4"
+            type="video/mp4"
+          />
+        </BackgroundLoopVideo>
+        <div className="pointer-events-none absolute inset-0 bg-black/50" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(249,115,22,0.16),transparent_40%),radial-gradient(circle_at_80%_60%,rgba(56,189,248,0.14),transparent_36%)]" />
-        <div className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(249,115,22,0.12),transparent_50%),linear-gradient(to_top,rgba(2,6,23,0.75)_0%,transparent_50%),linear-gradient(to_bottom,rgba(5,5,8,0.65)_0%,transparent_45%)]" />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 md:py-20">
           <p className="font-display text-sm uppercase tracking-[0.3em] text-sky-200/80">
             {tx.badge}
           </p>

@@ -3,14 +3,20 @@
 type NavHomeAuraTextProps = {
   text: string;
   variant: "title" | "sub";
+  /** Applied on the wrapping span so letter spans inherit typography */
+  className?: string;
 };
 
-export function NavHomeAuraText({ text, variant }: NavHomeAuraTextProps) {
+export function NavHomeAuraText({
+  text,
+  variant,
+  className,
+}: NavHomeAuraTextProps) {
   const chars = Array.from(text);
   const delayMs = variant === "title" ? 95 : 65;
 
   return (
-    <span>
+    <span className={className}>
       {chars.map((ch, i) => (
         <span
           key={i}

@@ -3,7 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
-import { SITE_NAME } from "@/lib/seo";
+import { NavHomeAuraText } from "@/components/NavHomeAuraText";
+import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
+import { SITE_NAME, SITE_TITLE } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
 export const metadata: Metadata = {
@@ -27,10 +29,11 @@ export default async function HomePage() {
   const lang = isSupportedLanguage(rawLang) ? rawLang : defaultLng;
   const tx = {
     es: {
-      welcome: "Bienvenido a Blackout-WoW",
-      exp: "Vive una experiencia custom completa.",
-      hero:
-        "Progresion hasta nivel 100, raids y tiers exclusivos, PvE avanzado, PvP activo, miles de opciones de personalizacion y nuevas fases cada 3 meses para que siempre tengas algo nuevo por hacer.",
+      heroTagline: "Servidor WoW · WotLK · 3.3.5a",
+      heroTaglineSub: "El mejor servidor",
+      onlineLabel: "Jugadores en línea",
+      serverStatusLabel: "Estado del reino",
+      serverStatusValue: "En línea",
       create: "Crear cuenta",
       connect: "Como conectarme",
       seeRules: "Consulta las reglas del servidor en",
@@ -149,10 +152,11 @@ export default async function HomePage() {
       ],
     },
     en: {
-      welcome: "Welcome to Blackout-WoW",
-      exp: "Live a complete custom experience.",
-      hero:
-        "Progress to level 100, exclusive raids and tiers, advanced PvE, active PvP, thousands of customization options and new phases every 3 months.",
+      heroTagline: "WoW realm · WotLK · 3.3.5a",
+      heroTaglineSub: "Best server",
+      onlineLabel: "Players online",
+      serverStatusLabel: "Realm status",
+      serverStatusValue: "Online",
       create: "Create account",
       connect: "How to connect",
       seeRules: "Check the server rules at",
@@ -244,10 +248,11 @@ export default async function HomePage() {
       ],
     },
     pt: {
-      welcome: "Bem-vindo ao Blackout-WoW",
-      exp: "Viva uma experiência custom completa.",
-      hero:
-        "Progrida até o nível 100, raids e tiers exclusivos, PvE avançado, PvP ativo e novas fases a cada 3 meses.",
+      heroTagline: "Servidor WoW · WotLK · 3.3.5a",
+      heroTaglineSub: "Melhor servidor",
+      onlineLabel: "Jogadores online",
+      serverStatusLabel: "Status do reino",
+      serverStatusValue: "Online",
       create: "Criar conta",
       connect: "Como conectar",
       seeRules: "Consulte as regras do servidor em",
@@ -339,6 +344,11 @@ export default async function HomePage() {
       ],
     },
   }[lang];
+  const MOCK_PLAYERS_ONLINE = 20_296;
+  const onlineLocale =
+    lang === "en" ? "en-US" : lang === "pt" ? "pt-BR" : "es-ES";
+  const playersOnlineDisplay =
+    MOCK_PLAYERS_ONLINE.toLocaleString(onlineLocale);
   const dragonModelSrc = "";
   const quickHighlights = tx.quickHighlights;
   const serverInfoColumns = tx.serverInfoColumns;
@@ -367,21 +377,56 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-[url('/feature-bg-treant.png')] bg-cover bg-center opacity-10 mix-blend-screen" />
         <div className="hero-drift pointer-events-none absolute inset-0 opacity-35" />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 md:grid-cols-2 md:gap-14 md:py-28">
-          <div className="reveal-up">
-            <p className="font-display text-sm uppercase tracking-[0.35em] text-sky-200/80">
-              BLACKOUT · Wrath of the Lich King
-            </p>
-            <h1 className="font-display mt-4 max-w-3xl text-2xl font-bold leading-tight text-zinc-50 sm:text-4xl md:text-5xl">
-              {tx.welcome}{" "}
-              <span className="glow-ember bg-linear-to-r from-amber-300 via-orange-400 to-red-500 bg-clip-text text-transparent">
-                {tx.exp}
-              </span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-300 md:text-lg">
-              {tx.hero}
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3 sm:gap-4">
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 pt-10 pb-16 text-center md:pt-12 md:pb-20 lg:pt-14 lg:pb-24">
+          <h1 className="sr-only">{SITE_TITLE}</h1>
+          <div className="reveal-up flex w-full flex-col items-center">
+            <div className="hero-logo-frame relative mx-auto -translate-y-1 overflow-hidden rounded-2xl bg-transparent px-4 pb-1 pt-2 sm:px-6 sm:pb-2 sm:pt-3 md:px-8">
+              <div className="hero-logo-aura pointer-events-none absolute inset-6 rounded-full bg-radial-[at_50%_50%] from-amber-300/18 via-sky-300/8 to-transparent" />
+              <div className="hero-logo-sheen pointer-events-none absolute inset-y-6 left-0 w-1/4 -skew-x-12 bg-linear-to-r from-transparent via-sky-300/15 to-transparent" />
+              <Image
+                src="/logo-transparent.png"
+                alt="BLACKOUT WOW — Wrath of the Lich King"
+                width={520}
+                height={148}
+                className="hero-logo-image relative mx-auto h-auto w-[min(92vw,480px)] max-w-full object-contain drop-shadow-[0_12px_40px_rgba(0,0,0,0.65)] md:w-[520px]"
+                priority
+              />
+            </div>
+
+            <div className="mt-3 text-center sm:mt-4">
+              <div className="inline-flex flex-col items-center gap-1 rounded-md border border-amber-600/35 bg-zinc-950/55 px-5 py-2 shadow-[inset_0_1px_0_rgba(251,191,36,0.1),0_10px_32px_rgba(0,0,0,0.4)] backdrop-blur-sm sm:gap-1.5 sm:px-6 sm:py-2.5">
+                <NavHomeAuraText
+                  variant="title"
+                  text={tx.heroTagline}
+                  className="font-display text-[11px] font-semibold uppercase tracking-[0.26em] sm:text-xs md:text-sm"
+                />
+                <NavHomeAuraText
+                  variant="sub"
+                  text={tx.heroTaglineSub}
+                  className="font-display text-[9px] font-semibold uppercase tracking-[0.34em] sm:text-[10px] md:text-[11px]"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 md:mt-6">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-zinc-300/95">
+                {tx.onlineLabel}
+              </p>
+              <p
+                className="font-display glow-ember mt-1.5 bg-linear-to-b from-amber-100 via-orange-400 to-red-600 bg-clip-text text-5xl font-bold leading-none text-transparent drop-shadow-[0_0_28px_rgba(251,146,60,0.45)] tabular-nums sm:text-6xl md:text-7xl"
+                aria-label={`${tx.onlineLabel}: ${playersOnlineDisplay}`}
+              >
+                {playersOnlineDisplay}
+              </p>
+              <p className="mt-2.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                {tx.serverStatusLabel}
+              </p>
+              <p className="mt-1 text-sm font-semibold text-emerald-400/95">
+                {tx.serverStatusValue}
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-7 sm:gap-4 md:mt-8">
               <Link
                 href="/registro"
                 className="metal-border rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400 sm:px-8 sm:text-base"
@@ -395,7 +440,8 @@ export default async function HomePage() {
                 {tx.connect}
               </Link>
             </div>
-            <p className="mt-4 text-sm text-zinc-400">
+
+            <p className="mt-2.5 max-w-xl text-sm text-zinc-500 sm:mt-3">
               {tx.seeRules}{" "}
               <Link
                 href="/terminos-y-condiciones"
@@ -405,21 +451,6 @@ export default async function HomePage() {
               </Link>
               .
             </p>
-          </div>
-
-          <div className="reveal-up hidden justify-center md:flex">
-            <div className="hero-logo-frame metal-border relative overflow-hidden rounded-2xl border border-white/10 bg-transparent p-10 shadow-2xl shadow-black/35">
-              <div className="hero-logo-aura pointer-events-none absolute inset-6 rounded-full bg-radial-[at_50%_50%] from-amber-300/18 via-sky-300/8 to-transparent" />
-              <div className="hero-logo-sheen pointer-events-none absolute inset-y-6 left-0 w-1/4 -skew-x-12 bg-linear-to-r from-transparent via-sky-300/15 to-transparent" />
-              {/* Logo destacado para equilibrar el hero en desktop */}
-              <Image
-                src="/logo-transparent.png"
-                alt="BLACKOUT WOW — Wrath of the Lich King"
-                width={420}
-                height={120}
-                className="hero-logo-image relative h-auto w-[360px] max-w-full object-contain"
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -447,7 +478,7 @@ export default async function HomePage() {
           {contentBlocks.map((f, idx) => (
             <div
               key={f.title}
-              className="home-card feature-card reveal-up metal-border rounded-xl border border-white/10 bg-zinc-950/70 p-6"
+              className="home-card home-card-aura feature-card reveal-up metal-border rounded-xl border border-white/10 bg-zinc-950/70 p-6"
               style={{ animationDelay: `${idx * 120}ms` }}
             >
               <h3 className="feature-card-title font-display mt-2 text-lg font-semibold text-amber-400">
@@ -471,7 +502,7 @@ export default async function HomePage() {
           {quickHighlights.map((item) => (
             <article
               key={item.label}
-              className="home-card rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+              className="home-card home-card-aura rounded-xl border border-white/10 bg-zinc-950/65 p-5"
             >
               <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
                 {item.label}
@@ -486,7 +517,7 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
-        <div className="home-card rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
+        <div className="home-card home-card-aura rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
           <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
             {tx.serverInfo}
           </h2>
@@ -516,9 +547,27 @@ export default async function HomePage() {
 
       <section
         id="fases-actualizaciones"
-        className="mx-auto max-w-6xl px-4 pb-14"
+        className="relative overflow-hidden pb-14 pt-6 md:pt-10"
       >
-        <div className="home-card reveal-up rounded-2xl border border-white/10 bg-zinc-950/55 p-5 md:p-8">
+        <BackgroundLoopVideo
+          startAtSec={1}
+          className="pointer-events-none absolute inset-0 h-full min-h-128 w-full object-cover opacity-[0.28]"
+          autoPlay
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden
+        >
+          <source
+            src="https://video.wixstatic.com/video/5dd8a0_00a855e7ddb049518bd8983809fb9a23/720p/mp4/file.mp4"
+            type="video/mp4"
+          />
+        </BackgroundLoopVideo>
+        <div className="pointer-events-none absolute inset-0 bg-black/50" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(249,115,22,0.14),transparent_55%),linear-gradient(to_top,rgba(2,6,23,0.92)_0%,transparent_45%),linear-gradient(to_bottom,rgba(5,5,8,0.75)_0%,transparent_40%)]" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4">
+          <div className="home-card home-card-aura reveal-up rounded-2xl border border-white/10 bg-zinc-950/72 p-5 shadow-2xl shadow-black/50 backdrop-blur-sm md:p-8">
           <p className="font-display text-xs uppercase tracking-[0.2em] text-amber-300/85">
             Visual Demo
           </p>
@@ -593,11 +642,12 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
-        <div className="home-card reveal-up relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
+        <div className="home-card home-card-aura reveal-up relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
           <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-42" />
           <div className="relative z-10">
             <h2 className="font-display text-2xl font-semibold text-zinc-100">
@@ -625,7 +675,7 @@ export default async function HomePage() {
               ].map((p) => (
                 <div
                   key={p.phase}
-                  className="home-card phase-card rounded-lg border border-white/10 bg-black/35 p-4"
+                  className="home-card home-card-aura phase-card rounded-lg border border-white/10 bg-black/35 p-4"
                 >
                   <p className="text-xs uppercase tracking-wider text-zinc-500">
                     {p.phase}
@@ -680,7 +730,7 @@ export default async function HomePage() {
             {visionCards.map((n, idx) => (
               <article
                 key={n.title}
-                className="home-card reveal-up rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+                className="home-card home-card-aura reveal-up rounded-xl border border-white/10 bg-zinc-950/65 p-5"
                 style={{ animationDelay: `${idx * 120}ms` }}
               >
                 <p className="text-xs uppercase tracking-[0.2em] text-sky-300/80">
@@ -705,7 +755,7 @@ export default async function HomePage() {
           {whyBlackoutCards.map((card) => (
             <article
               key={card.title}
-              className="home-card rounded-xl border border-white/10 bg-zinc-950/65 p-5"
+              className="home-card home-card-aura rounded-xl border border-white/10 bg-zinc-950/65 p-5"
             >
               <h3 className="font-display text-lg text-zinc-100">{card.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-zinc-400">
