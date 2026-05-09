@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
+import { CATEGORY_FILTER_ALL } from "@/lib/store-category-filter";
 
 type RewardProduct = {
   id: number;
@@ -53,13 +54,7 @@ function resolveRewardImage(imageUrl: string | null, category: string) {
 }
 
 export default function RewardShopPage() {
-  const { i18n } = useTranslation();
-  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
-  const tx = {
-    es: { all: "Todas", title: "Tienda de canje", noFilter: "No hay recompensas para ese filtro.", prev: "Anterior", next: "Siguiente", page: "Página", of: "de", back: "Volver a tienda de compra" },
-    en: { all: "All", title: "Redeem store", noFilter: "No rewards for this filter.", prev: "Previous", next: "Next", page: "Page", of: "of", back: "Back to purchase store" },
-    pt: { all: "Todas", title: "Loja de resgate", noFilter: "Não há recompensas para este filtro.", prev: "Anterior", next: "Seguinte", page: "Página", of: "de", back: "Voltar para loja de compra" },
-  }[lang];
+  const { t } = useTranslation();
   const ITEMS_PER_PAGE = 6;
   const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
@@ -69,7 +64,7 @@ export default function RewardShopPage() {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState(tx.all);
+  const [category, setCategory] = useState<string>(CATEGORY_FILTER_ALL);
   const [page, setPage] = useState(1);
   const [characters, setCharacters] = useState<CharacterOption[]>([]);
   const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
@@ -93,20 +88,23 @@ export default function RewardShopPage() {
         setCharacters(chars);
         setSelectedCharacterId(chars.length > 0 ? chars[0].id : null);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Error");
+        setError(e instanceof Error ? e.message : t("common.error"));
       }
     })();
-  }, [isAuthReady, accessToken, router]);
+  }, [isAuthReady, accessToken, router, t]);
 
   const categories = useMemo(() => {
-    const all = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
-    return [tx.all, ...all];
+    const all = Array.from(
+      new Set(products.map((p) => p.category).filter(Boolean)),
+    );
+    return [CATEGORY_FILTER_ALL, ...all];
   }, [products]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return products.filter((p) => {
-      const byCategory = category === tx.all || p.category === category;
+      const byCategory =
+        category === CATEGORY_FILTER_ALL || p.category === category;
       const bySearch =
         term.length === 0 ||
         p.name.toLowerCase().includes(term) ||
@@ -130,7 +128,7 @@ export default function RewardShopPage() {
   async function redeem(rewardProductId: number) {
     if (!accessToken) return;
     if (!selectedCharacterId) {
-      setError("Selecciona un personaje destino para el canje.");
+      setError(t("store.redeem.errPickChar"));
       return;
     }
     setBusyId(rewardProductId);
@@ -145,7 +143,9 @@ export default function RewardShopPage() {
       setPointsBalance(data.pointsBalance);
       setMsg(data.message);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No se pudo completar el canje.");
+      setError(
+        e instanceof Error ? e.message : t("store.redeem.errRedeem"),
+      );
     } finally {
       setBusyId(null);
     }
@@ -155,47 +155,65 @@ export default function RewardShopPage() {
     <SiteShell>
       <div className="mx-auto max-w-5xl px-4 py-16">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50">{tx.title}</h1>
+          <h1 className="font-display text-3xl font-semibold text-zinc-50">
+            {t("store.redeem.title")}
+          </h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-            Selecciona un personaje destino, busca la recompensa y canjea tus puntos en segundos.
+            {t("store.redeem.subtitle")}
           </p>
           <div className="mt-5 grid gap-3 text-xs text-zinc-300 md:grid-cols-3">
             <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <span className="text-amber-300">Paso 1:</span> Elige personaje
+              <span className="text-amber-300">{t("store.redeem.step1Label")}</span>{" "}
+              {t("store.redeem.step1")}
             </div>
             <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <span className="text-amber-300">Paso 2:</span> Filtra y busca recompensa
+              <span className="text-amber-300">{t("store.redeem.step2Label")}</span>{" "}
+              {t("store.redeem.step2")}
             </div>
             <div className="rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-              <span className="text-amber-300">Paso 3:</span> Canjea con tus puntos
+              <span className="text-amber-300">{t("store.redeem.step3Label")}</span>{" "}
+              {t("store.redeem.step3")}
             </div>
           </div>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="rounded-xl border border-amber-400/30 bg-amber-950/20 p-4">
-            <p className="text-xs uppercase tracking-widest text-amber-300/80">Saldo disponible</p>
-            <p className="mt-1 text-2xl font-bold text-amber-200">{pointsBalance} puntos</p>
-            <p className="mt-1 text-sm text-zinc-400">Solo podrás canjear recompensas con saldo suficiente.</p>
+            <p className="text-xs uppercase tracking-widest text-amber-300/80">
+              {t("store.redeem.balanceLabel")}
+            </p>
+            <p className="mt-1 text-2xl font-bold text-amber-200">
+              {pointsBalance} {t("store.redeem.balanceSuffix")}
+            </p>
+            <p className="mt-1 text-sm text-zinc-400">
+              {t("store.redeem.balanceHint")}
+            </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
-            <p className="text-xs uppercase tracking-widest text-zinc-500">Personaje destino del canje</p>
+            <p className="text-xs uppercase tracking-widest text-zinc-500">
+              {t("store.redeem.charLabel")}
+            </p>
             <div className="mt-2">
               <select
                 value={selectedCharacterId ?? ""}
                 onChange={(e) => setSelectedCharacterId(e.target.value ? Number(e.target.value) : null)}
                 className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
               >
-                {characters.length === 0 && <option value="">Sin personajes disponibles</option>}
+                {characters.length === 0 && (
+                  <option value="">{t("store.redeem.charNone")}</option>
+                )}
                 {characters.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name} (Lvl {c.level})
+                    {t("store.redeem.characterOption", {
+                      name: c.name,
+                      level: c.level,
+                    })}
                   </option>
                 ))}
               </select>
             </div>
             <p className="mt-2 text-xs text-zinc-500">
-              El item o servicio se enviará al personaje seleccionado.
+              {t("store.redeem.charHint")}
             </p>
           </div>
         </div>
@@ -205,7 +223,7 @@ export default function RewardShopPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre, SKU o descripción"
+            placeholder={t("store.redeem.searchPlaceholder")}
             className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
           />
           <select
@@ -215,7 +233,9 @@ export default function RewardShopPage() {
           >
             {categories.map((c) => (
               <option key={c} value={c}>
-                {c}
+                {c === CATEGORY_FILTER_ALL
+                  ? t("store.redeem.allCategories")
+                  : c}
               </option>
             ))}
           </select>
@@ -225,8 +245,13 @@ export default function RewardShopPage() {
         {error && <p className="mt-6 text-red-400">{error}</p>}
         {!error && (
           <p className="mt-4 text-sm text-zinc-500">
-            Mostrando <span className="text-zinc-300">{filtered.length}</span> recompensas para{" "}
-            <span className="text-zinc-300">{category}</span>.
+            {t("store.redeem.showingLine", {
+              count: filtered.length,
+              category:
+                category === CATEGORY_FILTER_ALL
+                  ? t("store.redeem.allCategories")
+                  : category,
+            })}
           </p>
         )}
 
@@ -250,34 +275,46 @@ export default function RewardShopPage() {
                 </div>
                 <div className="flex h-[280px] flex-col p-5">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-sky-300/80">
-                    SKU: {p.sku}
+                    {t("store.donation.sku")}: {p.sku}
                   </p>
                   <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-sky-200">{p.name}</h2>
                   <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
                   <div className="mt-3">
                     <span className="rounded-full border border-amber-400/35 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-200">
-                      {p.deliveryType ?? "REWARD"}
+                      {p.deliveryType ?? t("store.redeem.deliveryReward")}
                     </span>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
-                    <p className="text-xl font-bold text-amber-300">{p.costPoints} puntos</p>
+                    <p className="text-xl font-bold text-amber-300">
+                      {p.costPoints} {t("store.donation.points")}
+                    </p>
                     <button
                       type="button"
                       disabled={busyId === p.id || !canRedeem}
                       onClick={() => redeem(p.id)}
                       className="rounded bg-linear-to-r from-amber-600 to-orange-500 px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
                     >
-                      {busyId === p.id ? "Canjeando..." : canRedeem ? "Canjear" : "Sin puntos"}
+                      {busyId === p.id
+                        ? t("store.redeem.redeeming")
+                        : canRedeem
+                          ? t("store.redeem.redeemBtn")
+                          : t("store.redeem.notEnoughBalance")}
                     </button>
                   </div>
-                  {!canRedeem && <p className="mt-2 text-xs text-red-300/80">Te faltan puntos para este canje.</p>}
+                  {!canRedeem && (
+                    <p className="mt-2 text-xs text-red-300/80">
+                      {t("store.redeem.needMoreHint")}
+                    </p>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
         {!error && filtered.length === 0 && (
-          <p className="mt-8 text-center text-sm text-zinc-500">{tx.noFilter}</p>
+          <p className="mt-8 text-center text-sm text-zinc-500">
+            {t("store.redeem.noFilter")}
+          </p>
         )}
         {filtered.length > ITEMS_PER_PAGE && (
           <div className="mt-8 flex items-center justify-center gap-3">
@@ -287,10 +324,10 @@ export default function RewardShopPage() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              {tx.prev}
+              {t("store.donation.prev")}
             </button>
             <p className="text-sm text-zinc-400">
-              {tx.page} {page} {tx.of} {totalPages}
+              {t("store.donation.pageOf", { page, pages: totalPages })}
             </p>
             <button
               type="button"
@@ -298,14 +335,14 @@ export default function RewardShopPage() {
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              {tx.next}
+              {t("store.donation.next")}
             </button>
           </div>
         )}
 
         <div className="mt-10">
           <Link href="/tienda" className="text-sky-300 hover:underline">
-            {tx.back}
+            {t("store.redeem.backShop")}
           </Link>
         </div>
       </div>

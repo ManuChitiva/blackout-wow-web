@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
@@ -28,14 +29,165 @@ type GameAccountSummary = {
   }[];
 };
 
+const statAccents = {
+  amber: {
+    bar: "from-amber-400/90 to-orange-500/40",
+    glow: "bg-amber-500/30",
+  },
+  emerald: {
+    bar: "from-emerald-400/90 to-teal-600/35",
+    glow: "bg-emerald-500/25",
+  },
+  sky: {
+    bar: "from-sky-400/90 to-cyan-600/35",
+    glow: "bg-sky-500/25",
+  },
+  zinc: {
+    bar: "from-zinc-300/80 to-zinc-600/30",
+    glow: "bg-zinc-400/15",
+  },
+} as const;
+
+const PANEL_HERO_VIDEO_MP4 =
+  "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
+
+function StatCard({
+  label,
+  accent,
+  children,
+}: {
+  label: string;
+  accent: keyof typeof statAccents;
+  children: React.ReactNode;
+}) {
+  const a = statAccents[accent];
+  return (
+    <div className="metal-border group relative w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/75 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_12px_28px_rgba(2,6,23,0.42)] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_36px_rgba(2,6,23,0.5)] motion-reduce:hover:translate-y-0 sm:p-3.5">
+      <div
+        className={`pointer-events-none absolute left-5 right-5 top-0 h-[2px] rounded-full bg-linear-to-r ${a.bar}`}
+        aria-hidden
+      />
+      <div
+        className={`pointer-events-none absolute -right-10 -top-14 h-36 w-36 rounded-full ${a.glow} blur-3xl opacity-80 transition-opacity duration-500 group-hover:opacity-100`}
+        aria-hidden
+      />
+      <p className="relative text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">
+        {label}
+      </p>
+      <div className="relative mt-1">{children}</div>
+    </div>
+  );
+}
+
+type AccountModalId = "info" | "security" | "orders";
+
+function AccountModal({
+  open,
+  titleId,
+  title,
+  subtitle,
+  wide,
+  closeLabel,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  titleId: string;
+  title: string;
+  subtitle?: string;
+  wide?: boolean;
+  closeLabel: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(() => {
+      panelRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )?.focus();
+    }, 0);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-100 flex items-end justify-center p-0 sm:items-center sm:p-4">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        aria-label={closeLabel}
+        onClick={onClose}
+      />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className={`home-card metal-border relative z-10 flex max-h-[min(92dvh,900px)] w-full flex-col rounded-t-2xl border border-white/12 border-b-0 bg-zinc-950/95 shadow-2xl shadow-black/60 sm:max-h-[85vh] sm:rounded-2xl sm:border-b ${wide ? "sm:max-w-4xl" : "sm:max-w-lg"}`}
+      >
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-5 pb-4 pt-5 sm:px-6 sm:pt-6">
+          <div className="min-w-0">
+            <h2
+              id={titleId}
+              className="font-display text-lg font-semibold tracking-tight text-zinc-50 sm:text-xl"
+            >
+              {title}
+            </h2>
+            {subtitle ? (
+              <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
+                {subtitle}
+              </p>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-white/15 bg-black/35 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-white/25 hover:bg-white/10 hover:text-zinc-100"
+          >
+            {closeLabel}
+          </button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AccountPage() {
-  const { i18n } = useTranslation();
-  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
-  const tx = {
-    es: { title: "Panel del Aventurero", loadingSession: "Cargando sesión…", redirecting: "Redirigiendo al login…", changePassword: "Cambiar clave", saving: "Guardando…", store: "Ir a la tienda", redeem: "Canjear puntos", recover: "Recuperar acceso por correo" },
-    en: { title: "Adventurer Panel", loadingSession: "Loading session…", redirecting: "Redirecting to login…", changePassword: "Change password", saving: "Saving…", store: "Go to store", redeem: "Redeem points", recover: "Recover access by email" },
-    pt: { title: "Painel do Aventureiro", loadingSession: "Carregando sessão…", redirecting: "Redirecionando para login…", changePassword: "Alterar senha", saving: "Salvando…", store: "Ir para loja", redeem: "Resgatar pontos", recover: "Recuperar acesso por e-mail" },
-  }[lang];
+  const { t, i18n } = useTranslation();
+  const dateLocale = useMemo(
+    () =>
+      i18n.language?.startsWith("en")
+        ? "en-US"
+        : i18n.language?.startsWith("pt")
+          ? "pt-BR"
+          : "es-CL",
+    [i18n.language],
+  );
   const ORDERS_PER_PAGE = 5;
   const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
@@ -48,6 +200,8 @@ export default function AccountPage() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [savingPassword, setSavingPassword] = useState(false);
   const [ordersPage, setOrdersPage] = useState(1);
+  const [openModal, setOpenModal] = useState<AccountModalId | null>(null);
+  const modalTitleId = useId();
 
   const totalOrderPages = useMemo(() => {
     if (!data?.recentOrders?.length) return 1;
@@ -79,7 +233,7 @@ export default function AccountPage() {
         });
         setData(r);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Error");
+        setError(e instanceof Error ? e.message : t("common.error"));
       }
     })();
   }, [isAuthReady, accessToken, router]);
@@ -89,237 +243,452 @@ export default function AccountPage() {
     setPasswordMsg(null);
     setPasswordError(null);
     if (!accessToken) {
-      setPasswordError("Tu sesión no está lista. Inicia sesión nuevamente.");
+      setPasswordError(t("account.errSession"));
       return;
     }
     if (newPassword.length < 8) {
-      setPasswordError("La nueva clave debe tener al menos 8 caracteres.");
+      setPasswordError(t("account.errPwdShort"));
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPasswordError("La confirmación no coincide con la nueva clave.");
+      setPasswordError(t("account.errPwdMatch"));
       return;
     }
 
     setSavingPassword(true);
     try {
-      const result = await apiJson<{ message?: string }>("/api/v1/auth/change-password", {
-        method: "POST",
-        token: accessToken,
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      setPasswordMsg(result.message ?? "Tu clave se actualizó correctamente.");
+      const result = await apiJson<{ message?: string }>(
+        "/api/v1/auth/change-password",
+        {
+          method: "POST",
+          token: accessToken,
+          body: JSON.stringify({ currentPassword, newPassword }),
+        },
+      );
+      setPasswordMsg(result.message ?? t("account.pwdUpdated"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (e) {
-      setPasswordError(e instanceof Error ? e.message : "No se pudo actualizar la clave.");
+      setPasswordError(
+        e instanceof Error ? e.message : t("account.errPwdSave"),
+      );
     } finally {
       setSavingPassword(false);
     }
   }
 
+  const sidebarActionClass = (active: boolean) =>
+    [
+      "shrink-0 rounded-xl border px-4 py-2.5 text-left text-sm font-medium transition-colors lg:w-full",
+      active
+        ? "border-sky-400/40 bg-sky-950/35 text-sky-100"
+        : "border-white/10 bg-zinc-950/65 text-zinc-200 hover:border-white/18 hover:bg-zinc-900/75",
+    ].join(" ");
+
   return (
     <SiteShell>
-      <div className="mx-auto max-w-5xl px-4 py-14">
-        <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50 md:text-4xl">{tx.title}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-            Gestiona tu cuenta, revisa tu actividad reciente y mantén tu acceso seguro para seguir en Northrend.
-          </p>
+      <div className="mx-auto max-w-6xl px-4 py-10 md:py-12">
+        {/* Sin `home-card`: su regla "> * { z-index:1 }" anulaba z-20 y `absolute`, tapando texto y vídeo */}
+        <div className="metal-border relative isolate flex h-36 flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_12px_28px_rgba(2,6,23,0.4)] sm:h-40 md:h-44 md:rounded-2xl">
+          <BackgroundLoopVideo
+            startAtSec={0.05}
+            className="pointer-events-none absolute inset-0 z-0 h-full min-h-full w-full min-w-full object-cover object-[center_40%] brightness-[0.72] saturate-[1.05]"
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            aria-hidden
+          >
+            <source src={PANEL_HERO_VIDEO_MP4} type="video/mp4" />
+          </BackgroundLoopVideo>
+          {/* Oscurece arriba hacia transparente abajo — texto superior legible sobre el vídeo */}
+          <div
+            className="pointer-events-none absolute inset-0 z-1 bg-linear-to-b from-black/70 via-black/35 via-45% to-black/55"
+            aria-hidden
+          />
+          <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-4 py-3 text-center sm:px-6">
+            <h1 className="max-w-xl font-display text-base font-bold tracking-[0.08em] text-white [text-shadow:0_2px_12px_rgba(0,0,0,.95),0_0_28px_rgba(0,0,0,.5)] sm:text-lg md:text-xl">
+              {t("account.title")}
+            </h1>
+            <p className="mt-2 max-w-md font-sans text-[11px] font-medium leading-snug text-zinc-100 [text-shadow:0_2px_8px_rgba(0,0,0,.92)] sm:max-w-lg sm:text-xs sm:leading-relaxed md:text-[0.8125rem]">
+              {t("account.heroIntro")}
+            </p>
+          </div>
         </div>
 
-        {!isAuthReady && <p className="mt-8 text-zinc-400">{tx.loadingSession}</p>}
-        {isAuthReady && !accessToken && <p className="mt-8 text-zinc-400">{tx.redirecting}</p>}
+        {!isAuthReady && (
+          <p className="mt-8 text-zinc-400">{t("account.loadingSession")}</p>
+        )}
+        {isAuthReady && !accessToken && (
+          <p className="mt-8 text-zinc-400">{t("account.redirecting")}</p>
+        )}
         {error && <p className="mt-8 text-red-400">{error}</p>}
         {data && (
           <>
-            <div className="mt-8 grid gap-4 md:grid-cols-4">
-              <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
-                <p className="text-xs uppercase tracking-widest text-zinc-500">Usuario</p>
-                <p className="mt-2 text-lg font-semibold text-amber-200">{data.username}</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
-                <p className="text-xs uppercase tracking-widest text-zinc-500">Estado</p>
-                <p className={data.online ? "mt-2 text-lg font-semibold text-emerald-400" : "mt-2 text-lg font-semibold text-zinc-300"}>
-                  {data.online ? "En juego" : "Desconectado"}
+            <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+              <aside className="metal-border order-2 h-fit w-full shrink-0 rounded-2xl border border-white/10 bg-zinc-950/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_12px_28px_rgba(2,6,23,0.38)] lg:sticky lg:order-1 lg:top-24 lg:w-56 lg:self-start lg:p-5">
+                <p className="mb-3 font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                  {t("account.panelNavHint")}
                 </p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
-                <p className="text-xs uppercase tracking-widest text-zinc-500">Personajes</p>
-                <p className="mt-2 text-lg font-semibold text-sky-200">{data.characterCount}</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-zinc-950/60 p-4">
-                <p className="text-xs uppercase tracking-widest text-zinc-500">ID de cuenta</p>
-                <p className="mt-2 font-mono text-lg text-zinc-200">#{data.accountId}</p>
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-950/20 p-4">
-              <p className="text-xs uppercase tracking-widest text-amber-300/80">Saldo de donación</p>
-              <p className="mt-2 text-2xl font-bold text-amber-200">{data.donationPointsBalance} puntos</p>
-              <p className="mt-1 text-sm text-zinc-400">Disponible para usar en la tienda del servidor.</p>
-            </div>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <section className="rounded-xl border border-white/10 bg-zinc-950/60 p-6">
-                <h2 className="font-display text-xl font-semibold text-zinc-100">Información de cuenta</h2>
-                <dl className="mt-5 space-y-3 text-sm">
-                  <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-2">
-                    <dt className="text-zinc-500">Correo</dt>
-                    <dd className="text-right text-zinc-200">{data.email}</dd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-2">
-                    <dt className="text-zinc-500">Creada</dt>
-                    <dd className="text-zinc-300">{data.joinDate ?? "—"}</dd>
-                  </div>
-                  <div className="flex items-center justify-between gap-4">
-                    <dt className="text-zinc-500">Último acceso</dt>
-                    <dd className="text-zinc-300">{data.lastLogin ?? "—"}</dd>
-                  </div>
-                </dl>
-              </section>
-
-              <section className="rounded-xl border border-white/10 bg-zinc-950/60 p-6">
-                <h2 className="font-display text-xl font-semibold text-zinc-100">Seguridad</h2>
-                <p className="mt-2 text-sm text-zinc-400">
-                  Cambia tu clave periódicamente para proteger tu cuenta del servidor.
-                </p>
-                <form onSubmit={onChangePassword} className="mt-5 space-y-3">
-                  <div>
-                    <label className="block text-sm text-zinc-400">Clave actual</label>
-                    <input
-                      type="password"
-                      className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-zinc-400">Nueva clave</label>
-                    <input
-                      type="password"
-                      className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      minLength={8}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-zinc-400">Confirmar nueva clave</label>
-                    <input
-                      type="password"
-                      className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      minLength={8}
-                      required
-                    />
-                  </div>
-                  {passwordMsg && <p className="text-sm text-emerald-400">{passwordMsg}</p>}
-                  {passwordError && <p className="text-sm text-red-400">{passwordError}</p>}
+                <nav
+                  className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden"
+                  aria-label={t("account.panelNavHint")}
+                >
                   <button
-                    type="submit"
-                    disabled={savingPassword}
-                    className="w-full rounded bg-linear-to-r from-amber-600 to-orange-500 py-2.5 text-sm font-semibold text-black disabled:opacity-60"
+                    type="button"
+                    className={sidebarActionClass(openModal === "info")}
+                    onClick={() => setOpenModal("info")}
                   >
-                    {savingPassword ? tx.saving : tx.changePassword}
+                    {t("account.navAccountInfo")}
                   </button>
-                </form>
-              </section>
+                  <button
+                    type="button"
+                    className={sidebarActionClass(openModal === "security")}
+                    onClick={() => setOpenModal("security")}
+                  >
+                    {t("account.navSecurity")}
+                  </button>
+                  <button
+                    type="button"
+                    className={sidebarActionClass(openModal === "orders")}
+                    onClick={() => setOpenModal("orders")}
+                  >
+                    {t("account.navPurchases")}
+                  </button>
+                </nav>
+                <div className="mt-5 border-t border-white/10 pt-4">
+                  <p className="mb-2.5 font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                    {t("account.navShortcuts")}
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      href="/tienda"
+                      className="rounded-lg border border-sky-400/35 bg-sky-950/35 px-3 py-2 text-center text-sm font-semibold text-sky-100 transition-colors hover:bg-sky-900/45 lg:text-left"
+                    >
+                      {t("account.goStore")}
+                    </Link>
+                    <Link
+                      href="/tienda/puntos"
+                      className="rounded-lg border border-amber-400/35 bg-amber-950/30 px-3 py-2 text-center text-sm font-semibold text-amber-100 transition-colors hover:bg-amber-900/40 lg:text-left"
+                    >
+                      {t("account.redeem")}
+                    </Link>
+                    <Link
+                      href="/recuperar"
+                      className="rounded-lg border border-white/12 px-3 py-2 text-center text-sm font-medium text-zinc-300 transition-colors hover:bg-white/5 lg:text-left"
+                    >
+                      {t("account.recoverAccess")}
+                    </Link>
+                  </div>
+                </div>
+              </aside>
+
+              <div className="order-1 min-w-0 flex-1 space-y-6 lg:order-2">
+                <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+                  <StatCard label={t("account.statUser")} accent="amber">
+                    <p className="truncate font-display text-xs font-medium tracking-tight text-amber-100 sm:text-sm">
+                      {data.username}
+                    </p>
+                  </StatCard>
+                  <StatCard label={t("account.statStatus")} accent="emerald">
+                    <p
+                      className={
+                        data.online
+                          ? "inline-flex items-center gap-1.5 font-display text-xs font-semibold tracking-tight text-emerald-300 sm:text-sm"
+                          : "font-display text-xs font-semibold tracking-tight text-zinc-400 sm:text-sm"
+                      }
+                    >
+                      {data.online && (
+                        <span className="relative flex h-2 w-2">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/50 opacity-75 motion-reduce:hidden" />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                        </span>
+                      )}
+                      {data.online ? t("account.online") : t("account.offline")}
+                    </p>
+                  </StatCard>
+                  <StatCard label={t("account.statChars")} accent="sky">
+                    <p className="font-display text-lg font-bold tabular-nums text-sky-100 sm:text-xl">
+                      {data.characterCount}
+                    </p>
+                  </StatCard>
+                  <StatCard label={t("account.statAccountId")} accent="zinc">
+                    <p className="font-mono text-sm font-medium text-zinc-200 sm:text-base">
+                      #{data.accountId}
+                    </p>
+                  </StatCard>
+                </div>
+
+                <div className="metal-border relative shrink-0 overflow-hidden rounded-2xl border border-amber-400/35 bg-linear-to-br from-amber-950/45 via-zinc-950/85 to-zinc-950/90 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_12px_30px_rgba(2,6,23,0.42),0_0_28px_rgba(120,53,15,0.16)] md:flex md:items-center md:justify-between md:gap-8 md:px-5 md:py-3.5">
+                  <div
+                    className="pointer-events-none absolute -right-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-amber-400/12 blur-2xl md:right-12 md:h-32 md:w-32"
+                    aria-hidden
+                  />
+                  <div className="relative z-10 shrink-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-200/75">
+                      {t("account.donationTitle")}
+                    </p>
+                    <p className="mt-1 font-display text-xl font-bold tracking-tight text-amber-100 md:text-2xl">
+                      {data.donationPointsBalance}{" "}
+                      <span className="text-sm font-semibold text-amber-200/85 md:text-base">
+                        {t("account.donationPoints")}
+                      </span>
+                    </p>
+                  </div>
+                  <p className="relative z-10 mt-2 max-w-md text-xs leading-relaxed text-zinc-400 md:mt-0 md:flex-1 md:text-right md:text-sm">
+                    {t("account.donationHint")}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <section className="mt-6 rounded-xl border border-white/10 bg-zinc-950/60 p-6">
-              <h2 className="font-display text-xl font-semibold text-zinc-100">Historial de compras</h2>
-              <p className="mt-2 text-sm text-zinc-400">Últimas transacciones de tu cuenta en la tienda.</p>
+            <AccountModal
+              open={openModal === "info"}
+              titleId={`${modalTitleId}-info`}
+              title={t("account.navAccountInfo")}
+              subtitle={t("account.modalInfoSubtitle")}
+              closeLabel={t("account.closeModal")}
+              onClose={() => setOpenModal(null)}
+            >
+              <dl className="space-y-2.5 text-sm">
+                {[
+                  { label: t("account.infoEmail"), value: data.email },
+                  {
+                    label: t("account.infoCreated"),
+                    value: data.joinDate ?? t("common.dash"),
+                  },
+                  {
+                    label: t("account.infoLastAccess"),
+                    value: data.lastLogin ?? t("common.dash"),
+                  },
+                ].map((row) => (
+                  <div
+                    key={row.label}
+                    className="flex flex-col gap-0.5 rounded-xl border border-white/6 bg-black/30 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  >
+                    <dt className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                      {row.label}
+                    </dt>
+                    <dd className="break-all text-zinc-200 sm:text-right sm:break-normal">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </AccountModal>
+
+            <AccountModal
+              open={openModal === "security"}
+              titleId={`${modalTitleId}-security`}
+              title={t("account.navSecurity")}
+              subtitle={t("account.modalSecuritySubtitle")}
+              closeLabel={t("account.closeModal")}
+              onClose={() => setOpenModal(null)}
+            >
+              <form
+                onSubmit={onChangePassword}
+                className="space-y-3 rounded-xl border border-white/6 bg-black/25 p-4"
+              >
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    {t("account.pwdCurrent")}
+                  </label>
+                  <input
+                    type="password"
+                    className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    {t("account.pwdNew")}
+                  </label>
+                  <input
+                    type="password"
+                    className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    minLength={8}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    {t("account.pwdConfirm")}
+                  </label>
+                  <input
+                    type="password"
+                    className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    minLength={8}
+                    required
+                  />
+                </div>
+                {passwordMsg && (
+                  <p className="text-sm text-emerald-400">{passwordMsg}</p>
+                )}
+                {passwordError && (
+                  <p className="text-sm text-red-400">{passwordError}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={savingPassword}
+                  className="metal-border w-full rounded-lg bg-linear-to-r from-amber-600 to-orange-500 py-2.5 text-sm font-semibold text-black transition-[filter] hover:brightness-110 disabled:opacity-60"
+                >
+                  {savingPassword ? t("account.saving") : t("account.changePassword")}
+                </button>
+              </form>
+            </AccountModal>
+
+            <AccountModal
+              open={openModal === "orders"}
+              titleId={`${modalTitleId}-orders`}
+              title={t("account.navPurchases")}
+              subtitle={t("account.modalOrdersSubtitle")}
+              wide
+              closeLabel={t("account.closeModal")}
+              onClose={() => setOpenModal(null)}
+            >
               {data.recentOrders.length === 0 ? (
-                <p className="mt-4 text-sm text-zinc-500">Aún no tienes compras registradas.</p>
+                <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-10 text-center">
+                  <p className="text-sm text-zinc-500">
+                    {t("account.noPurchasesYet")}
+                  </p>
+                </div>
               ) : (
-                <div className="mt-5 overflow-x-auto">
-                  <table className="min-w-full text-left text-sm">
-                    <thead className="text-zinc-500">
-                      <tr>
-                        <th className="pb-2 pr-4 font-medium">Producto</th>
-                        <th className="pb-2 pr-4 font-medium">Puntos</th>
-                        <th className="pb-2 pr-4 font-medium">Estado</th>
-                        <th className="pb-2 pr-4 font-medium">Fecha</th>
-                        <th className="pb-2 font-medium">Orden PayPal</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pagedOrders.map((order) => (
-                        <tr key={order.orderId} className="border-t border-white/5 text-zinc-300">
-                          <td className="py-3 pr-4">{order.productName}</td>
-                          <td className="py-3 pr-4 text-amber-300">{order.donationPoints}</td>
-                          <td className="py-3 pr-4">
-                            <span
-                              className={
-                                order.status === "PAID"
-                                  ? "text-emerald-400"
-                                  : order.status === "FAILED"
-                                    ? "text-red-400"
-                                    : "text-zinc-400"
-                              }
-                            >
-                              {order.status}
-                            </span>
-                          </td>
-                          <td className="py-3 pr-4">{new Date(order.createdAt).toLocaleString("es-CL")}</td>
-                          <td className="py-3 font-mono text-xs text-zinc-400">{order.paypalOrderId ?? "—"}</td>
+                <div className="overflow-hidden rounded-xl border border-white/7 bg-black/25">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-left text-sm">
+                      <thead className="border-b border-white/8 bg-white/4 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                        <tr>
+                          <th className="px-4 py-3.5 font-medium">
+                            {t("account.ordersProduct")}
+                          </th>
+                          <th className="px-4 py-3.5 font-medium">
+                            {t("account.ordersPoints")}
+                          </th>
+                          <th className="px-4 py-3.5 font-medium">
+                            {t("account.ordersState")}
+                          </th>
+                          <th className="px-4 py-3.5 font-medium">
+                            {t("account.ordersDate")}
+                          </th>
+                          <th className="px-4 py-3.5 font-medium">
+                            {t("account.ordersPaypal")}
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {pagedOrders.map((order, i) => (
+                          <tr
+                            key={order.orderId}
+                            className={
+                              i % 2 === 0
+                                ? "border-t border-white/5 bg-white/2 text-zinc-300"
+                                : "border-t border-white/5 text-zinc-300"
+                            }
+                          >
+                            <td className="px-4 py-3.5 font-medium text-zinc-200">
+                              {order.productName}
+                            </td>
+                            <td className="px-4 py-3.5 tabular-nums text-amber-300/95">
+                              {order.donationPoints}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <span
+                                className={
+                                  order.status === "PAID"
+                                    ? "inline-flex rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/25"
+                                    : order.status === "FAILED"
+                                      ? "inline-flex rounded-full bg-red-500/15 px-2 py-0.5 text-xs font-medium text-red-300 ring-1 ring-red-500/25"
+                                      : "inline-flex rounded-full bg-zinc-500/10 px-2 py-0.5 text-xs font-medium text-zinc-400 ring-1 ring-white/10"
+                                }
+                              >
+                                {order.status === "PAID"
+                                  ? t("account.orderStatusPaid")
+                                  : order.status === "FAILED"
+                                    ? t("account.orderStatusFailed")
+                                    : t("account.orderStatusOther", {
+                                        status: order.status,
+                                      })}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3.5 text-zinc-400">
+                              {new Date(order.createdAt).toLocaleString(
+                                dateLocale,
+                              )}
+                            </td>
+                            <td className="px-4 py-3.5 font-mono text-xs text-zinc-500">
+                              {order.paypalOrderId ?? t("common.dash")}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                   {data.recentOrders.length > ORDERS_PER_PAGE && (
-                    <div className="mt-5 flex items-center justify-end gap-3">
+                    <div className="flex items-center justify-end gap-3 border-t border-white/8 bg-white/2 px-4 py-3">
                       <button
                         type="button"
                         disabled={ordersPage === 1}
-                        onClick={() => setOrdersPage((p) => Math.max(1, p - 1))}
-                        className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                        onClick={() =>
+                          setOrdersPage((p) => Math.max(1, p - 1))
+                        }
+                        className="rounded-lg border border-white/15 bg-black/30 px-3 py-1.5 text-xs font-medium text-zinc-200 transition-colors hover:border-white/25 hover:bg-white/5 disabled:opacity-50"
                       >
-                        Anterior
+                        {t("account.ordersPrev")}
                       </button>
-                      <span className="text-xs text-zinc-400">
-                        Página {ordersPage} de {totalOrderPages}
+                      <span className="text-xs text-zinc-500">
+                        {t("account.ordersPageOf", {
+                          current: ordersPage,
+                          total: totalOrderPages,
+                        })}
                       </span>
                       <button
                         type="button"
                         disabled={ordersPage === totalOrderPages}
-                        onClick={() => setOrdersPage((p) => Math.min(totalOrderPages, p + 1))}
-                        className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
+                        onClick={() =>
+                          setOrdersPage((p) =>
+                            Math.min(totalOrderPages, p + 1),
+                          )
+                        }
+                        className="rounded-lg border border-white/15 bg-black/30 px-3 py-1.5 text-xs font-medium text-zinc-200 transition-colors hover:border-white/25 hover:bg-white/5 disabled:opacity-50"
                       >
-                        Siguiente
+                        {t("account.ordersNext")}
                       </button>
                     </div>
                   )}
                 </div>
               )}
-            </section>
+            </AccountModal>
           </>
         )}
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link
-            href="/tienda"
-            className="rounded-md border border-sky-400/40 bg-sky-950/40 px-4 py-2 text-sm font-semibold text-sky-200 hover:bg-sky-900/50"
-          >
-            {tx.store}
-          </Link>
-          <Link
-            href="/tienda/puntos"
-            className="rounded-md border border-amber-400/40 bg-amber-950/30 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-900/40"
-          >
-            {tx.redeem}
-          </Link>
-          <Link
-            href="/recuperar"
-            className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-white/5"
-          >
-            {tx.recover}
-          </Link>
-        </div>
+        {!data && (
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/tienda"
+              className="rounded-md border border-sky-400/40 bg-sky-950/40 px-4 py-2 text-sm font-semibold text-sky-200 hover:bg-sky-900/50"
+            >
+              {t("account.goStore")}
+            </Link>
+            <Link
+              href="/tienda/puntos"
+              className="rounded-md border border-amber-400/40 bg-amber-950/30 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-900/40"
+            >
+              {t("account.redeem")}
+            </Link>
+            <Link
+              href="/recuperar"
+              className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-white/5"
+            >
+              {t("account.recoverAccess")}
+            </Link>
+          </div>
+        )}
       </div>
     </SiteShell>
   );
