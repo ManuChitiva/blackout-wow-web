@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
@@ -28,6 +29,13 @@ type GameAccountSummary = {
 };
 
 export default function AccountPage() {
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
+  const tx = {
+    es: { title: "Panel del Aventurero", loadingSession: "Cargando sesión…", redirecting: "Redirigiendo al login…", changePassword: "Cambiar clave", saving: "Guardando…", store: "Ir a la tienda", redeem: "Canjear puntos", recover: "Recuperar acceso por correo" },
+    en: { title: "Adventurer Panel", loadingSession: "Loading session…", redirecting: "Redirecting to login…", changePassword: "Change password", saving: "Saving…", store: "Go to store", redeem: "Redeem points", recover: "Recover access by email" },
+    pt: { title: "Painel do Aventureiro", loadingSession: "Carregando sessão…", redirecting: "Redirecionando para login…", changePassword: "Alterar senha", saving: "Salvando…", store: "Ir para loja", redeem: "Resgatar pontos", recover: "Recuperar acesso por e-mail" },
+  }[lang];
   const ORDERS_PER_PAGE = 5;
   const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
@@ -115,14 +123,14 @@ export default function AccountPage() {
     <SiteShell>
       <div className="mx-auto max-w-5xl px-4 py-14">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50 md:text-4xl">Panel del Aventurero</h1>
+          <h1 className="font-display text-3xl font-semibold text-zinc-50 md:text-4xl">{tx.title}</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
             Gestiona tu cuenta, revisa tu actividad reciente y mantén tu acceso seguro para seguir en Northrend.
           </p>
         </div>
 
-        {!isAuthReady && <p className="mt-8 text-zinc-400">Cargando sesión…</p>}
-        {isAuthReady && !accessToken && <p className="mt-8 text-zinc-400">Redirigiendo al login…</p>}
+        {!isAuthReady && <p className="mt-8 text-zinc-400">{tx.loadingSession}</p>}
+        {isAuthReady && !accessToken && <p className="mt-8 text-zinc-400">{tx.redirecting}</p>}
         {error && <p className="mt-8 text-red-400">{error}</p>}
         {data && (
           <>
@@ -217,7 +225,7 @@ export default function AccountPage() {
                     disabled={savingPassword}
                     className="w-full rounded bg-linear-to-r from-amber-600 to-orange-500 py-2.5 text-sm font-semibold text-black disabled:opacity-60"
                   >
-                    {savingPassword ? "Guardando…" : "Cambiar clave"}
+                    {savingPassword ? tx.saving : tx.changePassword}
                   </button>
                 </form>
               </section>
@@ -297,19 +305,19 @@ export default function AccountPage() {
             href="/tienda"
             className="rounded-md border border-sky-400/40 bg-sky-950/40 px-4 py-2 text-sm font-semibold text-sky-200 hover:bg-sky-900/50"
           >
-            Ir a la tienda
+            {tx.store}
           </Link>
           <Link
             href="/tienda/puntos"
             className="rounded-md border border-amber-400/40 bg-amber-950/30 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-900/40"
           >
-            Canjear puntos
+            {tx.redeem}
           </Link>
           <Link
             href="/recuperar"
             className="rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-white/5"
           >
-            Recuperar acceso por correo
+            {tx.recover}
           </Link>
         </div>
       </div>

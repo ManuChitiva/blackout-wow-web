@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
 import { SITE_NAME } from "@/lib/seo";
+import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
 export const metadata: Metadata = {
   title: "Servidor WoW Custom 3.3.5a",
@@ -19,106 +21,330 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const rawLang = cookieStore.get("lang")?.value;
+  const lang = isSupportedLanguage(rawLang) ? rawLang : defaultLng;
+  const tx = {
+    es: {
+      welcome: "Bienvenido a Blackout-WoW",
+      exp: "Vive una experiencia custom completa.",
+      hero:
+        "Progresion hasta nivel 100, raids y tiers exclusivos, PvE avanzado, PvP activo, miles de opciones de personalizacion y nuevas fases cada 3 meses para que siempre tengas algo nuevo por hacer.",
+      create: "Crear cuenta",
+      connect: "Como conectarme",
+      seeRules: "Consulta las reglas del servidor en",
+      terms: "terminos y condiciones",
+      features: "Caracteristicas principales del servidor",
+      featuresBody:
+        "Blackout-WoW esta construido para ofrecer una experiencia fresca, estable y divertida, donde siempre existe una nueva meta por cumplir.",
+      serverInfo: "Informacion general del servidor",
+      phases: "Fases y actualizaciones",
+      vision: "Nuestra vision",
+      why: "¿Por que Blackout?",
+      start: "Tu aventura empieza hoy",
+      startBody: "Crea tu cuenta y forma parte del reino BLACKOUT. El Lich King no espera.",
+      signupNow: "Registrarme ahora",
+      iHave: "Ya tengo cuenta",
+      downloadTitle: "Descarga el cliente oficial",
+      downloadCta: "Descargar cliente",
+      quickHighlights: [
+        { label: "Nivel maximo", value: "100", note: "Progresion custom" },
+        { label: "Contenido", value: "100% custom", note: "PvE, PvP y sistemas" },
+        { label: "Fases", value: "Cada 3 meses", note: "Actualizaciones activas" },
+        { label: "Modelo", value: "No pay to win", note: "Progreso real jugando" },
+      ],
+      contentBlocks: [
+        {
+          title: "Contenido 100% custom",
+          points: [
+            "Leveo personalizado de nivel 1 a 100 con progresion constante.",
+            "Teleporter custom para moverte rapido entre zonas importantes.",
+            "Pets y monturas custom, incluyendo contenido desde Cataclysm hasta The War Within.",
+            "Morphs y monturas tematicas inspiradas en universos como Dragon Ball Z y Star Wars.",
+          ],
+        },
+        {
+          title: "PvE custom",
+          points: [
+            "Raids personalizadas con equipamiento progresivo para todo tipo de jugador.",
+            "Tiers custom desde T1 hasta T20 para mantener metas de progreso claras.",
+            "World Bosses exclusivos con recompensas especiales y zonas de reto.",
+            "Contenido pensado para jugadores nuevos, casuales y competitivos.",
+          ],
+        },
+        {
+          title: "PvP activo",
+          points: [
+            "Duel Zone personalizada, Battlegrounds activos y zonas PvP.",
+            "Combates casuales y competitivos con actividad diaria entre jugadores.",
+            "Progresion y recompensas orientadas tanto a PvP como a PvE.",
+            "Sistema enfocado en juego limpio y competencia real.",
+          ],
+        },
+        {
+          title: "Sistemas especiales",
+          points: [
+            "Sistema avanzado para cambio de druida y otras mejoras de calidad de vida.",
+            "Tienda integrada dentro del juego para facilitar la experiencia.",
+            "Progresion balanceada con enfoque no pay to win.",
+            "Contenido diseñado para avanzar jugando y disfrutar en comunidad.",
+          ],
+        },
+      ],
+      serverInfoColumns: [
+        [
+          "Nivel maximo 100.",
+          "Leveo personalizado desde nivel 1 hasta 100.",
+          "Teleporter custom para facilitar el movimiento.",
+          "Pets personalizados y monturas custom.",
+        ],
+        [
+          "Monturas inspiradas en universos como Dragon Ball Z y Star Wars.",
+          "Morphs especiales para crear una identidad unica.",
+          "Mas de 100.000 items disponibles para transfiguracion.",
+          "Contenido balanceado para jugador casual y competitivo.",
+        ],
+        [
+          "Raids custom con progresion por tiers.",
+          "World Bosses exclusivos y recompensas especiales.",
+          "Duel Zone, Battlegrounds activos y zonas PvP.",
+          "Eventos por fase con recompensas y desafios nuevos.",
+        ],
+      ],
+      whyCards: [
+        {
+          title: "Comunidad activa",
+          body: "Un servidor con jugadores comprometidos para ayudarte, competir y progresar.",
+        },
+        {
+          title: "Progresion constante",
+          body: "Nuevas fases, sistemas y contenido nuevo para desafiarte todo el año.",
+        },
+        {
+          title: "Experiencia custom completa",
+          body: "Contenido diseñado para entregar una experiencia diferente a cualquier otro servidor.",
+        },
+        {
+          title: "Servidor estable",
+          body: "Infraestructura optimizada para ofrecer la mejor experiencia de juego posible.",
+        },
+      ],
+      visionCards: [
+        {
+          title: "Comunidad activa",
+          body: "Queremos un entorno estable y divertido donde todos puedan progresar, competir y cooperar.",
+          tag: "Comunidad",
+        },
+        {
+          title: "Progreso real",
+          body: "El enfoque no pay to win permite avanzar jugando, aprendiendo y participando.",
+          tag: "Progreso",
+        },
+        {
+          title: "Personalizacion total",
+          body: "Transfiguraciones masivas, monturas, pets y morphs para crear tu propio estilo.",
+          tag: "Identidad",
+        },
+      ],
+    },
+    en: {
+      welcome: "Welcome to Blackout-WoW",
+      exp: "Live a complete custom experience.",
+      hero:
+        "Progress to level 100, exclusive raids and tiers, advanced PvE, active PvP, thousands of customization options and new phases every 3 months.",
+      create: "Create account",
+      connect: "How to connect",
+      seeRules: "Check the server rules at",
+      terms: "terms and conditions",
+      features: "Main server features",
+      featuresBody:
+        "Blackout-WoW is built to deliver a fresh, stable and fun experience where there is always a new goal to achieve.",
+      serverInfo: "General server information",
+      phases: "Phases and updates",
+      vision: "Our vision",
+      why: "Why Blackout?",
+      start: "Your adventure starts today",
+      startBody: "Create your account and join the BLACKOUT realm. The Lich King is waiting.",
+      signupNow: "Sign up now",
+      iHave: "I already have an account",
+      downloadTitle: "Download the official client",
+      downloadCta: "Download client",
+      quickHighlights: [
+        { label: "Max level", value: "100", note: "Custom progression" },
+        { label: "Content", value: "100% custom", note: "PvE, PvP and systems" },
+        { label: "Phases", value: "Every 3 months", note: "Active updates" },
+        { label: "Model", value: "No pay to win", note: "Real progress by playing" },
+      ],
+      contentBlocks: [
+        {
+          title: "100% custom content",
+          points: [
+            "Custom leveling from 1 to 100 with constant progression.",
+            "Custom teleporter to move quickly between key zones.",
+            "Custom pets and mounts, including content from Cataclysm to The War Within.",
+            "Themed morphs and mounts inspired by universes like Dragon Ball Z and Star Wars.",
+          ],
+        },
+        {
+          title: "Custom PvE",
+          points: [
+            "Custom raids with progressive gear for every type of player.",
+            "Custom tiers from T1 to T20 with clear progression goals.",
+            "Exclusive world bosses with special rewards and challenge zones.",
+            "Content designed for new, casual and competitive players.",
+          ],
+        },
+        {
+          title: "Active PvP",
+          points: [
+            "Custom duel zone, active battlegrounds and PvP areas.",
+            "Casual and competitive combat with daily player activity.",
+            "Progression and rewards focused on both PvP and PvE.",
+            "System focused on fair play and real competition.",
+          ],
+        },
+        {
+          title: "Special systems",
+          points: [
+            "Advanced druid form switch and other quality-of-life improvements.",
+            "In-game integrated store to simplify the experience.",
+            "Balanced progression with no pay-to-win approach.",
+            "Content designed to progress by playing and enjoying the community.",
+          ],
+        },
+      ],
+      serverInfoColumns: [
+        ["Max level 100.", "Custom leveling from 1 to 100.", "Custom teleporter for fast movement.", "Custom pets and mounts."],
+        ["Mounts inspired by Dragon Ball Z and Star Wars.", "Special morphs for unique identity.", "More than 100,000 transmogrification items.", "Balanced content for casual and competitive players."],
+        ["Custom raids with tier progression.", "Exclusive world bosses and rewards.", "Duel Zone, active battlegrounds and PvP areas.", "Phase events with new rewards and challenges."],
+      ],
+      whyCards: [
+        { title: "Active community", body: "A server with committed players to help you, compete and progress." },
+        { title: "Constant progression", body: "New phases, systems and content to challenge you year-round." },
+        { title: "Full custom experience", body: "Content designed to deliver a unique experience." },
+        { title: "Stable server", body: "Optimized infrastructure for the best gameplay experience." },
+      ],
+      visionCards: [
+        {
+          title: "Active community",
+          body: "We want a stable and fun environment where everyone can progress, compete and cooperate.",
+          tag: "Community",
+        },
+        {
+          title: "Real progression",
+          body: "The no pay-to-win approach lets you advance by playing, learning and participating.",
+          tag: "Progress",
+        },
+        {
+          title: "Total customization",
+          body: "Massive transmogs, mounts, pets and morphs so you can create your own style.",
+          tag: "Identity",
+        },
+      ],
+    },
+    pt: {
+      welcome: "Bem-vindo ao Blackout-WoW",
+      exp: "Viva uma experiência custom completa.",
+      hero:
+        "Progrida até o nível 100, raids e tiers exclusivos, PvE avançado, PvP ativo e novas fases a cada 3 meses.",
+      create: "Criar conta",
+      connect: "Como conectar",
+      seeRules: "Consulte as regras do servidor em",
+      terms: "termos e condições",
+      features: "Principais características do servidor",
+      featuresBody:
+        "Blackout-WoW foi criado para oferecer uma experiência nova, estável e divertida, com sempre uma nova meta.",
+      serverInfo: "Informações gerais do servidor",
+      phases: "Fases e atualizações",
+      vision: "Nossa visão",
+      why: "Por que Blackout?",
+      start: "Sua aventura começa hoje",
+      startBody: "Crie sua conta e faça parte do reino BLACKOUT. O Lich King não espera.",
+      signupNow: "Registrar agora",
+      iHave: "Já tenho conta",
+      downloadTitle: "Baixe o cliente oficial",
+      downloadCta: "Baixar cliente",
+      quickHighlights: [
+        { label: "Nível máximo", value: "100", note: "Progressão custom" },
+        { label: "Conteúdo", value: "100% custom", note: "PvE, PvP e sistemas" },
+        { label: "Fases", value: "A cada 3 meses", note: "Atualizações ativas" },
+        { label: "Modelo", value: "Sem pay to win", note: "Progresso real jogando" },
+      ],
+      contentBlocks: [
+        {
+          title: "Conteúdo 100% custom",
+          points: [
+            "Leveling custom do nível 1 ao 100 com progressão constante.",
+            "Teleporter custom para mover rapidamente entre zonas importantes.",
+            "Pets e montarias custom, com conteúdo de Cataclysm até The War Within.",
+            "Morphs e montarias temáticas inspiradas em Dragon Ball Z e Star Wars.",
+          ],
+        },
+        {
+          title: "PvE custom",
+          points: [
+            "Raids custom com equipamentos progressivos para todo tipo de jogador.",
+            "Tiers custom de T1 até T20 com metas claras de progressão.",
+            "World Bosses exclusivos com recompensas especiais.",
+            "Conteúdo pensado para jogadores novos, casuais e competitivos.",
+          ],
+        },
+        {
+          title: "PvP ativo",
+          points: [
+            "Duel Zone custom, battlegrounds ativos e zonas PvP.",
+            "Combates casuais e competitivos com atividade diária.",
+            "Progressão e recompensas para PvP e PvE.",
+            "Sistema focado em jogo limpo e competição real.",
+          ],
+        },
+        {
+          title: "Sistemas especiais",
+          points: [
+            "Sistema avançado para mudança de forma de druida e melhorias de qualidade de vida.",
+            "Loja integrada dentro do jogo para facilitar a experiência.",
+            "Progressão equilibrada com foco sem pay to win.",
+            "Conteúdo criado para evoluir jogando e curtindo a comunidade.",
+          ],
+        },
+      ],
+      serverInfoColumns: [
+        ["Nível máximo 100.", "Leveling custom do nível 1 ao 100.", "Teleporter custom para facilitar movimento.", "Pets e montarias custom."],
+        ["Montarias inspiradas em Dragon Ball Z e Star Wars.", "Morphs especiais para identidade única.", "Mais de 100.000 itens para transmog.", "Conteúdo equilibrado para casual e competitivo."],
+        ["Raids custom com progressão por tiers.", "World Bosses exclusivos e recompensas especiais.", "Duel Zone, battlegrounds ativos e zonas PvP.", "Eventos por fase com novos desafios."],
+      ],
+      whyCards: [
+        { title: "Comunidade ativa", body: "Servidor com jogadores comprometidos para ajudar, competir e evoluir." },
+        { title: "Progressão constante", body: "Novas fases, sistemas e conteúdo para te desafiar o ano todo." },
+        { title: "Experiência custom completa", body: "Conteúdo desenhado para entregar uma experiência diferente." },
+        { title: "Servidor estável", body: "Infraestrutura otimizada para a melhor experiência possível." },
+      ],
+      visionCards: [
+        {
+          title: "Comunidade ativa",
+          body: "Queremos um ambiente estável e divertido onde todos possam evoluir, competir e cooperar.",
+          tag: "Comunidade",
+        },
+        {
+          title: "Progresso real",
+          body: "A abordagem sem pay to win permite evoluir jogando, aprendendo e participando.",
+          tag: "Progresso",
+        },
+        {
+          title: "Personalização total",
+          body: "Transmog em massa, montarias, pets e morphs para criar seu próprio estilo.",
+          tag: "Identidade",
+        },
+      ],
+    },
+  }[lang];
   const dragonModelSrc = "";
-  const quickHighlights = [
-    {
-      label: "Nivel maximo",
-      value: "100",
-      note: "Progresion custom",
-    },
-    {
-      label: "Contenido",
-      value: "100% custom",
-      note: "PvE, PvP y sistemas",
-    },
-    {
-      label: "Fases",
-      value: "Cada 3 meses",
-      note: "Actualizaciones activas",
-    },
-    {
-      label: "Modelo",
-      value: "No pay to win",
-      note: "Progreso real jugando",
-    },
-  ];
-  const serverInfoColumns = [
-    [
-      "Nivel maximo 100.",
-      "Leveo personalizado desde nivel 1 hasta 100.",
-      "Teleporter custom para facilitar el movimiento.",
-      "Pets personalizados y monturas custom.",
-    ],
-    [
-      "Monturas inspiradas en universos como Dragon Ball Z y Star Wars.",
-      "Morphs especiales para crear una identidad unica.",
-      "Mas de 100.000 items disponibles para transfiguracion.",
-      "Contenido balanceado para jugador casual y competitivo.",
-    ],
-    [
-      "Raids custom con progresion por tiers.",
-      "World Bosses exclusivos y recompensas especiales.",
-      "Duel Zone, Battlegrounds activos y zonas PvP.",
-      "Eventos por fase con recompensas y desafios nuevos.",
-    ],
-  ];
-  const whyBlackoutCards = [
-    {
-      title: "Comunidad activa",
-      body: "Un servidor con jugadores comprometidos para ayudarte, competir y progresar.",
-    },
-    {
-      title: "Progresion constante",
-      body: "Nuevas fases, sistemas y contenido nuevo para desafiarte todo el año.",
-    },
-    {
-      title: "Experiencia custom completa",
-      body: "Contenido diseñado para entregar una experiencia diferente a cualquier otro servidor.",
-    },
-    {
-      title: "Servidor estable",
-      body: "Infraestructura optimizada para ofrecer la mejor experiencia de juego posible.",
-    },
-  ];
-  const contentBlocks = [
-    {
-      title: "Contenido 100% custom",
-      points: [
-        "Leveo personalizado de nivel 1 a 100 con progresion constante.",
-        "Teleporter custom para moverte rapido entre zonas importantes.",
-        "Pets y monturas custom, incluyendo contenido desde Cataclysm hasta The War Within.",
-        "Morphs y monturas tematicas inspiradas en universos como Dragon Ball Z y Star Wars.",
-      ],
-    },
-    {
-      title: "PvE custom",
-      points: [
-        "Raids personalizadas con equipamiento progresivo para todo tipo de jugador.",
-        "Tiers custom desde T1 hasta T20 para mantener metas de progreso claras.",
-        "World Bosses exclusivos con recompensas especiales y zonas de reto.",
-        "Contenido pensado para jugadores nuevos, casuales y competitivos.",
-      ],
-    },
-    {
-      title: "PvP activo",
-      points: [
-        "Duel Zone personalizada, Battlegrounds activos y zonas PvP.",
-        "Combates casuales y competitivos con actividad diaria entre jugadores.",
-        "Progresion y recompensas orientadas tanto a PvP como a PvE.",
-        "Sistema enfocado en juego limpio y competencia real.",
-      ],
-    },
-    {
-      title: "Sistemas especiales",
-      points: [
-        "Sistema avanzado para cambio de druida y otras mejoras de calidad de vida.",
-        "Tienda integrada dentro del juego para facilitar la experiencia.",
-        "Progresion balanceada con enfoque no pay to win.",
-        "Contenido diseñado para avanzar jugando y disfrutar en comunidad.",
-      ],
-    },
-  ];
+  const quickHighlights = tx.quickHighlights;
+  const serverInfoColumns = tx.serverInfoColumns;
+  const whyBlackoutCards = tx.whyCards;
+  const visionCards = tx.visionCards;
+  const contentBlocks = tx.contentBlocks;
 
   return (
     <SiteShell>
@@ -147,38 +373,35 @@ export default function HomePage() {
               BLACKOUT · Wrath of the Lich King
             </p>
             <h1 className="font-display mt-4 max-w-3xl text-2xl font-bold leading-tight text-zinc-50 sm:text-4xl md:text-5xl">
-              Bienvenido a Blackout-WoW{" "}
+              {tx.welcome}{" "}
               <span className="glow-ember bg-linear-to-r from-amber-300 via-orange-400 to-red-500 bg-clip-text text-transparent">
-                Vive una experiencia custom completa.
+                {tx.exp}
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-300 md:text-lg">
-              Progresion hasta nivel 100, raids y tiers exclusivos, PvE
-              avanzado, PvP activo, miles de opciones de personalizacion y
-              nuevas fases cada 3 meses para que siempre tengas algo nuevo por
-              hacer.
+              {tx.hero}
             </p>
             <div className="mt-9 flex flex-wrap gap-3 sm:gap-4">
               <Link
                 href="/registro"
                 className="metal-border rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400 sm:px-8 sm:text-base"
               >
-                Crear cuenta
+                {tx.create}
               </Link>
               <Link
-                href="/tienda"
+                href="/como-conectarme"
                 className="metal-border rounded-md border border-sky-400/40 bg-sky-950/40 px-6 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-900/50 sm:px-8 sm:text-base"
               >
-                Ver tienda
+                {tx.connect}
               </Link>
             </div>
             <p className="mt-4 text-sm text-zinc-400">
-              Consulta las reglas del servidor en{" "}
+              {tx.seeRules}{" "}
               <Link
                 href="/terminos-y-condiciones"
                 className="text-sky-300 hover:text-sky-200 hover:underline"
               >
-                terminos y condiciones
+                {tx.terms}
               </Link>
               .
             </p>
@@ -215,11 +438,10 @@ export default function HomePage() {
         />
         <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-55" />
         <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
-          Caracteristicas principales del servidor
+          {tx.features}
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-center text-sm leading-relaxed text-zinc-400 md:text-base">
-          Blackout-WoW esta construido para ofrecer una experiencia fresca,
-          estable y divertida, donde siempre existe una nueva meta por cumplir.
+          {tx.featuresBody}
         </p>
         <div className="relative z-10 mt-12 grid gap-6 md:grid-cols-2">
           {contentBlocks.map((f, idx) => (
@@ -266,7 +488,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 pb-14">
         <div className="home-card rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
           <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
-            Informacion general del servidor
+            {tx.serverInfo}
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-zinc-400 md:text-base">
             Todo lo que necesitas saber de BLACKOUT WoW en un solo vistazo.
@@ -301,7 +523,7 @@ export default function HomePage() {
             Visual Demo
           </p>
           <h2 className="font-display mt-2 text-2xl font-semibold text-zinc-100 md:text-3xl">
-            Descarga el cliente oficial
+            {tx.downloadTitle}
           </h2>
           <p className="mt-3 max-w-3xl text-sm text-zinc-400 md:text-base">
             Instala BLACKOUT WoW 3.3.5a en minutos. Descarga el cliente completo
@@ -366,7 +588,7 @@ export default function HomePage() {
                   href="/downloads/blackout-wow-3.3.5a-client.zip"
                   className="inline-flex rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
                 >
-                  Descargar cliente
+                  {tx.downloadCta}
                 </Link>
               </div>
             </div>
@@ -379,7 +601,7 @@ export default function HomePage() {
           <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-42" />
           <div className="relative z-10">
             <h2 className="font-display text-2xl font-semibold text-zinc-100">
-              Fases y actualizaciones
+              {tx.phases}
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400 md:text-base">
               El servidor evoluciona por fases. Cada 3 meses llega contenido
@@ -452,26 +674,10 @@ export default function HomePage() {
         <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-38" />
         <div className="relative z-10">
           <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
-            Nuestra vision
+            {tx.vision}
           </h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                title: "Comunidad activa",
-                body: "Queremos un entorno estable y divertido donde todos puedan progresar, competir y cooperar.",
-                tag: "Comunidad",
-              },
-              {
-                title: "Progreso real",
-                body: "El enfoque no pay to win permite avanzar jugando, aprendiendo y participando.",
-                tag: "Progreso",
-              },
-              {
-                title: "Personalizacion total",
-                body: "Transfiguraciones masivas, monturas, pets y morphs para crear tu propio estilo.",
-                tag: "Identidad",
-              },
-            ].map((n, idx) => (
+            {visionCards.map((n, idx) => (
               <article
                 key={n.title}
                 className="home-card reveal-up rounded-xl border border-white/10 bg-zinc-950/65 p-5"
@@ -493,7 +699,7 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
         <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
-          ¿Por que Blackout?
+          {tx.why}
         </h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {whyBlackoutCards.map((card) => (
@@ -515,24 +721,23 @@ export default function HomePage() {
           <div className="home-card reveal-up cta-fire-border rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center">
             <div className="cta-fire-particles fire-embers pointer-events-none absolute -inset-x-10 -inset-y-12 opacity-75" />
             <h2 className="font-display text-3xl font-semibold text-zinc-50">
-              Tu aventura empieza hoy
+              {tx.start}
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-zinc-400">
-              Crea tu cuenta y forma parte del reino BLACKOUT. El Lich King no
-              espera.
+              {tx.startBody}
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Link
                 href="/registro"
                 className="rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
               >
-                Registrarme ahora
+                {tx.signupNow}
               </Link>
               <Link
                 href="/login"
                 className="rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-zinc-200 hover:bg-white/5"
               >
-                Ya tengo cuenta
+                {tx.iHave}
               </Link>
             </div>
           </div>

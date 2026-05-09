@@ -376,6 +376,81 @@ body {
   }
 }
 
+@keyframes nav-brand-letter-aura-title {
+  0%,
+  100% {
+    color: #fde68a;
+    text-shadow:
+      0 0 5px rgba(251, 191, 36, 0.5),
+      0 0 14px rgba(249, 115, 22, 0.35),
+      0 0 22px rgba(234, 88, 12, 0.12);
+  }
+  32% {
+    color: #a5f3fc;
+    text-shadow:
+      0 0 6px rgba(125, 211, 252, 0.55),
+      0 0 16px rgba(56, 189, 248, 0.32),
+      0 0 24px rgba(14, 165, 233, 0.14);
+  }
+  64% {
+    color: #fdba74;
+    text-shadow:
+      0 0 5px rgba(251, 146, 60, 0.52),
+      0 0 15px rgba(249, 115, 22, 0.38),
+      0 0 22px rgba(234, 88, 12, 0.14);
+  }
+}
+
+@keyframes nav-brand-letter-aura-sub {
+  0%,
+  100% {
+    color: rgba(212, 212, 216, 0.88);
+    text-shadow:
+      0 0 4px rgba(161, 161, 170, 0.35),
+      0 0 10px rgba(125, 211, 252, 0.12);
+  }
+  35% {
+    color: rgba(125, 211, 252, 0.92);
+    text-shadow:
+      0 0 5px rgba(125, 211, 252, 0.4),
+      0 0 12px rgba(56, 189, 248, 0.15);
+  }
+  68% {
+    color: rgba(253, 230, 138, 0.85);
+    text-shadow:
+      0 0 4px rgba(251, 191, 36, 0.38),
+      0 0 11px rgba(249, 115, 22, 0.12);
+  }
+}
+
+.nav-brand-aura-letter {
+  display: inline-block;
+  will-change: color, text-shadow;
+}
+
+.nav-brand-aura-letter--title {
+  animation: nav-brand-letter-aura-title 2.75s ease-in-out infinite;
+}
+
+.nav-brand-aura-letter--sub {
+  animation: nav-brand-letter-aura-sub 3.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-brand-aura-letter {
+    animation: none !important;
+    text-shadow: none !important;
+  }
+
+  .nav-brand-aura-letter--title {
+    color: #fde68a;
+  }
+
+  .nav-brand-aura-letter--sub {
+    color: rgba(212, 212, 216, 0.9);
+  }
+}
+
 .navbar-aura::after {
   content: "";
   position: absolute;

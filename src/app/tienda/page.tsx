@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
@@ -30,6 +31,73 @@ function imageForProduct(category: string) {
 }
 
 export default function ShopPage() {
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
+  const tx = {
+    es: {
+      all: "Todas",
+      title: "Tienda de donación",
+      subtitle: "Elige tu paquete de puntos y accede a ventajas premium dentro del servidor.",
+      hasPoints: "¿Ya tienes puntos?",
+      redeemShop: "Ir a la tienda de canje",
+      search: "Buscar por nombre, SKU o descripción",
+      showing: "Mostrando",
+      products: "productos.",
+      autoDelivery: "Entrega automática",
+      points: "puntos",
+      redirecting: "Redirigiendo…",
+      buy: "Comprar",
+      noProducts: "No hay productos para ese filtro.",
+      prev: "Anterior",
+      page: "Página",
+      of: "de",
+      next: "Siguiente",
+      login: "Inicia sesión",
+      toBuy: "para comprar.",
+    },
+    en: {
+      all: "All",
+      title: "Donation store",
+      subtitle: "Choose your points package and unlock premium benefits on the server.",
+      hasPoints: "Already have points?",
+      redeemShop: "Go to redeem store",
+      search: "Search by name, SKU or description",
+      showing: "Showing",
+      products: "products.",
+      autoDelivery: "Auto delivery",
+      points: "points",
+      redirecting: "Redirecting…",
+      buy: "Buy",
+      noProducts: "No products for this filter.",
+      prev: "Previous",
+      page: "Page",
+      of: "of",
+      next: "Next",
+      login: "Log in",
+      toBuy: "to buy.",
+    },
+    pt: {
+      all: "Todas",
+      title: "Loja de doação",
+      subtitle: "Escolha seu pacote de pontos e acesse vantagens premium no servidor.",
+      hasPoints: "Já tem pontos?",
+      redeemShop: "Ir para a loja de resgate",
+      search: "Buscar por nome, SKU ou descrição",
+      showing: "Mostrando",
+      products: "produtos.",
+      autoDelivery: "Entrega automática",
+      points: "pontos",
+      redirecting: "Redirecionando…",
+      buy: "Comprar",
+      noProducts: "Não há produtos para este filtro.",
+      prev: "Anterior",
+      page: "Página",
+      of: "de",
+      next: "Seguinte",
+      login: "Entrar",
+      toBuy: "para comprar.",
+    },
+  }[lang];
   const ITEMS_PER_PAGE = 6;
   const { accessToken } = useAuth();
   const router = useRouter();
@@ -37,7 +105,7 @@ export default function ShopPage() {
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("Todas");
+  const [category, setCategory] = useState(tx.all);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -53,13 +121,13 @@ export default function ShopPage() {
 
   const categories = useMemo(() => {
     const all = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
-    return ["Todas", ...all];
+    return [tx.all, ...all];
   }, [products]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return products.filter((p) => {
-      const byCategory = category === "Todas" || p.category === category;
+      const byCategory = category === tx.all || p.category === category;
       const bySearch =
         term.length === 0 ||
         p.name.toLowerCase().includes(term) ||
@@ -123,16 +191,16 @@ export default function ShopPage() {
           </video>
           <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/70 via-black/55 to-black/72" />
           <div className="relative z-10">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50">Tienda de donación</h1>
+          <h1 className="font-display text-3xl font-semibold text-zinc-50">{tx.title}</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-            Elige tu paquete de puntos y accede a ventajas premium dentro del servidor.
+            {tx.subtitle}
           </p>
           </div>
         </div>
         <p className="mt-3 text-sm text-zinc-400">
-          ¿Ya tienes puntos?{" "}
+          {tx.hasPoints}{" "}
           <Link href="/tienda/puntos" className="text-amber-300 hover:underline">
-            Ir a la tienda de canje
+            {tx.redeemShop}
           </Link>
           .
         </p>
@@ -141,7 +209,7 @@ export default function ShopPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre, SKU o descripción"
+            placeholder={tx.search}
             className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-sky-500/60"
           />
           <select
@@ -159,7 +227,7 @@ export default function ShopPage() {
         {error && <p className="mt-6 text-red-400">{error}</p>}
         {!error && filtered.length > 0 && (
           <p className="mt-4 text-sm text-zinc-500">
-            Mostrando <span className="text-zinc-300">{filtered.length}</span> productos.
+            {tx.showing} <span className="text-zinc-300">{filtered.length}</span> {tx.products}
           </p>
         )}
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -182,9 +250,9 @@ export default function ShopPage() {
                 <h2 className="font-display line-clamp-2 wrap-break-word text-lg font-semibold text-amber-300">{p.name}</h2>
                 <p className="mt-2 flex-1 line-clamp-3 wrap-break-word text-sm text-zinc-400">{p.description}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-amber-300">{p.donationPoints} puntos</p>
+                  <p className="text-sm font-semibold text-amber-300">{p.donationPoints} {tx.points}</p>
                   <span className="rounded-full border border-sky-400/35 bg-sky-500/10 px-2 py-0.5 text-[11px] font-semibold text-sky-200">
-                    Entrega automática
+                    {tx.autoDelivery}
                   </span>
                 </div>
                 <div className="mt-4 flex items-center justify-between">
@@ -195,7 +263,7 @@ export default function ShopPage() {
                     onClick={() => buy(p.id)}
                     className="rounded bg-linear-to-r from-sky-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-black hover:from-sky-500 hover:to-cyan-400 disabled:opacity-50"
                   >
-                    {busyId === p.id ? "Redirigiendo…" : "Comprar"}
+                    {busyId === p.id ? tx.redirecting : tx.buy}
                   </button>
                 </div>
               </div>
@@ -203,7 +271,7 @@ export default function ShopPage() {
           ))}
         </div>
         {!error && filtered.length === 0 && (
-          <p className="mt-8 text-center text-sm text-zinc-500">No hay productos para ese filtro.</p>
+          <p className="mt-8 text-center text-sm text-zinc-500">{tx.noProducts}</p>
         )}
         {filtered.length > ITEMS_PER_PAGE && (
           <div className="mt-8 flex items-center justify-center gap-3">
@@ -213,10 +281,10 @@ export default function ShopPage() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              Anterior
+              {tx.prev}
             </button>
             <p className="text-sm text-zinc-400">
-              Página {page} de {totalPages}
+              {tx.page} {page} {tx.of} {totalPages}
             </p>
             <button
               type="button"
@@ -224,16 +292,16 @@ export default function ShopPage() {
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              Siguiente
+              {tx.next}
             </button>
           </div>
         )}
         {!accessToken && (
           <p className="mt-10 text-center text-sm text-zinc-500">
             <Link href="/login" className="text-amber-400 hover:underline">
-              Inicia sesión
+              {tx.login}
             </Link>{" "}
-            para comprar.
+            {tx.toBuy}
           </p>
         )}
       </div>

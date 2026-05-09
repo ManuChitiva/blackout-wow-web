@@ -3,11 +3,19 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
 
 function ReturnInner() {
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
+  const tx = {
+    es: { loading: "Confirmando pago con PayPal…", ok: "¡Pago registrado correctamente!", refresh: "Refrescar estado", myAccount: "Ver mi cuenta", backStore: "Volver a tienda", retry: "Reintentar", loadingPage: "Cargando…" },
+    en: { loading: "Confirming PayPal payment…", ok: "Payment registered successfully!", refresh: "Refresh status", myAccount: "View my account", backStore: "Back to store", retry: "Retry", loadingPage: "Loading…" },
+    pt: { loading: "Confirmando pagamento do PayPal…", ok: "Pagamento registrado com sucesso!", refresh: "Atualizar status", myAccount: "Ver minha conta", backStore: "Voltar à loja", retry: "Tentar novamente", loadingPage: "Carregando…" },
+  }[lang];
   const searchParams = useSearchParams();
   const router = useRouter();
   const { accessToken } = useAuth();
@@ -86,10 +94,10 @@ function ReturnInner() {
   return (
     <div className="mx-auto max-w-xl px-4 py-16">
       <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 text-center md:p-8">
-        {status === "working" && <p className="text-zinc-300">Confirmando pago con PayPal…</p>}
+        {status === "working" && <p className="text-zinc-300">{tx.loading}</p>}
       {status === "ok" && (
         <>
-          <p className="text-lg text-emerald-400">¡Pago registrado correctamente!</p>
+          <p className="text-lg text-emerald-400">{tx.ok}</p>
           <p className="mt-2 text-sm text-zinc-400">Gracias por tu compra y por apoyar la comunidad BLACKOUT WoW.</p>
           {purchaseSummary ? (
             <div className="mx-auto mt-6 max-w-md rounded-lg border border-emerald-400/30 bg-emerald-950/20 px-4 py-3 text-left">
@@ -109,13 +117,13 @@ function ReturnInner() {
               onClick={() => (paypalToken ? void confirmPayment(paypalToken) : window.location.reload())}
               className="rounded border border-white/20 px-3 py-1.5 text-xs text-zinc-300 hover:bg-white/5"
             >
-              Refrescar estado
+              {tx.refresh}
             </button>
             <Link href="/cuenta" className="text-amber-400 hover:underline">
-              Ver mi cuenta
+              {tx.myAccount}
             </Link>
             <Link href="/tienda" className="text-sky-300 hover:underline">
-              Volver a tienda
+              {tx.backStore}
             </Link>
           </div>
         </>
@@ -135,10 +143,10 @@ function ReturnInner() {
               onClick={() => paypalToken && void confirmPayment(paypalToken)}
               className="rounded bg-linear-to-r from-amber-600 to-orange-500 px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
             >
-              Reintentar
+              {tx.retry}
             </button>
             <Link href="/tienda" className="text-sky-300 hover:underline">
-              Volver a la tienda
+              {tx.backStore}
             </Link>
           </div>
         </>
@@ -151,7 +159,7 @@ function ReturnInner() {
 export default function ShopReturnPage() {
   return (
     <SiteShell>
-      <Suspense fallback={<p className="py-20 text-center text-zinc-400">Cargando…</p>}>
+      <Suspense fallback={<p className="py-20 text-center text-zinc-400">Loading…</p>}>
         <ReturnInner />
       </Suspense>
     </SiteShell>

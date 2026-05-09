@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/components/LanguageProvider";
 import {
   SITE_DESCRIPTION,
   SITE_LOCALE,
@@ -84,7 +85,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

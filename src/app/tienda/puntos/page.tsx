@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
@@ -52,6 +53,13 @@ function resolveRewardImage(imageUrl: string | null, category: string) {
 }
 
 export default function RewardShopPage() {
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
+  const tx = {
+    es: { all: "Todas", title: "Tienda de canje", noFilter: "No hay recompensas para ese filtro.", prev: "Anterior", next: "Siguiente", page: "Página", of: "de", back: "Volver a tienda de compra" },
+    en: { all: "All", title: "Redeem store", noFilter: "No rewards for this filter.", prev: "Previous", next: "Next", page: "Page", of: "of", back: "Back to purchase store" },
+    pt: { all: "Todas", title: "Loja de resgate", noFilter: "Não há recompensas para este filtro.", prev: "Anterior", next: "Seguinte", page: "Página", of: "de", back: "Voltar para loja de compra" },
+  }[lang];
   const ITEMS_PER_PAGE = 6;
   const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
@@ -61,7 +69,7 @@ export default function RewardShopPage() {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("Todas");
+  const [category, setCategory] = useState(tx.all);
   const [page, setPage] = useState(1);
   const [characters, setCharacters] = useState<CharacterOption[]>([]);
   const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
@@ -92,13 +100,13 @@ export default function RewardShopPage() {
 
   const categories = useMemo(() => {
     const all = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
-    return ["Todas", ...all];
+    return [tx.all, ...all];
   }, [products]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return products.filter((p) => {
-      const byCategory = category === "Todas" || p.category === category;
+      const byCategory = category === tx.all || p.category === category;
       const bySearch =
         term.length === 0 ||
         p.name.toLowerCase().includes(term) ||
@@ -147,7 +155,7 @@ export default function RewardShopPage() {
     <SiteShell>
       <div className="mx-auto max-w-5xl px-4 py-16">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50">Tienda de canje</h1>
+          <h1 className="font-display text-3xl font-semibold text-zinc-50">{tx.title}</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-400">
             Selecciona un personaje destino, busca la recompensa y canjea tus puntos en segundos.
           </p>
@@ -269,7 +277,7 @@ export default function RewardShopPage() {
           })}
         </div>
         {!error && filtered.length === 0 && (
-          <p className="mt-8 text-center text-sm text-zinc-500">No hay recompensas para ese filtro.</p>
+          <p className="mt-8 text-center text-sm text-zinc-500">{tx.noFilter}</p>
         )}
         {filtered.length > ITEMS_PER_PAGE && (
           <div className="mt-8 flex items-center justify-center gap-3">
@@ -279,10 +287,10 @@ export default function RewardShopPage() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              Anterior
+              {tx.prev}
             </button>
             <p className="text-sm text-zinc-400">
-              Página {page} de {totalPages}
+              {tx.page} {page} {tx.of} {totalPages}
             </p>
             <button
               type="button"
@@ -290,14 +298,14 @@ export default function RewardShopPage() {
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               className="rounded border border-white/15 px-3 py-1.5 text-sm text-zinc-200 disabled:opacity-50"
             >
-              Siguiente
+              {tx.next}
             </button>
           </div>
         )}
 
         <div className="mt-10">
           <Link href="/tienda" className="text-sky-300 hover:underline">
-            Volver a tienda de compra
+            {tx.back}
           </Link>
         </div>
       </div>

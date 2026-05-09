@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useTranslation } from "react-i18next";
 import { publicEnv } from "@/config/public-env";
 import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
 import { SiteShell } from "@/components/SiteShell";
@@ -13,6 +14,7 @@ const REGISTER_BG_VIDEO =
   "https://video.wixstatic.com/video/5dd8a0_55ab45ac60f043378dcd8805dcfc892a/720p/mp4/file.mp4";
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const router = useRouter();
   const recaptchaSiteKey = publicEnv.recaptchaSiteKey;
@@ -49,11 +51,11 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
     if (!doPasswordsMatch) {
-      setError("Las contraseñas no coinciden.");
+      setError(t("auth.register.passwordMismatch"));
       return;
     }
     if (recaptchaSiteKey && !recaptchaToken) {
-      setError("Completa el reCAPTCHA antes de continuar.");
+      setError(t("auth.register.recaptchaHint"));
       return;
     }
     setLoading(true);
@@ -87,13 +89,13 @@ export default function RegisterPage() {
         <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_50%_20%,rgba(251,191,36,0.08),transparent_55%)]" />
         <LoginParticlesCanvas />
         <div className="relative z-10 mx-auto max-w-md px-4 py-16">
-          <h1 className="font-display text-3xl font-semibold text-zinc-50">Registro</h1>
+          <h1 className="font-display text-3xl font-semibold text-zinc-50">{t("auth.register.title")}</h1>
           <p className="mt-2 text-sm text-zinc-500">
-            Tu usuario y contraseña son los mismos que usarás en el cliente 3.3.5a.
+            {t("auth.register.subtitle")}
           </p>
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
             <div>
-              <label className="block text-sm text-zinc-400">Usuario</label>
+              <label className="block text-sm text-zinc-400">{t("auth.register.username")}</label>
               <input
                 className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
                 value={username}
@@ -104,7 +106,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400">Correo</label>
+              <label className="block text-sm text-zinc-400">{t("auth.register.email")}</label>
               <input
                 type="email"
                 className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
@@ -114,7 +116,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400">Contraseña</label>
+              <label className="block text-sm text-zinc-400">{t("auth.register.password")}</label>
               <div className="relative mt-1">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -126,7 +128,9 @@ export default function RegisterPage() {
                 />
                 <button
                   type="button"
-                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  aria-label={
+                    showPassword ? t("auth.register.hidePassword") : t("auth.register.showPassword")
+                  }
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 inline-flex w-10 items-center justify-center text-zinc-400 transition-colors hover:text-zinc-200"
                 >
@@ -135,7 +139,7 @@ export default function RegisterPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm text-zinc-400">Confirmar contraseña</label>
+              <label className="block text-sm text-zinc-400">{t("auth.register.confirmPassword")}</label>
               <div className="relative mt-1">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -147,7 +151,9 @@ export default function RegisterPage() {
                 />
                 <button
                   type="button"
-                  aria-label={showConfirmPassword ? "Ocultar confirmación de contraseña" : "Mostrar confirmación de contraseña"}
+                  aria-label={
+                    showConfirmPassword ? t("auth.register.hidePassword") : t("auth.register.showPassword")
+                  }
                   onClick={() => setShowConfirmPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 inline-flex w-10 items-center justify-center text-zinc-400 transition-colors hover:text-zinc-200"
                 >
@@ -156,7 +162,7 @@ export default function RegisterPage() {
               </div>
             </div>
             {confirmPassword.length > 0 && !doPasswordsMatch ? (
-              <p className="text-sm text-red-400">Las contraseñas no coinciden.</p>
+              <p className="text-sm text-red-400">{t("auth.register.passwordMismatch")}</p>
             ) : null}
             {recaptchaSiteKey ? (
               <div className="pt-1">
@@ -171,7 +177,7 @@ export default function RegisterPage() {
               </div>
             ) : (
               <p className="text-xs text-amber-300/90">
-                Configura `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` para activar el checkbox de seguridad.
+                {t("auth.register.recaptchaHint")}
               </p>
             )}
             {error && <p className="text-sm text-red-400">{error}</p>}
@@ -181,13 +187,13 @@ export default function RegisterPage() {
               className="group relative w-full overflow-hidden rounded bg-linear-to-r from-amber-600 to-orange-500 py-2.5 font-semibold text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(251,146,60,0.35)] hover:brightness-110 active:translate-y-0 active:brightness-100 disabled:cursor-not-allowed disabled:border disabled:border-zinc-600/70 disabled:bg-zinc-700 disabled:from-zinc-700 disabled:to-zinc-700 disabled:text-zinc-300 disabled:opacity-100 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:brightness-100"
             >
               <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-white/20 opacity-0 blur-[1px] transition-all duration-500 group-hover:left-[115%] group-hover:opacity-100 group-disabled:opacity-0" />
-              {loading ? "Creando cuenta…" : "Crear cuenta en el reino"}
+              {loading ? t("auth.register.submitting") : t("auth.register.submit")}
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-zinc-500">
-            ¿Ya tienes cuenta?{" "}
+            {t("auth.register.already")}{" "}
             <Link href="/login" className="text-amber-400 hover:underline">
-              Entrar
+              {t("auth.register.login")}
             </Link>
           </p>
         </div>
@@ -195,13 +201,12 @@ export default function RegisterPage() {
       {showWelcomeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4">
           <div className="w-full max-w-lg rounded-2xl border border-amber-400/40 bg-zinc-950 p-7 shadow-2xl shadow-black/60">
-            <p className="text-xs uppercase tracking-[0.25em] text-amber-300/85">Blackout WoW</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-amber-300/85">{t("auth.register.welcomeBrand")}</p>
             <h2 className="mt-2 font-display text-3xl font-semibold text-zinc-50">
-              Bienvenido al servidor, aventurero.
+              {t("auth.register.welcomeTitle")}
             </h2>
             <p className="mt-4 text-sm text-zinc-300">
-              Tu cuenta fue creada correctamente. Ya puedes iniciar sesión con tus datos y comenzar tu viaje por
-              Northrend.
+              {t("auth.register.welcomeBody")}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <button
@@ -209,14 +214,14 @@ export default function RegisterPage() {
                 onClick={() => router.push("/login?registered=1")}
                 className="rounded bg-linear-to-r from-amber-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-black"
               >
-                Ir a iniciar sesión
+                {t("auth.register.welcomeLogin")}
               </button>
               <button
                 type="button"
                 onClick={() => setShowWelcomeModal(false)}
                 className="rounded border border-white/20 px-5 py-2.5 text-sm font-medium text-zinc-300 hover:bg-white/5"
               >
-                Cerrar
+                {t("auth.register.close")}
               </button>
             </div>
           </div>

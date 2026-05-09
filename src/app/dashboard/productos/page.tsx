@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
@@ -188,6 +189,13 @@ const emptyRewardForm: RewardForm = {
 };
 
 export default function DashboardProductsPage() {
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
+  const tx = {
+    es: { title: "Dashboard de productos", subtitle: "Gestiona catálogo de tienda: crear, editar y configurar productos de donación." },
+    en: { title: "Products dashboard", subtitle: "Manage store catalog: create, edit and configure donation products." },
+    pt: { title: "Dashboard de produtos", subtitle: "Gerencie o catálogo da loja: criar, editar e configurar produtos de doação." },
+  }[lang];
   const { accessToken, isAuthReady } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
@@ -636,11 +644,10 @@ export default function DashboardProductsPage() {
     <SiteShell>
       <div className="mx-auto max-w-6xl px-4 py-14">
         <h1 className="font-display text-3xl font-semibold text-zinc-50">
-          Dashboard de productos
+          {tx.title}
         </h1>
         <p className="mt-2 text-sm text-zinc-400">
-          Gestiona catálogo de tienda: crear, editar y configurar productos de
-          donación.
+          {tx.subtitle}
         </p>
 
         <section className="mt-8 rounded-xl border border-white/10 bg-zinc-950/60 p-4 md:p-5">
