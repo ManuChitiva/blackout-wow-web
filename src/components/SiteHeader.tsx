@@ -71,13 +71,8 @@ export function SiteHeader() {
           className="group shrink-0 rounded-md border border-white/10 bg-zinc-950/50 px-2.5 py-1.5 transition-all hover:border-amber-400/40 hover:bg-zinc-900/70"
           onClick={() => setMobileOpen(false)}
         >
-          <span className="flex flex-col gap-0.5 leading-none">
-            <span className="font-display text-sm font-semibold tracking-[0.12em] sm:text-[0.95rem]">
-              <NavHomeAuraText variant="title" text={t("nav.home")} />
-            </span>
-            <span className="max-w-44 truncate whitespace-nowrap font-display text-[8.5px] font-medium uppercase tracking-[0.28em] sm:max-w-50 sm:text-[9.5px]">
-              <NavHomeAuraText variant="sub" text={t("nav.homeSub")} />
-            </span>
+          <span className="font-display text-sm font-semibold tracking-[0.12em] sm:text-[0.95rem] leading-none">
+            <NavHomeAuraText variant="title" text={t("nav.home")} />
           </span>
         </Link>
 
