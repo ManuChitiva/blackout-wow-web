@@ -63,12 +63,12 @@ export function SiteHeader() {
 
   return (
     <header className="navbar-aura sticky top-0 z-40 border-b border-white/10 bg-black/75 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 py-2.5 md:gap-3">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-2 px-4 py-2.5 md:gap-3">
         <Link
           href="/"
           aria-label={t("nav.homeAria")}
           title={t("nav.homeAria")}
-          className="group shrink-0 rounded-md border border-white/10 bg-zinc-950/50 px-2.5 py-1.5 transition-all hover:border-amber-400/40 hover:bg-zinc-900/70"
+          className="group shrink-0 justify-self-start rounded-md border border-white/10 bg-zinc-950/50 px-2.5 py-1.5 transition-all hover:border-amber-400/40 hover:bg-zinc-900/70"
           onClick={() => setMobileOpen(false)}
         >
           <span className="font-display text-sm font-semibold tracking-[0.12em] sm:text-[0.95rem] leading-none">
@@ -76,9 +76,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <span className="min-w-0 flex-1 md:hidden" aria-hidden />
-
-        <nav className="hidden min-w-0 flex-1 items-center justify-start gap-1 border-y border-white/10 px-2 py-1 md:flex">
+        <nav className="hidden min-w-0 items-center justify-center gap-1 justify-self-center border-y border-white/10 px-2 py-1 md:flex">
           <Link
             aria-current={navAriaCurrent("/")}
             className={getNavItemClass("/")}
@@ -160,7 +158,7 @@ export function SiteHeader() {
           )}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center justify-end gap-2 justify-self-end">
           <LanguageSwitcher />
           <button
             type="button"

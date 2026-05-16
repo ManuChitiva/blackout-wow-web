@@ -7,7 +7,6 @@ import { NavHomeAuraText } from "@/components/NavHomeAuraText";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SITE_NAME, SITE_TITLE } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
-import { fetchRealmStatus } from "@/lib/realm-public";
 
 export const metadata: Metadata = {
   title: "Servidor WoW Custom 3.3.5a",
@@ -32,11 +31,6 @@ export default async function HomePage() {
     es: {
       heroTagline: "Servidor WoW · WotLK · 3.3.5a",
       heroTaglineSub: "El mejor servidor",
-      onlineLabel: "Jugadores en línea",
-      serverStatusLabel: "Estado del reino",
-      serverStatusValue: "En línea",
-      serverStatusOffline: "Fuera de línea",
-      serverStatusUnknown: "No disponible",
       create: "Crear cuenta",
       connect: "Como conectarme",
       seeRules: "Consulta las reglas del servidor en",
@@ -157,11 +151,6 @@ export default async function HomePage() {
     en: {
       heroTagline: "WoW realm · WotLK · 3.3.5a",
       heroTaglineSub: "Best server",
-      onlineLabel: "Players online",
-      serverStatusLabel: "Realm status",
-      serverStatusValue: "Online",
-      serverStatusOffline: "Offline",
-      serverStatusUnknown: "Unavailable",
       create: "Create account",
       connect: "How to connect",
       seeRules: "Check the server rules at",
@@ -255,11 +244,6 @@ export default async function HomePage() {
     pt: {
       heroTagline: "Servidor WoW · WotLK · 3.3.5a",
       heroTaglineSub: "Melhor servidor",
-      onlineLabel: "Jogadores online",
-      serverStatusLabel: "Status do reino",
-      serverStatusValue: "Online",
-      serverStatusOffline: "Offline",
-      serverStatusUnknown: "Indisponível",
       create: "Criar conta",
       connect: "Como conectar",
       seeRules: "Consulte as regras do servidor em",
@@ -351,28 +335,6 @@ export default async function HomePage() {
       ],
     },
   }[lang];
-  const apiBase =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8080";
-  const realm = await fetchRealmStatus(apiBase);
-  const realmStatusUpper = realm?.realmStatus?.toUpperCase() ?? "UNKNOWN";
-  const onlineLocale =
-    lang === "en" ? "en-US" : lang === "pt" ? "pt-BR" : "es-ES";
-  const playersOnlineDisplay =
-    typeof realm?.playersOnline === "number"
-      ? realm.playersOnline.toLocaleString(onlineLocale)
-      : "—";
-  const serverStatusDisplay =
-    realmStatusUpper === "ONLINE"
-      ? tx.serverStatusValue
-      : realmStatusUpper === "OFFLINE"
-        ? tx.serverStatusOffline
-        : tx.serverStatusUnknown;
-  const serverStatusToneClass =
-    realmStatusUpper === "ONLINE"
-      ? "text-emerald-400/95"
-      : realmStatusUpper === "OFFLINE"
-        ? "text-red-300/95"
-        : "text-zinc-400/95";
   const dragonModelSrc = "";
   const quickHighlights = tx.quickHighlights;
   const serverInfoColumns = tx.serverInfoColumns;
@@ -430,26 +392,6 @@ export default async function HomePage() {
                   className="font-display text-[9px] font-semibold uppercase tracking-[0.34em] sm:text-[10px] md:text-[11px]"
                 />
               </div>
-            </div>
-
-            <div className="mt-5 md:mt-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-zinc-300/95">
-                {tx.onlineLabel}
-              </p>
-              <p
-                className="font-display glow-ember mt-1.5 bg-linear-to-b from-amber-100 via-orange-400 to-red-600 bg-clip-text text-5xl font-bold leading-none text-transparent drop-shadow-[0_0_28px_rgba(251,146,60,0.45)] tabular-nums sm:text-6xl md:text-7xl"
-                aria-label={`${tx.onlineLabel}: ${playersOnlineDisplay}`}
-              >
-                {playersOnlineDisplay}
-              </p>
-              <p className="mt-2.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-zinc-500">
-                {tx.serverStatusLabel}
-              </p>
-              <p
-                className={`mt-1 text-sm font-semibold ${serverStatusToneClass}`}
-              >
-                {serverStatusDisplay}
-              </p>
             </div>
 
             <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-7 sm:gap-4 md:mt-8">

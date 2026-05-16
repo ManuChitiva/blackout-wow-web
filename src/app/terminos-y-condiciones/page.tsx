@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
+import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SITE_NAME } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
@@ -25,15 +28,21 @@ export default async function TermsPage() {
   const lang = isSupportedLanguage(rawLang) ? rawLang : defaultLng;
   const tx = {
     es: {
+      badge: "Normativa oficial",
       title: "Reglas generales de Blackout-WoW",
       intro:
         "Para mantener una comunidad sana, divertida y justa, todos los jugadores deben respetar estas reglas. Cualquier incumplimiento puede terminar en sancion temporal, suspension o baneo permanente segun la gravedad del caso.",
       scope:
         "Estas normas aplican dentro del juego, canales globales, susurros, grupos, hermandades y Discord.",
+      scopeLabel: "Alcance",
+      ctaHome: "Volver al inicio",
+      ctaConnect: "Como conectarme",
+      rulesHeading: "Normas por categoria",
       c1: "Comportamiento de la comunidad",
       c2: "Hacks, trampas y abuso de bugs",
       c3: "Cuenta, staff y comercio",
       c4: "Reglas de PvP",
+      disclaimer: "Importante",
       end: "El desconocimiento de las reglas no exime de sancion. Blackout-WoW se reserva el derecho de actualizar estas normas para proteger la estabilidad del servidor y la experiencia de la comunidad.",
       communityRules: [
         "Prohibido insultar, acosar o discriminar a otros jugadores por cualquier motivo personal.",
@@ -65,15 +74,21 @@ export default async function TermsPage() {
       ],
     },
     en: {
+      badge: "Official policy",
       title: "General Blackout-WoW rules",
       intro:
         "To keep a healthy, fun and fair community, all players must follow these rules. Any violation may result in temporary sanctions, suspension or permanent ban depending on severity.",
       scope:
         "These rules apply in-game, global channels, whispers, groups, guilds and Discord.",
+      scopeLabel: "Scope",
+      ctaHome: "Back to home",
+      ctaConnect: "How to connect",
+      rulesHeading: "Rules by category",
       c1: "Community behavior",
       c2: "Hacks, cheats and bug abuse",
       c3: "Account, staff and trading",
       c4: "PvP rules",
+      disclaimer: "Important",
       end: "Not knowing the rules does not exempt sanctions. Blackout-WoW may update these rules to protect server stability and community experience.",
       communityRules: [
         "Insulting, harassment or discrimination of other players is prohibited.",
@@ -105,15 +120,21 @@ export default async function TermsPage() {
       ],
     },
     pt: {
+      badge: "Normativa oficial",
       title: "Regras gerais do Blackout-WoW",
       intro:
         "Para manter uma comunidade saudável, divertida e justa, todos os jogadores devem seguir estas regras. Qualquer infração pode resultar em sanções temporárias, suspensão ou banimento permanente.",
       scope:
         "Estas regras se aplicam no jogo, canais globais, whispers, grupos, guildas e Discord.",
+      scopeLabel: "Escopo",
+      ctaHome: "Voltar ao início",
+      ctaConnect: "Como conectar",
+      rulesHeading: "Regras por categoria",
       c1: "Comportamento da comunidade",
       c2: "Hacks, trapaças e abuso de bugs",
       c3: "Conta, staff e comércio",
       c4: "Regras de PvP",
+      disclaimer: "Importante",
       end: "O desconhecimento das regras não isenta punição. Blackout-WoW pode atualizar estas normas para proteger a estabilidade do servidor e a experiência da comunidade.",
       communityRules: [
         "É proibido insultar, assediar ou discriminar outros jogadores.",
@@ -145,78 +166,129 @@ export default async function TermsPage() {
       ],
     },
   }[lang];
-  const communityRules = tx.communityRules;
-  const fairPlayRules = tx.fairPlayRules;
-  const accountRules = tx.accountRules;
-  const pvpRules = tx.pvpRules;
+
+  const ruleSections: { n: string; title: string; rules: string[] }[] = [
+    { n: "01", title: tx.c1, rules: tx.communityRules },
+    { n: "02", title: tx.c2, rules: tx.fairPlayRules },
+    { n: "03", title: tx.c3, rules: tx.accountRules },
+    { n: "04", title: tx.c4, rules: tx.pvpRules },
+  ];
 
   return (
     <SiteShell>
-      <section className="mx-auto max-w-4xl px-4 py-16">
-        <div className="rounded-2xl border border-white/10 bg-zinc-950/65 p-6 md:p-8">
-          <h1 className="font-display text-3xl font-semibold text-zinc-100">{tx.title}</h1>
-          <p className="mt-3 text-sm leading-relaxed text-zinc-300">
+      <section className="section-fire-aura relative min-h-72 overflow-hidden border-b border-white/10">
+        <BackgroundLoopVideo
+          startAtSec={1}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.26]"
+          autoPlay
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden
+        >
+          <source
+            src="https://video.wixstatic.com/video/5dd8a0_00a855e7ddb049518bd8983809fb9a23/720p/mp4/file.mp4"
+            type="video/mp4"
+          />
+        </BackgroundLoopVideo>
+        <div className="pointer-events-none absolute inset-0 bg-black/52" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(249,115,22,0.17),transparent_42%),radial-gradient(circle_at_82%_58%,rgba(56,189,248,0.12),transparent_38%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(249,115,22,0.08),transparent_48%),linear-gradient(to_top,rgba(2,6,23,0.72)_0%,transparent_50%),linear-gradient(to_bottom,rgba(5,5,8,0.55)_0%,transparent_42%)]" />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-14 md:py-20">
+          <p className="font-display text-sm uppercase tracking-[0.3em] text-sky-200/85">
+            {tx.badge}
+          </p>
+          <h1 className="font-display mt-4 max-w-4xl text-3xl font-bold leading-tight text-zinc-50 md:text-5xl">
+            {tx.title}
+          </h1>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-zinc-200 md:text-lg">
             {tx.intro}
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-zinc-400">
-            {tx.scope}
-          </p>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            <article className="rounded-xl border border-white/10 bg-black/30 p-5">
-              <h2 className="font-display text-lg text-amber-300">{tx.c1}</h2>
-              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
-                {communityRules.map((rule) => (
-                  <li key={rule} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="rounded-xl border border-white/10 bg-black/30 p-5">
-              <h2 className="font-display text-lg text-amber-300">{tx.c2}</h2>
-              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
-                {fairPlayRules.map((rule) => (
-                  <li key={rule} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="rounded-xl border border-white/10 bg-black/30 p-5">
-              <h2 className="font-display text-lg text-amber-300">{tx.c3}</h2>
-              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
-                {accountRules.map((rule) => (
-                  <li key={rule} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="rounded-xl border border-white/10 bg-black/30 p-5">
-              <h2 className="font-display text-lg text-amber-300">{tx.c4}</h2>
-              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">
-                {pvpRules.map((rule) => (
-                  <li key={rule} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </div>
-
-          <div className="mt-6 rounded-xl border border-sky-300/20 bg-sky-950/20 p-4">
-            <p className="text-sm leading-relaxed text-zinc-300">
-              {tx.end}
+          <div className="mt-6 max-w-3xl rounded-xl border border-white/10 bg-black/35 p-4 backdrop-blur-[2px] md:p-5">
+            <p className="font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300/90">
+              {tx.scopeLabel}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-300 md:text-base">
+              {tx.scope}
             </p>
           </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/"
+              className="metal-border rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
+            >
+              {tx.ctaHome}
+            </Link>
+            <Link
+              href="/como-conectarme"
+              className="rounded-md border border-sky-400/45 bg-sky-950/35 px-6 py-3 text-sm font-semibold text-sky-100 hover:bg-sky-900/45"
+            >
+              {tx.ctaConnect}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative mx-auto max-w-6xl overflow-hidden px-4 py-14 md:py-16">
+        <Image
+          src="https://static.wixstatic.com/media/5dd8a0_9222be68baa94d82b57cdd840b2ec278~mv2.png"
+          alt=""
+          width={1500}
+          height={1800}
+          className="hero-sword pointer-events-none absolute -right-12 bottom-0 z-0 hidden h-auto w-[200px] rotate-6 opacity-[0.22] lg:block xl:w-[280px]"
+          priority={false}
+        />
+        <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-12 z-0 opacity-45" />
+
+        <div className="relative z-10">
+          <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
+            {tx.rulesHeading}
+          </h2>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {ruleSections.map((block, idx) => (
+              <article
+                key={block.n}
+                className="home-card home-card-aura feature-card reveal-up metal-border relative rounded-xl border border-white/10 bg-zinc-950/70 p-6 md:p-7"
+                style={{ animationDelay: `${idx * 90}ms` }}
+              >
+                <div className="flex gap-4">
+                  <span
+                    className="font-display shrink-0 text-3xl font-bold tabular-nums leading-none text-amber-500/25 md:text-4xl"
+                    aria-hidden
+                  >
+                    {block.n}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-display text-lg font-semibold text-amber-300 md:text-xl">
+                      {block.title}
+                    </h3>
+                    <ul className="mt-4 space-y-2.5 text-sm leading-relaxed text-zinc-300">
+                      {block.rules.map((rule) => (
+                        <li key={rule} className="flex gap-2.5">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400/85" />
+                          <span>{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16 md:pb-20">
+        <div className="metal-border relative overflow-hidden rounded-2xl border border-sky-400/30 bg-linear-to-br from-sky-950/50 via-zinc-950/75 to-orange-950/25 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] md:p-9">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-sky-400/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
+          <p className="font-display relative text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/90">
+            {tx.disclaimer}
+          </p>
+          <p className="relative mt-4 text-sm leading-relaxed text-zinc-200 md:text-base">
+            {tx.end}
+          </p>
         </div>
       </section>
     </SiteShell>
