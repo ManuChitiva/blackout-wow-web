@@ -1,27 +1,23 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
 import { NavHomeAuraText } from "@/components/NavHomeAuraText";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
-import { SITE_NAME, SITE_TITLE } from "@/lib/seo";
+import { buildPageMetadata, SITE_TITLE } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
-export const metadata: Metadata = {
-  title: "Servidor WoW Custom 3.3.5a",
+export const metadata = buildPageMetadata({
+  title: "Servidor WoW custom WotLK 3.3.5a",
   description:
-    "Explora BLACKOUT WOW: servidor WotLK custom con progresion 1-100, raids, PvP activo y contenido nuevo por fases.",
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: `${SITE_NAME} - Servidor WoW Custom 3.3.5a`,
-    description:
-      "Servidor WotLK con progresion custom, eventos, tienda y comunidad activa.",
-    url: "/",
-  },
-};
+    "BLACKOUT WOW: servidor WotLK con progresión 1-100, raids y PvP custom, fases de contenido, tienda de puntos y comunidad activa. Entra y comienza tu aventura.",
+  pathname: "/",
+  keywords: [
+    "servidor WoW Latinoamérica",
+    "Blackout WoW WotLK",
+    "WoW custom 3.3.5",
+  ],
+});
 
 export default async function HomePage() {
   const cookieStore = await cookies();

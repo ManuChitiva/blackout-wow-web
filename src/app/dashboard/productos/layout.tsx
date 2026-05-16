@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Productos",
+  title: "Productos y pedidos",
   description:
-    "Panel interno para gestionar productos, canjes, trazabilidad y analitica.",
-  alternates: {
-    canonical: "/dashboard/productos",
-  },
+    "Gestión de productos de la tienda, trazabilidad de pedidos, canjes y analítica interna para el equipo BLACKOUT WOW.",
   robots: {
     index: false,
     follow: false,

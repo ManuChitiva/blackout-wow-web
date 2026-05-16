@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Iniciar sesion",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Iniciar sesión",
   description:
-    "Accede a tu cuenta de BLACKOUT WOW para gestionar personaje, compras y puntos.",
-  alternates: {
-    canonical: "/login",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+    "Accede al portal de BLACKOUT WOW para gestionar tu cuenta, puntos, pedidos y enlace con tu personaje en el servidor WotLK 3.3.5a.",
+  pathname: "/login",
+  noIndex: true,
+});
 
 export default function LoginLayout({
   children,

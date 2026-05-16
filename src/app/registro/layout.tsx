@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Registro",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Crear cuenta",
   description:
-    "Crea tu cuenta en BLACKOUT WOW y comienza tu aventura en el reino WotLK custom.",
-  alternates: {
-    canonical: "/registro",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+    "Regístrate en BLACKOUT WOW: un mismo usuario para el portal y el juego. Servidor WotLK custom 3.3.5a, progresión activa y comunidad en español.",
+  pathname: "/registro",
+  keywords: [
+    "registro WoW privado",
+    "crear cuenta Blackout WoW",
+    "servidor WoW registro",
+  ],
+});
 
 export default function RegisterLayout({
   children,

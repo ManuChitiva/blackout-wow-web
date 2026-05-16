@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import {
   SITE_DESCRIPTION,
+  SITE_KEYWORDS,
   SITE_LOCALE,
   SITE_NAME,
   SITE_TITLE,
@@ -39,14 +40,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  keywords: [
-    "wow privado",
-    "wotlk",
-    "servidor wow",
-    "blackout wow",
-    "wow 3.3.5a",
-    "servidor custom",
-  ],
+  keywords: [...SITE_KEYWORDS],
   openGraph: {
     type: "website",
     locale: SITE_LOCALE,
@@ -75,6 +69,20 @@ export const metadata: Metadata = {
   },
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  inLanguage: "es",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+} as const;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -85,6 +93,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
         <LanguageProvider>
           <AuthProvider>{children}</AuthProvider>
         </LanguageProvider>

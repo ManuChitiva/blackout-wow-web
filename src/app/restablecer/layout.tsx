@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Restablecer contrasena",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Nueva contraseña",
   description:
-    "Cambia tu clave con codigo OTP para recuperar el acceso al portal y juego en BLACKOUT WOW.",
-  alternates: {
-    canonical: "/restablecer",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+    "Define una nueva contraseña para tu cuenta BLACKOUT WOW usando el código OTP que recibiste por correo. Válido para el portal y el acceso al servidor.",
+  pathname: "/restablecer",
+  noIndex: true,
+});
 
 export default function ResetLayout({
   children,

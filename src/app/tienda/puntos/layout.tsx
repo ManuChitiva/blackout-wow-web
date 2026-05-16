@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Tienda de canje",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Canjear puntos en el juego",
   description:
-    "Canjea tus puntos por recompensas para personajes en BLACKOUT WOW.",
-  alternates: {
-    canonical: "/tienda/puntos",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+    "Canjea tus puntos BLACKOUT WOW por recompensas para tus personajes. Requiere sesión iniciada y saldo disponible en el reino.",
+  pathname: "/tienda/puntos",
+  noIndex: true,
+});
 
 export default function RewardShopLayout({
   children,

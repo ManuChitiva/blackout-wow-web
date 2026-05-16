@@ -1,25 +1,21 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
-import { SITE_NAME } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
-export const metadata: Metadata = {
-  title: "Como conectarme a Blackout WoW",
+export const metadata = buildPageMetadata({
+  title: "Cómo conectarme al servidor",
   description:
-    "Guia paso a paso para conectarte a BLACKOUT WOW 3.3.5a: crea tu cuenta, descarga el cliente, configura realmlist e inicia sesion.",
-  alternates: {
-    canonical: "/como-conectarme",
-  },
-  openGraph: {
-    title: `${SITE_NAME} - Como conectarme`,
-    description:
-      "Sigue esta guia oficial para entrar al reino de BLACKOUT WOW en minutos.",
-    url: "/como-conectarme",
-  },
-};
+    "Guía oficial BLACKOUT WOW 3.3.5a: crear cuenta, descargar cliente, configurar realmlist (logon.blackoutwow.com) e iniciar sesión en el reino WotLK custom.",
+  pathname: "/como-conectarme",
+  keywords: [
+    "realmlist Blackout WoW",
+    "conectar WoW 3.3.5a",
+    "cliente WotLK private server",
+  ],
+});
 
 export default async function ComoConectarmePage() {
   const cookieStore = await cookies();

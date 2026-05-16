@@ -1,26 +1,22 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
-import { SITE_NAME } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
-export const metadata: Metadata = {
-  title: "Terminos y condiciones",
+export const metadata = buildPageMetadata({
+  title: "Términos y condiciones",
   description:
-    "Consulta las reglas oficiales de BLACKOUT WOW para comunidad, PvP, cuentas, comercio y uso del servidor.",
-  alternates: {
-    canonical: "/terminos-y-condiciones",
-  },
-  openGraph: {
-    title: `Terminos y condiciones | ${SITE_NAME}`,
-    description:
-      "Normas y politicas del servidor BLACKOUT WOW para una experiencia justa y estable.",
-    url: "/terminos-y-condiciones",
-  },
-};
+    "Reglas del servidor BLACKOUT WOW: comunidad, juego limpio, cuentas, comercio y PvP. Consulta la normativa oficial antes de jugar.",
+  pathname: "/terminos-y-condiciones",
+  keywords: [
+    "reglas servidor WoW",
+    "normativa private server",
+    "términos Blackout WoW",
+  ],
+});
 
 export default async function TermsPage() {
   const cookieStore = await cookies();

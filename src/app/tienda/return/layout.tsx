@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Confirmacion de pago",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Confirmación de pago",
   description:
-    "Pantalla de retorno para confirmar pagos de PayPal en la tienda de BLACKOUT WOW.",
-  alternates: {
-    canonical: "/tienda/return",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+    "Página de retorno tras el pago en la tienda BLACKOUT WOW. Confirma el estado de tu compra de puntos (PayPal u otros métodos habilitados).",
+  pathname: "/tienda/return",
+  noIndex: true,
+});
 
 export default function ShopReturnLayout({
   children,

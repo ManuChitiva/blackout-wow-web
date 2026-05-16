@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Mi cuenta",
   description:
-    "Panel privado para revisar tus personajes, historial de compras y seguridad de cuenta.",
-  alternates: {
-    canonical: "/cuenta",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+    "Panel de cuenta BLACKOUT WOW: personajes, estado en juego, historial de compras, canjes y seguridad. Solo accesible con tu sesión iniciada.",
+  pathname: "/cuenta",
+  noIndex: true,
+});
 
 export default function AccountLayout({
   children,

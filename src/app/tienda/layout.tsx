@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Tienda de donacion",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Tienda de donación y puntos",
   description:
-    "Compra paquetes de puntos para BLACKOUT WOW con entrega automatica y pago seguro.",
-  alternates: {
-    canonical: "/tienda",
-  },
-  openGraph: {
-    title: "Tienda de donacion BLACKOUT WOW",
-    description:
-      "Paquetes de puntos para usar en el reino con entrega rapida y segura.",
-    url: "/tienda",
-  },
-};
+    "Compra paquetes de puntos para BLACKOUT WOW con pago seguro y entrega automática en el juego. Apoya el servidor y canjea recompensas.",
+  pathname: "/tienda",
+  keywords: [
+    "tienda WoW privado",
+    "puntos Blackout WoW",
+    "donación servidor WoW",
+  ],
+});
 
 export default function ShopLayout({
   children,
