@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
 import { NavHomeAuraText } from "@/components/NavHomeAuraText";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
+import { HomeDiscordSection } from "@/components/HomeDiscordSection";
 import { buildPageMetadata, SITE_TITLE } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
@@ -38,6 +39,14 @@ export default async function HomePage() {
       phases: "Fases y actualizaciones",
       vision: "Nuestra vision",
       why: "¿Por que Blackout?",
+      discordBadge: "Comunidad",
+      discordTitle: "Únete a nuestro Discord",
+      discordBody:
+        "Canal oficial para anuncios, soporte, buscar grupo, PvP y hermandad. Conecta con la comunidad de BLACKOUT WOW antes y después de entrar al juego.",
+      discordPerkOnline: "Anuncios y soporte",
+      discordPerkCommunity: "Comunidad activa",
+      discordPerkEvents: "Eventos y sorteos",
+      discordJoin: "Entrar al Discord",
       start: "Tu aventura empieza hoy",
       startBody: "Crea tu cuenta y forma parte del reino BLACKOUT. El Lich King no espera.",
       signupNow: "Registrarme ahora",
@@ -158,6 +167,14 @@ export default async function HomePage() {
       phases: "Phases and updates",
       vision: "Our vision",
       why: "Why Blackout?",
+      discordBadge: "Community",
+      discordTitle: "Join our Discord",
+      discordBody:
+        "Official channel for announcements, support, group finder, PvP and guild recruitment. Connect with the BLACKOUT WOW community before and after you log in.",
+      discordPerkOnline: "News and support",
+      discordPerkCommunity: "Active community",
+      discordPerkEvents: "Events and giveaways",
+      discordJoin: "Join Discord",
       start: "Your adventure starts today",
       startBody: "Create your account and join the BLACKOUT realm. The Lich King is waiting.",
       signupNow: "Sign up now",
@@ -251,6 +268,14 @@ export default async function HomePage() {
       phases: "Fases e atualizações",
       vision: "Nossa visão",
       why: "Por que Blackout?",
+      discordBadge: "Comunidade",
+      discordTitle: "Entre no nosso Discord",
+      discordBody:
+        "Canal oficial para anúncios, suporte, buscar grupo, PvP e guilda. Conecte-se com a comunidade BLACKOUT WOW antes e depois de entrar no jogo.",
+      discordPerkOnline: "Anúncios e suporte",
+      discordPerkCommunity: "Comunidade ativa",
+      discordPerkEvents: "Eventos e sorteios",
+      discordJoin: "Entrar no Discord",
       start: "Sua aventura começa hoje",
       startBody: "Crie sua conta e faça parte do reino BLACKOUT. O Lich King não espera.",
       signupNow: "Registrar agora",
@@ -418,6 +443,18 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomeDiscordSection
+        copy={{
+          badge: tx.discordBadge,
+          title: tx.discordTitle,
+          body: tx.discordBody,
+          perkOnline: tx.discordPerkOnline,
+          perkCommunity: tx.discordPerkCommunity,
+          perkEvents: tx.discordPerkEvents,
+          joinCta: tx.discordJoin,
+        }}
+      />
 
       <section
         id="features"

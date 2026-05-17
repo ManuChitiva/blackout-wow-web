@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Cinzel, Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { languageCookieName, resolveAppLanguage } from "@/i18n/settings";
 import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -83,13 +85,16 @@ const websiteJsonLd = {
   },
 } as const;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const lang = resolveAppLanguage(cookieStore.get(languageCookieName)?.value);
+
   return (
-    <html lang="es">
+    <html lang={lang}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}
       >
@@ -99,7 +104,7 @@ export default function RootLayout({
             __html: JSON.stringify(websiteJsonLd),
           }}
         />
-        <LanguageProvider>
+        <LanguageProvider initialLanguage={lang}>
           <AuthProvider>{children}</AuthProvider>
         </LanguageProvider>
       </body>
