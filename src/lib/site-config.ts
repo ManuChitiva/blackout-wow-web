@@ -4,7 +4,7 @@
  */
 export const DISCORD_WIDGET_URL =
   process.env.NEXT_PUBLIC_DISCORD_WIDGET_URL?.trim() ??
-  "https://discord.com/widget?id=1444554820340944969&theme=dark";
+  "https://discord.com/widget?id=1026731303925710948&theme=dark";
 
 export const DISCORD_INVITE_URL =
   process.env.NEXT_PUBLIC_DISCORD_INVITE_URL?.trim() ??
