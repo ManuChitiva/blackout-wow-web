@@ -6,6 +6,7 @@ import { NavHomeAuraText } from "@/components/NavHomeAuraText";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { HomeDiscordSection } from "@/components/HomeDiscordSection";
 import { buildPageMetadata, SITE_TITLE } from "@/lib/seo";
+import { DISCORD_INVITE_URL, hasDiscordInvite } from "@/lib/site-config";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
 
 export const metadata = buildPageMetadata({
@@ -26,209 +27,259 @@ export default async function HomePage() {
   const lang = isSupportedLanguage(rawLang) ? rawLang : defaultLng;
   const tx = {
     es: {
-      heroTagline: "Servidor WoW · WotLK · 3.3.5a",
-      heroTaglineSub: "El mejor servidor",
+      heroTagline: "Wrath of the Lich King · 3.3.5a",
+      heroTaglineSub: "Servidor custom PvE / PvP",
+      heroIntro:
+        "Servidor custom con nivel 100, progresión única, contenido exclusivo, sistemas propios y una comunidad activa.",
+      heroIntroLong:
+        "Vive una experiencia renovada en Wrath of the Lich King 3.3.5a con progresión custom, PvP balanceado, transmog masivo, monturas, razas custom, World Bosses, eventos y actualizaciones constantes.",
       create: "Crear cuenta",
       connect: "Como conectarme",
       seeRules: "Consulta las reglas del servidor en",
       terms: "terminos y condiciones",
-      features: "Caracteristicas principales del servidor",
+      features: "Características principales del servidor",
+      featuresSubtitle: "Una experiencia custom completa",
       featuresBody:
-        "Blackout-WoW esta construido para ofrecer una experiencia fresca, estable y divertida, donde siempre existe una nueva meta por cumplir.",
-      serverInfo: "Informacion general del servidor",
+        "Blackout WoW está diseñado para ofrecer una experiencia fresca, estable y divertida, donde siempre tendrás una nueva meta por cumplir.",
+      serverInfo: "Información general del servidor",
+      serverInfoIntro:
+        "Blackout WoW es un servidor custom basado en Wrath of the Lich King 3.3.5a, con nivel máximo 100, progresión por tiers, contenido PvE y PvP, sistemas exclusivos y modelo no pay to win.",
       phases: "Fases y actualizaciones",
-      vision: "Nuestra vision",
-      why: "¿Por que Blackout?",
+      phasesIntro:
+        "Blackout WoW avanzará por fases, agregando nuevas raids, mapas, sistemas, recompensas, World Bosses y mejoras para mantener el servidor activo.",
+      phasesList: [
+        { phase: "Fase 1", name: "Lanzamiento", status: "Activa" as const },
+        { phase: "Fase 2", name: "Expansión de contenido", status: "Proxima" as const },
+        { phase: "Fase 3", name: "Nuevos retos", status: "Programada" as const },
+        { phase: "Fase 4", name: "Actualización mayor", status: "Programada" as const },
+      ],
+      phaseStatusActive: "Activa",
+      phaseStatusNext: "Próxima",
+      phaseStatusPlanned: "Programada",
+      vision: "Nuestra visión",
+      why: "¿Por qué Blackout?",
       discordBadge: "Comunidad",
-      discordTitle: "Únete a nuestro Discord",
+      discordTitle: "Únete a nuestra comunidad",
       discordBody:
-        "Canal oficial para anuncios, soporte, buscar grupo, PvP y hermandad. Conecta con la comunidad de BLACKOUT WOW antes y después de entrar al juego.",
-      discordPerkOnline: "Anuncios y soporte",
-      discordPerkCommunity: "Comunidad activa",
+        "Forma parte del Discord oficial de Blackout WoW. Recibe anuncios, soporte, noticias, eventos, sorteos y encuentra jugadores para PvE, PvP y hermandades.",
+      discordPerkOnline: "Anuncios oficiales",
+      discordPerkCommunity: "Soporte del Staff",
       discordPerkEvents: "Eventos y sorteos",
       discordJoin: "Entrar al Discord",
       start: "Tu aventura empieza hoy",
-      startBody: "Crea tu cuenta y forma parte del reino BLACKOUT. El Lich King no espera.",
+      startBody:
+        "Crea tu cuenta y forma parte de Blackout WoW. Progresa, compite, personaliza tu personaje y vive una experiencia custom diferente dentro de Wrath of the Lich King.",
       signupNow: "Registrarme ahora",
       iHave: "Ya tengo cuenta",
       downloadTitle: "Descarga el cliente oficial",
+      downloadBody:
+        "Instala Blackout WoW 3.3.5a en pocos minutos. Descarga el cliente completo, crea tu cuenta y entra al reino con la configuración recomendada para una experiencia estable desde el primer login.",
+      downloadNote:
+        "Si la descarga no inicia, revisa el bloqueador del navegador o intenta usar otro mirror disponible.",
       downloadCta: "Descargar cliente",
       quickHighlights: [
-        { label: "Nivel maximo", value: "100", note: "Progresion custom" },
-        { label: "Contenido", value: "100% custom", note: "PvE, PvP y sistemas" },
-        { label: "Fases", value: "Cada 3 meses", note: "Actualizaciones activas" },
+        { label: "Nivel máximo", value: "100", note: "Progresión custom" },
+        { label: "Progresión", value: "Por tiers", note: "Raids custom" },
+        { label: "Contenido", value: "PvE / PvP", note: "Sistemas custom" },
         { label: "Modelo", value: "No pay to win", note: "Progreso real jugando" },
+        { label: "Actualizaciones", value: "Por fases", note: "Contenido en evolución" },
+        { label: "Comunidad", value: "Discord activo", note: "Soporte del Staff" },
       ],
       contentBlocks: [
         {
-          title: "Contenido 100% custom",
+          title: "PvE Custom",
           points: [
-            "Leveo personalizado de nivel 1 a 100 con progresion constante.",
-            "Teleporter custom para moverte rapido entre zonas importantes.",
-            "Pets y monturas custom, incluyendo contenido desde Cataclysm hasta The War Within.",
-            "Morphs y monturas tematicas inspiradas en universos como Dragon Ball Z y Star Wars.",
+            "Raids custom, World Bosses y progresión por tiers.",
+            "Misiones especiales, armas legendarias y llaves de contenido.",
+            "Tiers del 1 al 16 en modo solo y del 17 al 25 para grupos.",
+            "Daily Quests, Custom Quests y nuevas raids con mapas adaptados.",
           ],
         },
         {
-          title: "PvE custom",
+          title: "PvP Activo",
           points: [
-            "Raids personalizadas con equipamiento progresivo para todo tipo de jugador.",
-            "Tiers custom desde T1 hasta T20 para mantener metas de progreso claras.",
-            "World Bosses exclusivos con recompensas especiales y zonas de reto.",
-            "Contenido pensado para jugadores nuevos, casuales y competitivos.",
+            "Arenas 1v1, 2v2, 3v3 y 5v5 con Battlegrounds activos.",
+            "Duel Zone personalizada y recompensas PvP especiales.",
+            "Balance para evitar clases rotas y crossfaction en PvP.",
+            "Sistema competitivo, justo y con actividad diaria.",
           ],
         },
         {
-          title: "PvP activo",
+          title: "Contenido Custom",
           points: [
-            "Duel Zone personalizada, Battlegrounds activos y zonas PvP.",
-            "Combates casuales y competitivos con actividad diaria entre jugadores.",
-            "Progresion y recompensas orientadas tanto a PvP como a PvE.",
-            "Sistema enfocado en juego limpio y competencia real.",
+            "Transmog masivo con más de 100.000 ítems.",
+            "Más de 500 monturas, pets, morphs, visuales, alas y auras custom.",
+            "Más de 16 razas custom con todas las clases disponibles.",
+            "Sets custom y nuevos displays para anillos, collares y trinkets.",
           ],
         },
         {
-          title: "Sistemas especiales",
+          title: "Sistemas Exclusivos",
           points: [
-            "Sistema avanzado para cambio de druida y otras mejoras de calidad de vida.",
-            "Tienda integrada dentro del juego para facilitar la experiencia.",
-            "Progresion balanceada con enfoque no pay to win.",
-            "Contenido diseñado para avanzar jugando y disfrutar en comunidad.",
+            "Pasivas custom, teleporter y Custom Mall integrado.",
+            "Profesiones instantáneas, buffs custom y comandos útiles.",
+            "Nueva interfaz, login custom y pantallas de carga propias.",
+            "Modelo no pay to win con progresión balanceada.",
           ],
         },
       ],
       serverInfoColumns: [
         [
-          "Nivel maximo 100.",
-          "Leveo personalizado desde nivel 1 hasta 100.",
-          "Teleporter custom para facilitar el movimiento.",
-          "Pets personalizados y monturas custom.",
+          "Nivel máximo 100.",
+          "Cliente Wrath of the Lich King 3.3.5a.",
+          "Progresión custom por tiers.",
+          "Contenido PvE y PvP activo.",
         ],
         [
-          "Monturas inspiradas en universos como Dragon Ball Z y Star Wars.",
-          "Morphs especiales para crear una identidad unica.",
-          "Mas de 100.000 items disponibles para transfiguracion.",
-          "Contenido balanceado para jugador casual y competitivo.",
+          "Sistemas exclusivos del servidor.",
+          "Modelo no pay to win.",
+          "Actualizaciones por fases.",
+          "Más de 30 World Bosses custom.",
         ],
         [
-          "Raids custom con progresion por tiers.",
-          "World Bosses exclusivos y recompensas especiales.",
-          "Duel Zone, Battlegrounds activos y zonas PvP.",
-          "Eventos por fase con recompensas y desafios nuevos.",
+          "Transmog masivo y personalización visual.",
+          "Monturas, morphs, razas y sets custom.",
+          "Tienda organizada por categorías.",
+          "Comunidad activa con Discord y soporte del Staff.",
         ],
       ],
       whyCards: [
         {
           title: "Comunidad activa",
-          body: "Un servidor con jugadores comprometidos para ayudarte, competir y progresar.",
+          body: "Discord oficial con anuncios, soporte del Staff, eventos y jugadores para PvE, PvP y hermandades.",
         },
         {
-          title: "Progresion constante",
-          body: "Nuevas fases, sistemas y contenido nuevo para desafiarte todo el año.",
+          title: "Progresión constante",
+          body: "Raids custom por tiers, World Bosses, fases de contenido y actualizaciones regulares.",
         },
         {
           title: "Experiencia custom completa",
-          body: "Contenido diseñado para entregar una experiencia diferente a cualquier otro servidor.",
+          body: "PvE, PvP balanceado, transmog masivo, monturas, razas custom y sistemas exclusivos.",
         },
         {
-          title: "Servidor estable",
-          body: "Infraestructura optimizada para ofrecer la mejor experiencia de juego posible.",
+          title: "No pay to win",
+          body: "Progresa jugando con un modelo balanceado. La tienda ofrece contenido especial sin romper el servidor.",
         },
       ],
       visionCards: [
         {
-          title: "Comunidad activa",
-          body: "Queremos un entorno estable y divertido donde todos puedan progresar, competir y cooperar.",
-          tag: "Comunidad",
+          title: "PvE por tiers",
+          body: "Progresión clara desde contenido inicial hasta desafíos avanzados con raids, llaves y armas legendarias.",
+          tag: "PvE",
         },
         {
-          title: "Progreso real",
-          body: "El enfoque no pay to win permite avanzar jugando, aprendiendo y participando.",
-          tag: "Progreso",
+          title: "PvP balanceado",
+          body: "Arenas, Battlegrounds, Duel Zone y recompensas competitivas con sistemas de balance activos.",
+          tag: "PvP",
         },
         {
-          title: "Personalizacion total",
-          body: "Transfiguraciones masivas, monturas, pets y morphs para crear tu propio estilo.",
+          title: "Personalización total",
+          body: "Transmog masivo, monturas, morphs, visuales, alas, auras y razas custom para tu identidad única.",
           tag: "Identidad",
         },
       ],
     },
     en: {
-      heroTagline: "WoW realm · WotLK · 3.3.5a",
-      heroTaglineSub: "Best server",
+      heroTagline: "Wrath of the Lich King · 3.3.5a",
+      heroTaglineSub: "Custom PvE / PvP realm",
+      heroIntro:
+        "Custom realm with level 100, unique progression, exclusive content, proprietary systems and an active community.",
+      heroIntroLong:
+        "Experience a refreshed Wrath of the Lich King 3.3.5a with custom progression, balanced PvP, massive transmog, mounts, custom races, world bosses, events and constant updates.",
       create: "Create account",
       connect: "How to connect",
       seeRules: "Check the server rules at",
       terms: "terms and conditions",
       features: "Main server features",
+      featuresSubtitle: "A complete custom experience",
       featuresBody:
-        "Blackout-WoW is built to deliver a fresh, stable and fun experience where there is always a new goal to achieve.",
+        "Blackout WoW is designed to deliver a fresh, stable and fun experience where you will always have a new goal to achieve.",
       serverInfo: "General server information",
+      serverInfoIntro:
+        "Blackout WoW is a custom Wrath of the Lich King 3.3.5a realm with max level 100, tier progression, PvE and PvP content, exclusive systems and a no pay-to-win model.",
       phases: "Phases and updates",
+      phasesIntro:
+        "Blackout WoW will grow in phases, adding new raids, maps, systems, rewards, world bosses and improvements to keep the realm active.",
+      phasesList: [
+        { phase: "Phase 1", name: "Launch", status: "Activa" as const },
+        { phase: "Phase 2", name: "Content expansion", status: "Proxima" as const },
+        { phase: "Phase 3", name: "New challenges", status: "Programada" as const },
+        { phase: "Phase 4", name: "Major update", status: "Programada" as const },
+      ],
+      phaseStatusActive: "Active",
+      phaseStatusNext: "Upcoming",
+      phaseStatusPlanned: "Planned",
       vision: "Our vision",
       why: "Why Blackout?",
       discordBadge: "Community",
-      discordTitle: "Join our Discord",
+      discordTitle: "Join our community",
       discordBody:
-        "Official channel for announcements, support, group finder, PvP and guild recruitment. Connect with the BLACKOUT WOW community before and after you log in.",
-      discordPerkOnline: "News and support",
-      discordPerkCommunity: "Active community",
+        "Join the official Blackout WoW Discord for announcements, support, news, events, giveaways and to find players for PvE, PvP and guilds.",
+      discordPerkOnline: "Official announcements",
+      discordPerkCommunity: "Staff support",
       discordPerkEvents: "Events and giveaways",
       discordJoin: "Join Discord",
       start: "Your adventure starts today",
-      startBody: "Create your account and join the BLACKOUT realm. The Lich King is waiting.",
+      startBody:
+        "Create your account and join Blackout WoW. Progress, compete, customize your character and enjoy a different custom experience in Wrath of the Lich King.",
       signupNow: "Sign up now",
       iHave: "I already have an account",
       downloadTitle: "Download the official client",
+      downloadBody:
+        "Install Blackout WoW 3.3.5a in minutes. Download the full client, create your account and enter the realm with the recommended setup for a stable experience from your first login.",
+      downloadNote:
+        "If the download does not start, check your browser blocker or try another available mirror.",
       downloadCta: "Download client",
       quickHighlights: [
         { label: "Max level", value: "100", note: "Custom progression" },
-        { label: "Content", value: "100% custom", note: "PvE, PvP and systems" },
-        { label: "Phases", value: "Every 3 months", note: "Active updates" },
+        { label: "Progression", value: "By tiers", note: "Custom raids" },
+        { label: "Content", value: "PvE / PvP", note: "Custom systems" },
         { label: "Model", value: "No pay to win", note: "Real progress by playing" },
+        { label: "Updates", value: "By phases", note: "Evolving content" },
+        { label: "Community", value: "Active Discord", note: "Staff support" },
       ],
       contentBlocks: [
         {
-          title: "100% custom content",
-          points: [
-            "Custom leveling from 1 to 100 with constant progression.",
-            "Custom teleporter to move quickly between key zones.",
-            "Custom pets and mounts, including content from Cataclysm to The War Within.",
-            "Themed morphs and mounts inspired by universes like Dragon Ball Z and Star Wars.",
-          ],
-        },
-        {
           title: "Custom PvE",
           points: [
-            "Custom raids with progressive gear for every type of player.",
-            "Custom tiers from T1 to T20 with clear progression goals.",
-            "Exclusive world bosses with special rewards and challenge zones.",
-            "Content designed for new, casual and competitive players.",
+            "Custom raids, world bosses and tier progression.",
+            "Special quests, legendary weapons and content keys.",
+            "Tiers 1–16 solo and 17–25 for groups of five.",
+            "Daily quests, custom quests and new raids with adapted maps.",
           ],
         },
         {
           title: "Active PvP",
           points: [
-            "Custom duel zone, active battlegrounds and PvP areas.",
-            "Casual and competitive combat with daily player activity.",
-            "Progression and rewards focused on both PvP and PvE.",
-            "System focused on fair play and real competition.",
+            "1v1, 2v2, 3v3 and 5v5 arenas with active battlegrounds.",
+            "Custom duel zone and special PvP rewards.",
+            "Balance to avoid broken classes and crossfaction PvP.",
+            "Fair, competitive gameplay with daily activity.",
           ],
         },
         {
-          title: "Special systems",
+          title: "Custom content",
           points: [
-            "Advanced druid form switch and other quality-of-life improvements.",
-            "In-game integrated store to simplify the experience.",
-            "Balanced progression with no pay-to-win approach.",
-            "Content designed to progress by playing and enjoying the community.",
+            "Massive transmog with 100,000+ items.",
+            "500+ custom mounts, pets, morphs, visuals, wings and auras.",
+            "16+ custom races with all classes available.",
+            "Custom sets and new displays for rings, necks and trinkets.",
+          ],
+        },
+        {
+          title: "Exclusive systems",
+          points: [
+            "Custom passives, teleporter and integrated Custom Mall.",
+            "Instant professions, custom buffs and useful commands.",
+            "New UI, custom login and loading screens.",
+            "No pay-to-win model with balanced progression.",
           ],
         },
       ],
       serverInfoColumns: [
-        ["Max level 100.", "Custom leveling from 1 to 100.", "Custom teleporter for fast movement.", "Custom pets and mounts."],
-        ["Mounts inspired by Dragon Ball Z and Star Wars.", "Special morphs for unique identity.", "More than 100,000 transmogrification items.", "Balanced content for casual and competitive players."],
-        ["Custom raids with tier progression.", "Exclusive world bosses and rewards.", "Duel Zone, active battlegrounds and PvP areas.", "Phase events with new rewards and challenges."],
+        ["Max level 100.", "Wrath of the Lich King 3.3.5a client.", "Custom tier progression.", "Active PvE and PvP content."],
+        ["Exclusive server systems.", "No pay-to-win model.", "Phase-based updates.", "30+ custom world bosses."],
+        ["Massive transmog and visual customization.", "Custom mounts, morphs, races and sets.", "Store organized by categories.", "Active community with Discord and staff support."],
       ],
       whyCards: [
         { title: "Active community", body: "A server with committed players to help you, compete and progress." },
@@ -255,81 +306,106 @@ export default async function HomePage() {
       ],
     },
     pt: {
-      heroTagline: "Servidor WoW · WotLK · 3.3.5a",
-      heroTaglineSub: "Melhor servidor",
+      heroTagline: "Wrath of the Lich King · 3.3.5a",
+      heroTaglineSub: "Servidor custom PvE / PvP",
+      heroIntro:
+        "Servidor custom com nível 100, progressão única, conteúdo exclusivo, sistemas próprios e comunidade ativa.",
+      heroIntroLong:
+        "Viva uma experiência renovada em Wrath of the Lich King 3.3.5a com progressão custom, PvP balanceado, transmog em massa, montarias, raças custom, World Bosses, eventos e atualizações constantes.",
       create: "Criar conta",
       connect: "Como conectar",
       seeRules: "Consulte as regras do servidor em",
       terms: "termos e condições",
       features: "Principais características do servidor",
+      featuresSubtitle: "Uma experiência custom completa",
       featuresBody:
-        "Blackout-WoW foi criado para oferecer uma experiência nova, estável e divertida, com sempre uma nova meta.",
+        "Blackout WoW foi criado para oferecer uma experiência nova, estável e divertida, com sempre uma nova meta para cumprir.",
       serverInfo: "Informações gerais do servidor",
+      serverInfoIntro:
+        "Blackout WoW é um servidor custom baseado em Wrath of the Lich King 3.3.5a, com nível máximo 100, progressão por tiers, conteúdo PvE e PvP, sistemas exclusivos e modelo sem pay to win.",
       phases: "Fases e atualizações",
+      phasesIntro:
+        "Blackout WoW avançará por fases, adicionando novas raids, mapas, sistemas, recompensas, World Bosses e melhorias para manter o servidor ativo.",
+      phasesList: [
+        { phase: "Fase 1", name: "Lançamento", status: "Activa" as const },
+        { phase: "Fase 2", name: "Expansão de conteúdo", status: "Proxima" as const },
+        { phase: "Fase 3", name: "Novos desafios", status: "Programada" as const },
+        { phase: "Fase 4", name: "Atualização maior", status: "Programada" as const },
+      ],
+      phaseStatusActive: "Ativa",
+      phaseStatusNext: "Próxima",
+      phaseStatusPlanned: "Programada",
       vision: "Nossa visão",
       why: "Por que Blackout?",
       discordBadge: "Comunidade",
-      discordTitle: "Entre no nosso Discord",
+      discordTitle: "Junte-se à nossa comunidade",
       discordBody:
-        "Canal oficial para anúncios, suporte, buscar grupo, PvP e guilda. Conecte-se com a comunidade BLACKOUT WOW antes e depois de entrar no jogo.",
-      discordPerkOnline: "Anúncios e suporte",
-      discordPerkCommunity: "Comunidade ativa",
+        "Faça parte do Discord oficial do Blackout WoW. Receba anúncios, suporte, notícias, eventos, sorteios e encontre jogadores para PvE, PvP e guildas.",
+      discordPerkOnline: "Anúncios oficiais",
+      discordPerkCommunity: "Suporte da equipe",
       discordPerkEvents: "Eventos e sorteios",
       discordJoin: "Entrar no Discord",
       start: "Sua aventura começa hoje",
-      startBody: "Crie sua conta e faça parte do reino BLACKOUT. O Lich King não espera.",
+      startBody:
+        "Crie sua conta e faça parte do Blackout WoW. Progrida, compita, personalize seu personagem e viva uma experiência custom diferente em Wrath of the Lich King.",
       signupNow: "Registrar agora",
       iHave: "Já tenho conta",
       downloadTitle: "Baixe o cliente oficial",
+      downloadBody:
+        "Instale o Blackout WoW 3.3.5a em poucos minutos. Baixe o cliente completo, crie sua conta e entre no reino com a configuração recomendada para uma experiência estável desde o primeiro login.",
+      downloadNote:
+        "Se o download não iniciar, verifique o bloqueador do navegador ou tente outro mirror disponível.",
       downloadCta: "Baixar cliente",
       quickHighlights: [
         { label: "Nível máximo", value: "100", note: "Progressão custom" },
-        { label: "Conteúdo", value: "100% custom", note: "PvE, PvP e sistemas" },
-        { label: "Fases", value: "A cada 3 meses", note: "Atualizações ativas" },
+        { label: "Progressão", value: "Por tiers", note: "Raids custom" },
+        { label: "Conteúdo", value: "PvE / PvP", note: "Sistemas custom" },
         { label: "Modelo", value: "Sem pay to win", note: "Progresso real jogando" },
+        { label: "Atualizações", value: "Por fases", note: "Conteúdo em evolução" },
+        { label: "Comunidade", value: "Discord ativo", note: "Suporte da equipe" },
       ],
       contentBlocks: [
         {
-          title: "Conteúdo 100% custom",
+          title: "PvE Custom",
           points: [
-            "Leveling custom do nível 1 ao 100 com progressão constante.",
-            "Teleporter custom para mover rapidamente entre zonas importantes.",
-            "Pets e montarias custom, com conteúdo de Cataclysm até The War Within.",
-            "Morphs e montarias temáticas inspiradas em Dragon Ball Z e Star Wars.",
+            "Raids custom, World Bosses e progressão por tiers.",
+            "Missões especiais, armas lendárias e chaves de conteúdo.",
+            "Tiers 1 a 16 no modo solo e 17 a 25 para grupos.",
+            "Daily Quests, Custom Quests e novas raids com mapas adaptados.",
           ],
         },
         {
-          title: "PvE custom",
+          title: "PvP Ativo",
           points: [
-            "Raids custom com equipamentos progressivos para todo tipo de jogador.",
-            "Tiers custom de T1 até T20 com metas claras de progressão.",
-            "World Bosses exclusivos com recompensas especiais.",
-            "Conteúdo pensado para jogadores novos, casuais e competitivos.",
+            "Arenas 1v1, 2v2, 3v3 e 5v5 com battlegrounds ativos.",
+            "Duel Zone personalizada e recompensas PvP especiais.",
+            "Balanceamento para evitar classes quebradas e crossfaction no PvP.",
+            "Jogo competitivo, justo e com atividade diária.",
           ],
         },
         {
-          title: "PvP ativo",
+          title: "Conteúdo Custom",
           points: [
-            "Duel Zone custom, battlegrounds ativos e zonas PvP.",
-            "Combates casuais e competitivos com atividade diária.",
-            "Progressão e recompensas para PvP e PvE.",
-            "Sistema focado em jogo limpo e competição real.",
+            "Transmog em massa com mais de 100.000 itens.",
+            "Mais de 500 montarias, pets, morphs, visuais, asas e auras custom.",
+            "Mais de 16 raças custom com todas as classes disponíveis.",
+            "Sets custom e novos displays para anéis, colares e trinkets.",
           ],
         },
         {
-          title: "Sistemas especiais",
+          title: "Sistemas Exclusivos",
           points: [
-            "Sistema avançado para mudança de forma de druida e melhorias de qualidade de vida.",
-            "Loja integrada dentro do jogo para facilitar a experiência.",
-            "Progressão equilibrada com foco sem pay to win.",
-            "Conteúdo criado para evoluir jogando e curtindo a comunidade.",
+            "Passivas custom, teleporter e Custom Mall integrado.",
+            "Profissões instantâneas, buffs custom e comandos úteis.",
+            "Nova interface, login custom e telas de carregamento próprias.",
+            "Modelo sem pay to win com progressão equilibrada.",
           ],
         },
       ],
       serverInfoColumns: [
-        ["Nível máximo 100.", "Leveling custom do nível 1 ao 100.", "Teleporter custom para facilitar movimento.", "Pets e montarias custom."],
-        ["Montarias inspiradas em Dragon Ball Z e Star Wars.", "Morphs especiais para identidade única.", "Mais de 100.000 itens para transmog.", "Conteúdo equilibrado para casual e competitivo."],
-        ["Raids custom com progressão por tiers.", "World Bosses exclusivos e recompensas especiais.", "Duel Zone, battlegrounds ativos e zonas PvP.", "Eventos por fase com novos desafios."],
+        ["Nível máximo 100.", "Cliente Wrath of the Lich King 3.3.5a.", "Progressão custom por tiers.", "Conteúdo PvE e PvP ativo."],
+        ["Sistemas exclusivos do servidor.", "Modelo sem pay to win.", "Atualizações por fases.", "Mais de 30 World Bosses custom."],
+        ["Transmog em massa e personalização visual.", "Montarias, morphs, raças e sets custom.", "Loja organizada por categorias.", "Comunidade ativa com Discord e suporte da equipe."],
       ],
       whyCards: [
         { title: "Comunidade ativa", body: "Servidor com jogadores comprometidos para ajudar, competir e evoluir." },
@@ -362,6 +438,13 @@ export default async function HomePage() {
   const whyBlackoutCards = tx.whyCards;
   const visionCards = tx.visionCards;
   const contentBlocks = tx.contentBlocks;
+  const phasesList = tx.phasesList;
+
+  const phaseStatusLabel = (status: "Activa" | "Proxima" | "Programada") => {
+    if (status === "Activa") return tx.phaseStatusActive;
+    if (status === "Proxima") return tx.phaseStatusNext;
+    return tx.phaseStatusPlanned;
+  };
 
   return (
     <SiteShell>
@@ -415,6 +498,13 @@ export default async function HomePage() {
               </div>
             </div>
 
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-zinc-200 sm:mt-6">
+              {tx.heroIntro}
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
+              {tx.heroIntroLong}
+            </p>
+
             <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-7 sm:gap-4 md:mt-8">
               <Link
                 href="/registro"
@@ -428,6 +518,16 @@ export default async function HomePage() {
               >
                 {tx.connect}
               </Link>
+              {hasDiscordInvite ? (
+                <Link
+                  href={DISCORD_INVITE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md border border-[#5865F2]/50 bg-[#5865F2]/15 px-6 py-3 text-sm font-semibold text-[#e0e4ff] hover:bg-[#5865F2]/25 sm:px-8 sm:text-base"
+                >
+                  {tx.discordJoin}
+                </Link>
+              ) : null}
             </div>
 
             <p className="mt-2.5 max-w-xl text-sm text-zinc-500 sm:mt-3">
@@ -469,7 +569,10 @@ export default async function HomePage() {
           priority={false}
         />
         <div className="feature-fire-particles fire-embers pointer-events-none absolute -inset-x-8 -inset-y-10 z-0 opacity-55" />
-        <h2 className="font-display text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
+        <p className="font-display text-center text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/85">
+          {tx.featuresSubtitle}
+        </p>
+        <h2 className="font-display mt-3 text-center text-2xl font-semibold text-zinc-100 md:text-3xl">
           {tx.features}
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-center text-sm leading-relaxed text-zinc-400 md:text-base">
@@ -499,7 +602,7 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {quickHighlights.map((item) => (
             <article
               key={item.label}
@@ -523,8 +626,7 @@ export default async function HomePage() {
             {tx.serverInfo}
           </h2>
           <p className="mx-auto mt-3 max-w-3xl text-center text-sm text-zinc-400 md:text-base">
-            Todo lo que necesitas saber de BLACKOUT WoW en un solo vistazo.
-            Progresion custom, sistemas especiales y contenido activo.
+            {tx.serverInfoIntro}
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {serverInfoColumns.map((column, idx) => (
@@ -576,9 +678,7 @@ export default async function HomePage() {
             {tx.downloadTitle}
           </h2>
           <p className="mt-3 max-w-3xl text-sm text-zinc-400 md:text-base">
-            Instala BLACKOUT WoW 3.3.5a en minutos. Descarga el cliente completo
-            y entra al reino con la configuracion recomendada para una
-            experiencia estable desde el primer login.
+            {tx.downloadBody}
           </p>
 
           <div className="dragon-modal-shell mt-6">
@@ -629,10 +729,7 @@ export default async function HomePage() {
                 conecta con tu cuenta y entra directamente al reino sin
                 configuraciones complejas.
               </p>
-              <p className="mt-2 text-xs text-zinc-400/90">
-                Si no inicia la descarga, verifica tu bloqueador del navegador o
-                prueba desde otro mirror.
-              </p>
+              <p className="mt-2 text-xs text-zinc-400/90">{tx.downloadNote}</p>
               <div className="mt-6">
                 <Link
                   href="/downloads/blackout-wow-3.3.5a-client.zip"
@@ -655,25 +752,10 @@ export default async function HomePage() {
               {tx.phases}
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-zinc-400 md:text-base">
-              El servidor evoluciona por fases. Cada 3 meses llega contenido
-              nuevo con mejoras importantes, nuevos retos y recompensas para
-              mantener la experiencia activa para jugadores nuevos y veteranos.
+              {tx.phasesIntro}
             </p>
             <div className="mt-8 grid gap-4 md:grid-cols-4">
-              {[
-                { phase: "Fase 1", name: "Lanzamiento", status: "Activa" },
-                {
-                  phase: "Fase 2",
-                  name: "Expansion de contenido",
-                  status: "Proxima",
-                },
-                { phase: "Fase 3", name: "Nuevos retos", status: "Programada" },
-                {
-                  phase: "Fase 4",
-                  name: "Actualizacion mayor",
-                  status: "Programada",
-                },
-              ].map((p) => (
+              {phasesList.map((p) => (
                 <div
                   key={p.phase}
                   className="home-card home-card-aura phase-card rounded-lg border border-white/10 bg-black/35 p-4"
@@ -693,7 +775,7 @@ export default async function HomePage() {
                           : "text-zinc-500"
                     }`}
                   >
-                    {p.status}
+                    {phaseStatusLabel(p.status)}
                   </p>
                 </div>
               ))}
