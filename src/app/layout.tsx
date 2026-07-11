@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Cinzel, Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -107,6 +108,7 @@ export default async function RootLayout({
         <LanguageProvider initialLanguage={lang}>
           <AuthProvider>{children}</AuthProvider>
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
