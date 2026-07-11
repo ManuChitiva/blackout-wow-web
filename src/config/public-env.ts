@@ -1,5 +1,5 @@
-const DEFAULT_API_URL = "http://localhost:8080";
-const DEFAULT_RECAPTCHA_SITE_KEY = "6Lcd3iArAAAAAAUJI-22bSPgBrh6lmT2BEXu66Hb";
+const DEFAULT_API_URL = "https://api.blackout-wow.com";
+const DEFAULT_RECAPTCHA_SITE_KEY = "6Le0U00tAAAAALrpUbDcjijuYa6AApKemDXnbYTh";
 function clean(value: string | undefined): string {
   return value?.trim() ?? "";
 }
