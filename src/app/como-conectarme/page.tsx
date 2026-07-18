@@ -44,8 +44,9 @@ export default async function ComoConectarmePage() {
         {
           title: "2) Descarga el cliente 3.3.5a",
           body: "Instala el cliente recomendado para evitar errores de compatibilidad y entrar al servidor con la configuracion correcta.",
-          ctaLabel: "Descargar cliente",
-          ctaHref: "/downloads/blackout-wow-3.3.5a-client.zip",
+          ctaLabel: "Descargar parches",
+          ctaHref:
+            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
         },
         {
           title: "3) Configura el realmlist",
@@ -83,7 +84,8 @@ export default async function ComoConectarmePage() {
           title: "2) Download 3.3.5a client",
           body: "Install the recommended client to avoid compatibility issues and connect with the correct setup.",
           ctaLabel: "Download client",
-          ctaHref: "/downloads/blackout-wow-3.3.5a-client.zip",
+          ctaHref:
+            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
         },
         {
           title: "3) Configure realmlist",
@@ -121,7 +123,8 @@ export default async function ComoConectarmePage() {
           title: "2) Baixe o cliente 3.3.5a",
           body: "Instale o cliente recomendado para evitar erros de compatibilidade e entrar com a configuração correta.",
           ctaLabel: "Baixar cliente",
-          ctaHref: "/downloads/blackout-wow-3.3.5a-client.zip",
+          ctaHref:
+            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
         },
         {
           title: "3) Configure o realmlist",
