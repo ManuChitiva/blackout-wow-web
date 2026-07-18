@@ -126,7 +126,7 @@ export default async function ComoConectarmePage() {
         {
           title: "3) Configure o realmlist",
           body: "Abra o arquivo `realmlist.wtf` e substitua pelo endereço oficial do reino para autenticar.",
-          code: "set realmlist logon.blackoutwow.com",
+          code: "set realmlist logon.blackout-wow.com",
         },
         {
           title: "4) Entre e jogue",
@@ -191,7 +191,9 @@ export default async function ComoConectarmePage() {
               key={step.title}
               className="home-card rounded-xl border border-white/10 bg-zinc-950/65 p-6"
             >
-              <h2 className="font-display text-xl text-zinc-100">{step.title}</h2>
+              <h2 className="font-display text-xl text-zinc-100">
+                {step.title}
+              </h2>
               <p className="mt-3 text-sm leading-relaxed text-zinc-300">
                 {step.body}
               </p>
@@ -236,9 +238,7 @@ export default async function ComoConectarmePage() {
             </li>
             <li className="flex gap-2">
               <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400/80" />
-              <span>
-                {tx.tip3}
-              </span>
+              <span>{tx.tip3}</span>
             </li>
           </ul>
           <div className="mt-6">
