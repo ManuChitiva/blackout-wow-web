@@ -60,6 +60,16 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
+      addonsTitle: "Addon obligatorio",
+      addonsIntro:
+        "Antes de entrar al reino descarga este addon oficial. Es requerido para que todo funcione correctamente en BLACKOUT WOW.",
+      addonsTip:
+        "Descomprime el archivo en la carpeta Interface/AddOns dentro de tu cliente 3.3.5a y reinicia el juego para que se cargue.",
+      addon: {
+        name: "Addon oficial BLACKOUT WOW",
+        desc: "Paquete unico con todos los addons necesarios para jugar el reino. Mantenlo actualizado desde este enlace oficial.",
+        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
+      },
     },
     en: {
       badge: "Official guide",
@@ -99,6 +109,16 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
+      addonsTitle: "Required addon",
+      addonsIntro:
+        "Before entering the realm download this official addon. It is required for everything to work properly on BLACKOUT WOW.",
+      addonsTip:
+        "Unzip the file into Interface/AddOns inside your 3.3.5a client folder and restart the game so it loads.",
+      addon: {
+        name: "Official BLACKOUT WOW addon",
+        desc: "Single pack containing every addon needed to play on the realm. Keep it up to date from this official link.",
+        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
+      },
     },
     pt: {
       badge: "Guia oficial",
@@ -138,6 +158,16 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
+      addonsTitle: "Addon obrigatorio",
+      addonsIntro:
+        "Antes de entrar no reino baixe este addon oficial. Ele e necessario para que tudo funcione corretamente no BLACKOUT WOW.",
+      addonsTip:
+        "Descompacte o arquivo na pasta Interface/AddOns dentro do seu cliente 3.3.5a e reinicie o jogo para que carregue.",
+      addon: {
+        name: "Addon oficial BLACKOUT WOW",
+        desc: "Pacote unico com todos os addons necessarios para jogar no reino. Mantenha-o atualizado por este link oficial.",
+        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
+      },
     },
   }[lang];
   return (
@@ -223,6 +253,46 @@ export default async function ComoConectarmePage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
+        <div className="mb-6 flex flex-col gap-2">
+          <p className="font-display text-sm uppercase tracking-[0.3em] text-sky-200/80">
+            {lang === "en" ? "Required addon" : lang === "pt" ? "Addon" : "Addon"}
+          </p>
+          <h2 className="font-display text-2xl font-semibold text-zinc-100 md:text-3xl">
+            {tx.addonsTitle}
+          </h2>
+          <p className="max-w-3xl text-sm leading-relaxed text-zinc-300 md:text-base">
+            {tx.addonsIntro}
+          </p>
+          <p className="text-xs text-zinc-400">{tx.addonsTip}</p>
+        </div>
+        <article className="home-card flex flex-col gap-5 rounded-2xl border border-amber-500/25 bg-zinc-950/65 p-6 md:flex-row md:items-center md:gap-6 md:p-8">
+          <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-amber-500/40 bg-amber-500/15 font-display text-2xl text-amber-300">
+            ★
+          </span>
+          <div className="flex-1">
+            <h3 className="font-display text-xl text-zinc-100 md:text-2xl">
+              {tx.addon.name}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-300 md:text-base">
+              {tx.addon.desc}
+            </p>
+          </div>
+          <a
+            href={tx.addon.href}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex shrink-0 items-center justify-center rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
+          >
+            {lang === "en"
+              ? "Download addon"
+              : lang === "pt"
+                ? "Baixar addon"
+                : "Descargar addon"}
+          </a>
+        </article>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16">
