@@ -50,7 +50,7 @@ export default async function ComoConectarmePage() {
         {
           title: "3) Configura el realmlist",
           body: "Abre el archivo realmlist.wtf y reemplaza su contenido con la direccion oficial del reino para poder autenticarte.",
-          code: "set realmlist logon.blackoutwow.com",
+          code: "set realmlist logon.blackout-wow.com",
         },
         {
           title: "4) Inicia sesion y juega",
@@ -88,7 +88,7 @@ export default async function ComoConectarmePage() {
         {
           title: "3) Configure realmlist",
           body: "Open `realmlist.wtf` and replace its content with the official realm address to authenticate.",
-          code: "set realmlist logon.blackoutwow.com",
+          code: "set realmlist logon.blackout-wow.com",
         },
         {
           title: "4) Log in and play",
