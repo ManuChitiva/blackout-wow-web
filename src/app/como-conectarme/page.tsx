@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/SiteShell";
+import { DownloadsSection, type DownloadsCopy } from "@/components/DownloadsSection";
 import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLng, isSupportedLanguage } from "@/i18n/settings";
@@ -45,8 +46,7 @@ export default async function ComoConectarmePage() {
           title: "2) Descarga el cliente 3.3.5a",
           body: "Instala el cliente recomendado para evitar errores de compatibilidad y entrar al servidor con la configuracion correcta.",
           ctaLabel: "Descargar parches",
-          ctaHref:
-            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
+          ctaHref: "#descargas",
         },
         {
           title: "3) Configura el realmlist",
@@ -60,16 +60,54 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
-      addonsTitle: "Addon obligatorio",
-      addonsIntro:
-        "Antes de entrar al reino descarga este addon oficial. Es requerido para que todo funcione correctamente en BLACKOUT WOW.",
-      addonsTip:
-        "Descomprime el archivo en la carpeta Interface/AddOns dentro de tu cliente 3.3.5a y reinicia el juego para que se cargue.",
-      addon: {
-        name: "Addon oficial BLACKOUT WOW",
-        desc: "Paquete unico con todos los addons necesarios para jugar el reino. Mantenlo actualizado desde este enlace oficial.",
-        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
-      },
+      downloads: {
+        badge: "Descargas oficiales",
+        title: "Descargas del servidor",
+        intro:
+          "Todos los archivos necesarios para conectarte correctamente a BLACKOUT WOW. Tenlos siempre actualizados para evitar errores dentro del juego.",
+        tip: "Todos los archivos se descargan desde Google Drive. Recuerda instalar y activar el addon antes de entrar al juego.",
+        groups: [
+          {
+            id: "parches",
+            title: "Parches + WoW.exe",
+            desc: "Archivo actualizado con los parches necesarios y el ejecutable del juego. Es obligatorio para el correcto funcionamiento del servidor.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1YXqxzPbBd5TAyLZ1yu0c0o64X8UGOtxi/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "addon",
+            title: "Addon obligatorio",
+            desc: "Necesario para el correcto funcionamiento del servidor. Descomprime el archivo en Interface/AddOns, activa el addon y reinicia el juego.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "cliente",
+            title: "Cliente completo + parches",
+            desc: "Si prefieres descargar directamente el cliente completo, elige la version en tu idioma.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                label: "esES - Español",
+                href: "https://drive.google.com/file/d/1_0FWKqbGP2YarJ5WlQp2YpR5ubJGIdtQ/view?usp=sharing",
+              },
+              {
+                provider: "gdrive",
+                label: "enUS - English",
+                href: "https://drive.google.com/file/d/1qIDOR1xMNYmCoyUxOmhngnJ-32E1rgsM/view?usp=sharing",
+              },
+            ],
+          },
+        ],
+      } satisfies DownloadsCopy,
     },
     en: {
       badge: "Official guide",
@@ -94,8 +132,7 @@ export default async function ComoConectarmePage() {
           title: "2) Download 3.3.5a client",
           body: "Install the recommended client to avoid compatibility issues and connect with the correct setup.",
           ctaLabel: "Download client",
-          ctaHref:
-            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
+          ctaHref: "#descargas",
         },
         {
           title: "3) Configure realmlist",
@@ -109,16 +146,54 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
-      addonsTitle: "Required addon",
-      addonsIntro:
-        "Before entering the realm download this official addon. It is required for everything to work properly on BLACKOUT WOW.",
-      addonsTip:
-        "Unzip the file into Interface/AddOns inside your 3.3.5a client folder and restart the game so it loads.",
-      addon: {
-        name: "Official BLACKOUT WOW addon",
-        desc: "Single pack containing every addon needed to play on the realm. Keep it up to date from this official link.",
-        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
-      },
+      downloads: {
+        badge: "Official downloads",
+        title: "Server downloads",
+        intro:
+          "All the files you need to connect properly to BLACKOUT WOW. Keep them up to date to avoid errors in-game.",
+        tip: "All files are downloaded from Google Drive. Remember to install and enable the addon before logging in.",
+        groups: [
+          {
+            id: "parches",
+            title: "Patches + WoW.exe",
+            desc: "Updated file with the required patches and the game executable. Mandatory for the server to work correctly.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1YXqxzPbBd5TAyLZ1yu0c0o64X8UGOtxi/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "addon",
+            title: "Required addon",
+            desc: "Required for the server to work correctly. Unzip the file into Interface/AddOns, enable the addon and restart the game.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "cliente",
+            title: "Full client + patches",
+            desc: "Prefer to download the full client directly? Choose your language version.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                label: "esES - Spanish",
+                href: "https://drive.google.com/file/d/1_0FWKqbGP2YarJ5WlQp2YpR5ubJGIdtQ/view?usp=sharing",
+              },
+              {
+                provider: "gdrive",
+                label: "enUS - English",
+                href: "https://drive.google.com/file/d/1qIDOR1xMNYmCoyUxOmhngnJ-32E1rgsM/view?usp=sharing",
+              },
+            ],
+          },
+        ],
+      } satisfies DownloadsCopy,
     },
     pt: {
       badge: "Guia oficial",
@@ -143,8 +218,7 @@ export default async function ComoConectarmePage() {
           title: "2) Baixe o cliente 3.3.5a",
           body: "Instale o cliente recomendado para evitar erros de compatibilidade e entrar com a configuração correta.",
           ctaLabel: "Baixar cliente",
-          ctaHref:
-            "https://drive.google.com/file/d/1ux56GLpgvr_0qyXnqJwlALPVXy883bEz/view",
+          ctaHref: "#descargas",
         },
         {
           title: "3) Configure o realmlist",
@@ -158,16 +232,54 @@ export default async function ComoConectarmePage() {
           ctaHref: "/login",
         },
       ],
-      addonsTitle: "Addon obrigatorio",
-      addonsIntro:
-        "Antes de entrar no reino baixe este addon oficial. Ele e necessario para que tudo funcione corretamente no BLACKOUT WOW.",
-      addonsTip:
-        "Descompacte o arquivo na pasta Interface/AddOns dentro do seu cliente 3.3.5a e reinicie o jogo para que carregue.",
-      addon: {
-        name: "Addon oficial BLACKOUT WOW",
-        desc: "Pacote unico com todos os addons necessarios para jogar no reino. Mantenha-o atualizado por este link oficial.",
-        href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view",
-      },
+      downloads: {
+        badge: "Downloads oficiais",
+        title: "Downloads do servidor",
+        intro:
+          "Todos os arquivos necessarios para se conectar corretamente ao BLACKOUT WOW. Mantenha-os atualizados para evitar erros no jogo.",
+        tip: "Todos os arquivos sao baixados do Google Drive. Lembre de instalar e ativar o addon antes de entrar no jogo.",
+        groups: [
+          {
+            id: "parches",
+            title: "Patches + WoW.exe",
+            desc: "Arquivo atualizado com os patches necessarios e o executavel do jogo. Obrigatorio para o funcionamento correto do servidor.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1YXqxzPbBd5TAyLZ1yu0c0o64X8UGOtxi/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "addon",
+            title: "Addon obrigatorio",
+            desc: "Necessario para o funcionamento correto do servidor. Descompacte o arquivo em Interface/AddOns, ative o addon e reinicie o jogo.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                href: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view?usp=sharing",
+              },
+            ],
+          },
+          {
+            id: "cliente",
+            title: "Cliente completo + patches",
+            desc: "Se preferir baixar o cliente completo diretamente, escolha a versao no seu idioma.",
+            mirrors: [
+              {
+                provider: "gdrive",
+                label: "esES - Espanhol",
+                href: "https://drive.google.com/file/d/1_0FWKqbGP2YarJ5WlQp2YpR5ubJGIdtQ/view?usp=sharing",
+              },
+              {
+                provider: "gdrive",
+                label: "enUS - Ingles",
+                href: "https://drive.google.com/file/d/1qIDOR1xMNYmCoyUxOmhngnJ-32E1rgsM/view?usp=sharing",
+              },
+            ],
+          },
+        ],
+      } satisfies DownloadsCopy,
     },
   }[lang];
   return (
@@ -255,45 +367,7 @@ export default async function ComoConectarmePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-14">
-        <div className="mb-6 flex flex-col gap-2">
-          <p className="font-display text-sm uppercase tracking-[0.3em] text-sky-200/80">
-            {lang === "en" ? "Required addon" : lang === "pt" ? "Addon" : "Addon"}
-          </p>
-          <h2 className="font-display text-2xl font-semibold text-zinc-100 md:text-3xl">
-            {tx.addonsTitle}
-          </h2>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-300 md:text-base">
-            {tx.addonsIntro}
-          </p>
-          <p className="text-xs text-zinc-400">{tx.addonsTip}</p>
-        </div>
-        <article className="home-card flex flex-col gap-5 rounded-2xl border border-amber-500/25 bg-zinc-950/65 p-6 md:flex-row md:items-center md:gap-6 md:p-8">
-          <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-amber-500/40 bg-amber-500/15 font-display text-2xl text-amber-300">
-            ★
-          </span>
-          <div className="flex-1">
-            <h3 className="font-display text-xl text-zinc-100 md:text-2xl">
-              {tx.addon.name}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-300 md:text-base">
-              {tx.addon.desc}
-            </p>
-          </div>
-          <a
-            href={tx.addon.href}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex shrink-0 items-center justify-center rounded-md bg-linear-to-r from-amber-600 to-orange-500 px-6 py-3 text-sm font-semibold text-black hover:from-amber-500 hover:to-orange-400"
-          >
-            {lang === "en"
-              ? "Download addon"
-              : lang === "pt"
-                ? "Baixar addon"
-                : "Descargar addon"}
-          </a>
-        </article>
-      </section>
+      <DownloadsSection copy={tx.downloads} />
 
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-6 md:p-8">
