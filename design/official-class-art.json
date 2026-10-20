@@ -1,0 +1,35 @@
+{
+  "origin": "Blizzard official World of Warcraft class pages; artwork remains property of Blizzard Entertainment.",
+  "pages": [
+    "https://worldofwarcraft.blizzard.com/en-us/game/classes/evoker",
+    "https://worldofwarcraft.blizzard.com/en-us/game/classes/monk",
+    "https://worldofwarcraft.blizzard.com/en-us/game/classes/demon-hunter"
+  ],
+  "files": [
+    {
+      "file": "public\\warcraft\\classes\\evoker.png",
+      "url": "https://blz-contentstack-images.akamaized.net/v3/assets/blt3452e3b114fab0cd/blt149d0f0b7e67663e/635700169dfd7536c202781f/Evoker_MainImage.png",
+      "bytes": 3283539
+    },
+    {
+      "file": "public\\warcraft\\classes\\monk.png",
+      "url": "https://blz-contentstack-images.akamaized.net/v3/assets/blt3452e3b114fab0cd/blt6e169380711a7668/5ee793cd889f91709461100d/DCAPWBFVI77U1457037527937.png",
+      "bytes": 1481570
+    },
+    {
+      "file": "public\\warcraft\\classes\\evoker-bg.png",
+      "url": "https://blz-contentstack-images.akamaized.net/v3/assets/blt3452e3b114fab0cd/blt078c38350f80f2af/6351b7fbbf416852dd931e39/Evoker_BG.png",
+      "bytes": 1810391
+    },
+    {
+      "file": "public\\warcraft\\classes\\monk-bg.jpg",
+      "url": "https://blz-contentstack-images.akamaized.net/v3/assets/blt3452e3b114fab0cd/blt2ee517ce9fe4c6c1/5ee793cee35f99710ac79063/FD1BR6EWP9C31457037528430.jpg",
+      "bytes": 474303
+    },
+    {
+      "file": "public/warcraft/classes/demon-hunter.png",
+      "url": "https://blz-contentstack-images.akamaized.net/v3/assets/blt3452e3b114fab0cd/blt2eba0922e67b24f1/5ee7963314a7bc718bab615b/70HK5LSS30HD1457037556699.png",
+      "bytes": 1251294
+    }
+  ]
+}

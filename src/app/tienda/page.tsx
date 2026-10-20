@@ -10,8 +10,6 @@ import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
 import { CATEGORY_FILTER_ALL } from "@/lib/store-category-filter";
 
-const SHOP_BG_VIDEO =
-  "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
 
 type Product = {
   id: number;
@@ -111,7 +109,7 @@ export default function ShopPage() {
         sessionStorage.setItem("blackout_pending_paypal", r.paypalOrderId);
       }
       if (typeof window !== "undefined") {
-        window.open(r.approvalUrl, "_blank", "noopener,noreferrer");
+        window.location.assign(r.approvalUrl);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : t("common.error"));
@@ -133,18 +131,9 @@ export default function ShopPage() {
   return (
     <SiteShell>
       <div className="mx-auto max-w-5xl px-4 py-16">
+        <Link href="/cuenta" className="account-back-link"><span aria-hidden="true">←</span> {t("nav.account")}</Link>
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/70 p-6 md:p-8">
-          <video
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden
-          >
-            <source src={SHOP_BG_VIDEO} type="video/mp4" />
-          </video>
+
           <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/70 via-black/55 to-black/72" />
           <div className="relative z-10">
           <h1 className="font-display text-3xl font-semibold text-zinc-50">
@@ -162,15 +151,17 @@ export default function ShopPage() {
           </Link>
           .
         </p>
-        <div className="mt-6 grid gap-3 md:grid-cols-[2fr,1fr]">
+        <div className="mt-6 grid gap-3 md:grid-cols-[2fr_1fr]">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("store.donation.searchPlaceholder")}
+            aria-label={t("store.donation.searchPlaceholder")}
             className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-sky-500/60"
           />
           <select
+            aria-label={t("store.donation.allCategories")}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-sky-500/60"
@@ -192,7 +183,7 @@ export default function ShopPage() {
             })}
           </p>
         )}
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {pageItems.map((p) => (
             <div
               key={p.id}

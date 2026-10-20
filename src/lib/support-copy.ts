@@ -1,0 +1,32 @@
+export const supportCopy = {
+  es: {
+    eyebrow: "APORTACIONES AL SERVIDOR",
+    title: "Apoya a",
+    accent: "Blackout.",
+    intro: "Contribuye al futuro de Blackout-WoW. Consulta las opciones VIP y Donor desde tu cuenta.",
+    login: "INICIAR SESIÓN",
+    account: "VER OPCIONES EN MI CUENTA",
+    note: "¿Quieres saber más? Contacta con Blackout-WoW en Discord o abre un ticket.",
+    discord: "CONTACTAR EN DISCORD",
+  },
+  en: {
+    eyebrow: "SUPPORT THE SERVER",
+    title: "Support",
+    accent: "Blackout.",
+    intro: "Support Blackout-WoW’s future. Explore VIP and Donor options from your account.",
+    login: "LOG IN",
+    account: "VIEW OPTIONS IN MY ACCOUNT",
+    note: "Want to know more? Contact Blackout-WoW on Discord or open a ticket.",
+    discord: "CONTACT US ON DISCORD",
+  },
+  pt: {
+    eyebrow: "CONTRIBUIÇÕES PARA O SERVIDOR",
+    title: "Apoie o",
+    accent: "Blackout.",
+    intro: "Contribua para o futuro do Blackout-WoW. Consulte as opções VIP e Donor na sua conta.",
+    login: "ENTRAR NA CONTA",
+    account: "VER OPÇÕES NA MINHA CONTA",
+    note: "Quer saber mais? Fale com Blackout-WoW no Discord ou abra um ticket.",
+    discord: "ENTRAR EM CONTATO NO DISCORD",
+  },
+};

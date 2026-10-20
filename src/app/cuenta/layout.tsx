@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { localizedPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = buildPageMetadata({
+export function generateMetadata() { return localizedPageMetadata({
   title: "Mi cuenta",
   description:
     "Panel de cuenta BLACKOUT WOW: personajes, estado en juego, historial de compras, canjes y seguridad. Solo accesible con tu sesión iniciada.",
   pathname: "/cuenta",
   noIndex: true,
-});
+}); }
 
 export default function AccountLayout({
   children,

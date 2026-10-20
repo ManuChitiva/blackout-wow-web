@@ -1,0 +1,112 @@
+BLACKOUT-WOW — REDISEÑO WEB
+Entrega: 18 de octubre de 2026
+Repositorio de destino: ManuChitiva/blackout-wow-web
+
+INSTALACIÓN
+1. Guarda una copia de tu repositorio actual.
+2. Extrae el contenido del ZIP directamente en la raíz del repositorio.
+   src/, public/, package.json y package-lock.json deben quedar al mismo nivel
+   que sus equivalentes originales. No crees otra carpeta anidada.
+3. Conserva las variables de entorno de tu despliegue actual.
+4. Sube los archivos al repositorio y despliega con la configuración Next.js
+   que ya utilizas. GitHub almacena el código; GitHub Pages por sí solo no
+   ejecuta esta aplicación Next.js con renderizado en servidor.
+
+EJECUCIÓN LOCAL
+Node.js 20.9 o superior. Entrega compilada con Node.js 24.20.0.
+Desde la carpeta del proyecto:
+  npm ci
+  npm run build
+  npm start
+Abrir http://localhost:3000
+Para desarrollo: npm run dev
+
+CONFIGURACIÓN
+Mantén los valores de tu entorno de producción:
+  NEXT_PUBLIC_API_URL
+  NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+  NEXT_PUBLIC_SITE_URL
+  NEXT_PUBLIC_PATCH_DOWNLOAD_URL (URL HTTPS del paquete de parches actualizado)
+Los valores predeterminados existentes de API y reCAPTCHA se conservan.
+No se incluyen archivos .env ni credenciales privadas.
+Las variables NEXT_PUBLIC se aplican durante la compilación; recompila si cambian.
+La API y las cuentas del servidor son servicios externos a este repositorio.
+No se incluyen node_modules, .next, .git ni los archivos temporales de trabajo.
+
+CONTENIDO
+Inicio cinematográfico de cinco secciones, tres vídeos y fuentes locales.
+Página del servidor, guía de conexión, normas, login, registro, recuperación,
+restablecimiento, cuenta, tienda, puntos, retorno de pago y administración.
+Español, inglés y portugués. Diseño adaptable a móvil y escritorio.
+Pausa de animaciones y respeto de la preferencia de movimiento reducido.
+La información parte de la web actual e incorpora las ampliaciones del propietario.
+High Rate y estadísticas elevadas, sin multiplicadores numéricos no confirmados.
+35 raids en total, de las cuales 19 son totalmente custom, y más de 30 mapas custom.
+Parches + WoW.exe son obligatorios; su enlace está pendiente.
+Las razas base son las de WotLK, con personalización y diseños custom.
+Las apariencias de otras razas se describen como morphs, con ejemplos.
+No se han añadido contadores de jugadores conectados ni actividad inventada.
+
+RECURSOS
+El favicon cuadrado y la imagen para compartir usan el logo original de Blackout.
+Para regenerarlos: node scripts/generate-brand-assets.mjs
+Los archivos resultantes están incluidos; no hace falta generarlos al desplegar.
+Tras publicar, solicita el rastreo de la portada en Google Search Console.
+Google decide la presentación final y puede tardar días o semanas en actualizarla.
+Los vídeos, imágenes, texturas y fuentes usados están incluidos en public/.
+design/media-manifest.json y design/warcraft-asset-sources.json documentan
+el origen de los recursos. Las texturas de interfaz proceden del cliente WoW;
+los fondos animados incluyen las generaciones aprobadas durante el trabajo.
+Las licencias de las fuentes se incluyen en public/fonts/.
+
+COMPROBACIONES
+  npm run test:i18n
+  npm run lint
+Con la web iniciada en el puerto 3000:
+  npm run test:smoke -- http://localhost:3000
+El informe design/verification.json describe las comprobaciones realizadas.
+Se han conservado las integraciones existentes. Los pagos, el registro con
+reCAPTCHA y las operaciones autenticadas no se han ejecutado con cuentas reales
+durante la revisión; verifica esos flujos en tu entorno antes del lanzamiento.
+
+AVISO SOBRE LOS PARCHES
+El propietario confirma que Parches + WoW.exe todavía no están disponibles.
+La tarjeta se presenta como «Próximamente» y su botón abre los anuncios del
+Discord oficial. Los enlaces ENUS y ESES son los confirmados por el propietario.
+Cuando tengas la URL de los parches, configura NEXT_PUBLIC_PATCH_DOWNLOAD_URL
+y recompila; el botón pasará a ser una descarga directa al enlace configurado.
+Los enlaces de los dos addons y de los dos clientes de Google Drive respondieron 200.
+
+AIO y Druid C Fix son dos addons obligatorios, con enlaces propios de descarga.
+Los clientes enUS y esES ya incluyen realmlist, AIO y Druid C Fix.
+Quien use su propio cliente debe tener la versión 3.3.5a, instalar los dos
+addons y configurar el realmlist. En ambos casos se requieren los parches
+y WoW.exe de Blackout, distribuidos por separado.
+
+ACTUALIZACIÓN DE ESTA ENTREGA
+Portada con el vídeo del orco enviado por el propietario e identidad BLACKOUT.
+Selector ES/EN/PT con banderas, nombres de idiomas y navegación por teclado.
+Reglamento actualizado en siete categorías y sanciones, incluyendo multiboxing,
+loot, prohibición de compartir cuentas, RMT de Tokens, publicidad por DM y privacidad.
+
+REVISIÓN V3
+10 hechizos custom por clase para Paladin, Warrior, DK, Mage, Rogue, Priest,
+Shaman, Druid, Hunter y Warlock; corregido en ES, EN y PT.
+Cursor del sitio con contorno rojo en dispositivos con ratón.
+El diseño y el vídeo del orco se mantienen como en la versión V2.
+
+REVISIÓN V4
+«Explorar todos los sistemas» enlaza directamente a /servidor#sistemas.
+Tarjetas PvE, PvP y Sistemas con ilustraciones sin logos de expansión.
+Se mantienen el diseño aprobado, el orco animado y los 10 hechizos por clase.
+Las cuatro tarjetas usan imágenes diferentes, sin repetir las de Inicio.
+AIO, tienda custom, pasivas Paragon, Battle Pass, transmog y colores de formas
+de druida añadidos en ES, EN y PT.
+Evoker y Monk tienen animación continua por capas sobre sus ilustraciones
+originales; respetan la pausa, el movimiento reducido y la visibilidad.
+
+REVISION V5
+Retirados el boton de ver cinematica, su visor y el boton de pausa.
+Videos decorativos automaticos, silenciados y en bucle cuando estan visibles.
+Ya no se utiliza la pausa manual guardada en versiones anteriores.
+Se conserva la preferencia de movimiento reducido del sistema operativo.

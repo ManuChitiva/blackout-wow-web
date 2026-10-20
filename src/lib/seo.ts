@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
-export const SITE_NAME = "BLACKOUT WOW";
-export const SITE_TITLE = "BLACKOUT WOW - Servidor WotLK 3.3.5a Nivel 255";
+export const SITE_NAME = "Blackout-WoW";
+export const SITE_TITLE = "Blackout-WoW | WoW 3.3.5a Custom 255 · Experiencia aumentada";
 export const SITE_DESCRIPTION =
-  "Servidor privado WoW WotLK 3.3.5a nivel 255: progresión Tier 1–35, 35 raids, 45+ World Bosses, 3 clases custom, PvP balanceado y sin Pay to Win.";
+  "Servidor WoW 3.3.5a custom nivel 255, con experiencia aumentada para subir de nivel y estadísticas altas. 35 raids, 19 totalmente custom, más de 30 mapas custom y PvE + PvP sin Pay to Win.";
 export const SITE_LOCALE = "es_CL";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-  "http://localhost:3000";
+  "https://blackout-wow.com";
 
 /** Keywords base reutilizables en páginas indexables. */
 export const SITE_KEYWORDS = [
@@ -25,7 +25,8 @@ export const SITE_KEYWORDS = [
   "custom WoW server level 255",
 ] as const;
 
-const OG_IMAGE_PATH = "/logo-transparent.png";
+export const OG_IMAGE_PATH = "/brand/blackout-social.png";
+export const BRAND_LOGO_PATH = "/brand/blackout-512.png";
 
 export function withBaseUrl(path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -33,14 +34,16 @@ export function withBaseUrl(path: string): string {
 }
 
 type BuildPageMetadataOptions = {
-  /** Segmento de título; el layout raíz añade ` | BLACKOUT WOW` salvo rutas con otro template. */
+  /** Segmento de título; el layout raíz añade la marca salvo en títulos absolutos. */
   title: string;
+  absoluteTitle?: boolean;
   description: string;
   /** Ruta canónica, ej. `/login` */
   pathname: string;
   keywords?: string[];
   /** Login, cuenta, dashboard, etc. */
   noIndex?: boolean;
+  locale?: string;
 };
 
 /**
@@ -49,19 +52,21 @@ type BuildPageMetadataOptions = {
  */
 export function buildPageMetadata({
   title,
+  absoluteTitle = false,
   description,
   pathname,
   keywords,
   noIndex = false,
+  locale = SITE_LOCALE,
 }: BuildPageMetadataOptions): Metadata {
   const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  const ogTitle = `${title} | ${SITE_NAME}`;
+  const ogTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`;
   const mergedKeywords = keywords?.length
     ? [...new Set([...SITE_KEYWORDS, ...keywords])]
     : [...SITE_KEYWORDS];
 
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     keywords: mergedKeywords,
     alternates: {
@@ -69,7 +74,7 @@ export function buildPageMetadata({
     },
     openGraph: {
       type: "website",
-      locale: SITE_LOCALE,
+      locale,
       siteName: SITE_NAME,
       title: ogTitle,
       description,

@@ -1,4 +1,6 @@
 import { publicEnv } from "@/config/public-env";
+import i18n from "i18next";
+import { interfaceText } from "./interface-copy";
 
 const API_BASE = publicEnv.apiUrl;
 
@@ -32,10 +34,13 @@ export async function apiJson<T>(
   if (init?.token) {
     headers.set("Authorization", `Bearer ${init.token}`);
   }
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") throw error;
+    throw new ApiError(interfaceText("No se ha podido conectar con el servidor. Inténtalo de nuevo en unos minutos.", i18n.language), 0, path);
+  }
   const text = await res.text();
   let data: unknown = null;
   if (text) {
@@ -55,9 +60,9 @@ export async function apiJson<T>(
         ? payload.error
         : typeof payload?.message === "string"
           ? payload.message
-          : typeof data === "string"
+          : typeof data === "string" && !data.trim().startsWith("<") && data.length < 300
             ? data
-            : res.statusText;
+            : interfaceText("No se ha podido completar la solicitud. Inténtalo de nuevo.", i18n.language);
 
     const detail =
       typeof payload?.detail === "string"

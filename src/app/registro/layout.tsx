@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { localizedPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = buildPageMetadata({
+export function generateMetadata() { return localizedPageMetadata({
   title: "Crear cuenta",
   description:
     "Regístrate en BLACKOUT WOW: un mismo usuario para el portal y el juego. Servidor WotLK custom 3.3.5a nivel 255, progresión Tier 1–35 y comunidad internacional activa.",
@@ -11,7 +10,7 @@ export const metadata: Metadata = buildPageMetadata({
     "crear cuenta Blackout WoW",
     "servidor WoW registro",
   ],
-});
+}); }
 
 export default function RegisterLayout({
   children,

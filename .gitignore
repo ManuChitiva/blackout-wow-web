@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local research and previews; only web-ready assets are shipped.
+/design/*.jpg
+/design/*.png
+/design/*.zip
+/design/qa/
+
+/design/*.py
+/design/media-sources.json
+/public/cinematic/*
+!/public/cinematic/scene-03-shadow-kling.mp4
+!/public/cinematic/sylvanas.jpg
+/public/warcraft/illidan.jpg

@@ -1,0 +1,85 @@
+{
+  "description": "Blackout-WoW website assets. Game textures are original decoded client textures, not AI-generated textures.",
+  "hero": {
+    "file": "public/warcraft/blackout-orc.mp4",
+    "poster": "public/warcraft/blackout-orc-poster.webp",
+    "source": "Animate-this-exact-hooded-orc-portrait (1).mp4",
+    "origin": "Video supplied by the owner on 2026-10-18; original MP4 retained unchanged. Poster extracted from video at 1 second.",
+    "durationSeconds": 4.04,
+    "resolution": "716x1284",
+    "branding": "BLACKOUT"
+  },
+  "illidan": {
+    "videoJob": "d9cac35e-3623-4ba8-874a-eb87c058fd73",
+    "model": "Kling 3.0 Standard",
+    "durationSeconds": 4,
+    "file": "public/warcraft/illidan.mp4",
+    "origin": "Animation of the user-supplied painted Warcraft illustration. Uploaded final video supplied by the user.",
+    "prompt": "Animate the supplied hand-painted Warcraft illustration while preserving every character detail, the original brushwork, pose, proportions and composition. A restrained four-second ambient loop. Locked camera. Green background smoke drifts slowly, faint magical particles move through depth, weapon edges glow softly, hair and wing membranes move just slightly in a breeze. The character stays in the exact pose, with subtle idle breathing only. No weapon swings, no walking, no cuts, no facial changes, no talking, no new objects or writing. Maintain the authentic game illustration aesthetic. No photorealistic restyling, no armor warping. Suitable as a quiet decorative background alongside website text.",
+    "status": "Retained as a source asset; replaced in the homepage class selector by the official transparent class illustration."
+  },
+  "thirdVideo": {
+    "file": "public/cinematic/scene-03-shadow-kling.mp4",
+    "origin": "Existing Kling animation supplied in the earlier Blackout website work"
+  },
+  "artworks": [
+    {
+      "file": "public/warcraft/paladin.webp",
+      "source": "8c05608271f8f6238bdce0a24ad23031.jpg"
+    },
+    {
+      "file": "public/warcraft/teldrassil.webp",
+      "source": "c285979a4dbca0d87a637a7a08107c42.jpg"
+    },
+    {
+      "file": "public/warcraft/ragnaros.webp",
+      "source": "3429bf49f5658f1b05a2c697c6a73bce.jpg"
+    },
+    {
+      "file": "public/warcraft/guldan.webp",
+      "source": "4c46b2c64980a2707f6eb3df55948d17.jpg"
+    },
+    {
+      "file": "public/warcraft/dark-portal.jpg",
+      "source": "e066e846053c6a744ca384c8b08b796b.jpg",
+      "origin": "Owner-supplied Warcraft illustration; original JPG copied unchanged. Used for the systems card without an expansion logo."
+    },
+    {
+      "file": "public/warcraft/frozen-champion.jpg",
+      "source": "codex-clipboard-bfc2f4c7-bf6d-4035-a13d-8fea1efa6400.jpg",
+      "origin": "Owner-supplied reference; original JPG copied unchanged for the PvE card."
+    },
+    {
+      "file": "public/warcraft/arena-clash.jpg",
+      "source": "3af8a99559a0884db373aa94e2a7a0e1.jpg",
+      "origin": "Owner-supplied Warcraft artwork; original JPG copied unchanged for the PvP card."
+    }
+  ],
+  "native": "See warcraft-asset-sources.json. Sprite crops remove transparent atlas padding. Loading-scene crops retain the central illustration (26%–82% of height).",
+  "fonts": "Inter and Cinzel are bundled locally with their OFL license files.",
+  "rights": "Original Warcraft artwork and game textures remain the property of their respective owners. Included from user-provided reference materials; no claim that these assets are public-domain or original Blackout artwork.",
+  "retiredHero": {
+    "imageJob": "4735e7af-737c-4e22-a712-2710e97c8f63",
+    "videoJob": "a115bf24-fda7-4b1f-a4b6-86f59a85306f",
+    "model": "Kling 3.0 Standard",
+    "durationSeconds": 4,
+    "imagePrompt": "Create an original widescreen World of Warcraft: Wrath of the Lich King website background key art, 16:9. Art direction: recognizable hand-painted Warcraft game art and official expansion loading-screen aesthetic, broad deliberate brushwork, strong chunky stylized armor and architectural silhouettes, restrained weathered materials, not photorealistic AI fantasy. Composition: the Lich King stands in the RIGHT THIRD of the frame, full upper body and knees visible, heavy asymmetric spiked black steel armor with skull pauldrons, iconic crown, icy glowing eyes, holding Frostmourne point down. Keep him smaller within an immense Icecrown gateway and northern glacial fortress, not an extreme portrait. To the LEFT two thirds, leave an atmospheric readable dark slate blue sky and distant fortress panorama with low detail where a website logo and headline will overlay. Huge carved stone arch fragments in the extreme corners, pale cold fog at ground level, tiny amber embers from one brazier in lower left complement restrained cyan ice light on the right. Dark but readable, epic tangible Warcraft world, carefully composed depth with foreground stone, middle character, distant citadel. No writing, no logos, no watermarks, no UI, no extra faces, no montage, no neon borders, no excessive tiny filigree, no floating crystals. Landscape 16:9, sharp intentional game-art painting.",
+    "videoPrompt": "Animate this exact Warcraft key art as an elegant looping website background. Preserve the entire composition, painted aesthetic, architecture, Lich King identity, helmet, sword and anatomy. Locked camera, absolutely no cuts, no zoom or pan. Restrained cinematic environmental motion: drifting fine snow at several depth planes, slow ground fog flowing sideways, distant storm clouds moving subtly, orange brazier flames flickering naturally at far left, faint blue runelight breathing on Frostmourne. The character remains imposing and almost still, a tiny calm breathing motion and gently moving cape only. Keep the left area quiet and dark for website text. Five-second continuous ambient shot, natural cyclic motion with start and end visually similar. No talking, attacks, walking, new characters, morphing armor, logo, writing, UI, lightning flashes or camera shake.",
+    "file": "public/warcraft/icecrown.mp4",
+    "origin": "Higgsfield-generated illustration and animation approved in the conversation",
+    "status": "Replaced by the owner-supplied Blackout orc; no longer used as a background."
+  },
+  "serverFeatureCards": {
+    "pve": "public/warcraft/frozen-champion.jpg",
+    "pvp": "public/warcraft/arena-clash.jpg",
+    "custom": "public/warcraft/guldan.webp",
+    "systems": "public/warcraft/dark-portal.jpg",
+    "note": "Four different owner-supplied illustrations. None of these card images is reused on the homepage. No expansion logos."
+  },
+  "classMotion": {
+    "evoker": "Continuous layered CSS idle movement, depth, light and motes on the unchanged official illustration.",
+    "monk": "Continuous layered CSS weight-shift movement, depth, light and motes on the unchanged official illustration.",
+    "demonHunter": "Continuous layered CSS idle movement, depth, fel light and motes on the unchanged official transparent class illustration; same presentation as Evoker and Monk.",
+    "controls": "No manual playback controls. Automatic looping motion; OS reduced-motion preference retained. Offscreen and hidden-tab animation resumes when visible."
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-18",
+  "project": "ManuChitiva/blackout-wow-web",
+  "environment": {
+    "node": "24.20.0",
+    "next": "16.2.4",
+    "preview": "http://127.0.0.1:4177",
+    "mode": "production"
+  },
+  "checks": {
+    "productionBuild": "passed",
+    "smoke": {
+      "status": "passed",
+      "pageRoutes": 13,
+      "localAssets": 53,
+      "videos": 3,
+      "concurrentLocaleRequests": 12,
+      "unknownRouteReturns404": true,
+      "noOnlinePlayerCounter": true,
+      "requiredDownloadLinksPresent": 4,
+      "rulesCategories": 7,
+      "rulesLanguages": [
+        "es",
+        "en",
+        "pt"
+      ],
+      "bothInstallationPaths": true,
+      "requiredPatchLabelWhenLinkPending": true
+    },
+    "translations": {
+      "status": "passed",
+      "languages": [
+        "es",
+        "en",
+        "pt"
+      ],
+      "resourceKeys": 191,
+      "interfaceLabels": 200,
+      "homeFieldsPerLanguage": 46,
+      "rulesAndConnectionGuide": "All fields present and non-empty in ES/EN/PT"
+    },
+    "lint": {
+      "errors": 0,
+      "warnings": 9,
+      "note": "Warnings concern img elements used for native or preoptimized artwork."
+    },
+    "gitDiffWhitespace": "passed",
+    "visualReview": [
+      "Desktop and 390x844 mobile layouts",
+      "ES/EN/PT language switching and mobile menu",
+      "Custom class tabs by pointer and keyboard",
+      "Official Evoker and Monk art",
+      "Base race customization and visual morph distinction",
+      "Four download links with only patches marked upcoming",
+      "Login password visibility and required field validation",
+      "Unauthenticated store redirect",
+      "Owner-supplied orc video playing at 4.041667 seconds on desktop and mobile",
+      "Flag language picker with pointer and ArrowDown/End/Enter keyboard selection",
+      "Separate existing-client and official-client installation instructions",
+      "Updated rules and readable action buttons",
+      "V5 automatic playback with no manual controls, desktop and mobile; offscreen media auto-resumes"
+    ],
+    "finalPreviewConsoleErrors": 0,
+    "customSpellCopy": "Confirmed 10 spells per listed WotLK class on Home and Server; live ES/EN/PT headings checked.",
+    "cursor": "32px SVG cursor with red outline; browser computed styles confirm use on body and links. Native text and disabled cursors preserved.",
+    "orcPreservation": "Orc video byte-for-byte identical to delivery V2; no motion changes.",
+    "revisionV4": {
+      "systemsNavigation": "Clicked the Home CTA; destination /servidor#sistemas confirmed in the browser.",
+      "artwork": "Four distinct server card artworks, without expansion logos; none repeats Home card artwork.",
+      "systems": [
+        "AIO",
+        "Custom shop",
+        "Paragon passives",
+        "Battle Pass",
+        "Transmog",
+        "Druid form colors"
+      ],
+      "systemsLocales": "Verified all six systems in the rendered Home and Server pages for ES/EN/PT.",
+      "classMotion": "Original Evoker and Monk PNG illustrations animated with CSS transforms, light and particles. Not newly generated videos or skeletal 3D models.",
+      "motionVerified": "Evoker and Monk transforms changed while playing. Pause produced identical Monk transforms across separate browser observations; animations resumed afterward.",
+      "responsive": "Desktop and 390x844 mobile reviewed; mobile Monk visible without horizontal overflow.",
+      "consoleErrors": 0,
+      "validation": "Production build, smoke, i18n and lint passed; 9 existing image-element lint warnings."
+    },
+    "revisionV5": {
+      "build": "passed",
+      "lint": "0 errors; 9 existing img warnings",
+      "smoke": "13 routes, 53 assets, 3 videos and locale/content checks passed",
+      "controls": "No cinematic viewer, play button, pause button or native video controls remain.",
+      "autoplay": "Visible orc, Illidan and final-section videos verified playing, muted and looping without clicking play. Mobile orc also verified playing.",
+      "classAnimation": "Evoker and Monk computed animations running when selected.",
+      "oldSessionPause": "Manual sessionStorage pause no longer read.",
+      "accessibility": "OS reduced-motion preference retained. Offscreen and hidden-tab media pause and resume automatically when visible.",
+      "consoleErrors": 0
+    }
+  },
+  "content": {
+    "baseline": "https://blackout-wow.com/",
+    "ownerConfirmedRaids": 35,
+    "ownerConfirmedDiscord": "https://discord.gg/aH7cXcUUn4",
+    "availableDownloads": [
+      "ENUS client",
+      "ESES client",
+      "AIO required addon",
+      "Druid C Fix required addon"
+    ],
+    "downloadHttpChecks": "All four Google Drive landing pages returned HTTP 200; full game archives were not downloaded.",
+    "pendingDownload": "Patches + WoW.exe",
+    "ownerClarifications": "Includes Level 255, custom classes and spells, expanded systems, WotLK race customization and visual racial morphs.",
+    "mandatoryComponents": [
+      "Client 3.3.5a",
+      "Blackout patches",
+      "WoW.exe",
+      "AIO",
+      "Druid C Fix"
+    ],
+    "officialClientsInclude": [
+      "Blackout realmlist",
+      "AIO",
+      "Druid C Fix"
+    ],
+    "rulesSource": "Owner-supplied official Discord rules, adapted for website and translated into Portuguese"
+  },
+  "limits": [
+    "Real account registration with reCAPTCHA, authenticated account operations and payments were not executed.",
+    "Existing external API and payment integrations require verification in the deployment environment.",
+    "No changes were published to GitHub or the live website; this delivery is the source ZIP and local preview."
+  ],
+  "delivery": "v5 - automatic looping ambient animation; cinematic viewer and manual playback buttons removed"
+}

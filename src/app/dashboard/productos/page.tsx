@@ -1,6 +1,7 @@
 "use client";
+import {useInterfaceCopy} from "@/lib/use-interface-copy";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
@@ -189,14 +190,15 @@ const emptyRewardForm: RewardForm = {
 };
 
 export default function DashboardProductsPage() {
+ const ui=useInterfaceCopy();
   const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith("en") ? "en" : i18n.language?.startsWith("pt") ? "pt" : "es";
   const tx = {
-    es: { title: "Dashboard de productos", subtitle: "Gestiona catálogo de tienda: crear, editar y configurar productos de donación." },
-    en: { title: "Products dashboard", subtitle: "Manage store catalog: create, edit and configure donation products." },
-    pt: { title: "Dashboard de produtos", subtitle: "Gerencie o catálogo da loja: criar, editar e configurar produtos de doação." },
+    es: { title: "Administración del reino", subtitle: "Gestiona los productos, canjes y pedidos de tu comunidad." },
+    en: { title: "Realm administration", subtitle: "Manage your community’s products, rewards and orders." },
+    pt: { title: "Administração do reino", subtitle: "Gerencie os produtos, resgates e pedidos da sua comunidade." },
   }[lang];
-  const { accessToken, isAuthReady } = useAuth();
+  const { accessToken, isAuthReady, canManageDashboard } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [rewardProducts, setRewardProducts] = useState<RewardProduct[]>([]);
@@ -229,24 +231,118 @@ export default function DashboardProductsPage() {
   const [orderPage, setOrderPage] = useState(1);
   const [redemptionPage, setRedemptionPage] = useState(1);
 
+  const loadProducts = useCallback(async (token: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiJson<ProductListResponse>(
+        "/api/v1/admin/shop/products",
+        { token },
+      );
+      setProducts(data.products);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : ui("No se pudo cargar productos."));
+    } finally {
+      setLoading(false);
+    }
+  }, [ui]);
+
+  const loadRewardProducts = useCallback(async (token: string) => {
+    setLoadingRewards(true);
+    setError(null);
+    try {
+      const data = await apiJson<RewardProductListResponse>(
+        REWARD_ADMIN_ENDPOINT,
+        { token },
+      );
+      setRewardProducts(data.products);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : ui("No se pudo cargar productos de canje."),
+      );
+    } finally {
+      setLoadingRewards(false);
+    }
+  }, [ui]);
+
+  const loadOrderTrace = useCallback(async (token: string) => {
+    setLoadingOrders(true);
+    setError(null);
+    try {
+      const query =
+        orderStatusFilter === "ALL"
+          ? ORDER_TRACE_ENDPOINT
+          : `${ORDER_TRACE_ENDPOINT}?status=${encodeURIComponent(orderStatusFilter)}`;
+      const data = await apiJson<OrderTraceListResponse>(query, { token });
+      setOrderTrace(data.orders);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : ui("No se pudo cargar la trazabilidad de pedidos."),
+      );
+    } finally {
+      setLoadingOrders(false);
+    }
+  }, [orderStatusFilter, ui]);
+
+  const loadRedemptionTrace = useCallback(async (token: string) => {
+    setLoadingRedemptions(true);
+    setError(null);
+    try {
+      const query =
+        redemptionStatusFilter === "ALL"
+          ? REDEMPTION_TRACE_ENDPOINT
+          : `${REDEMPTION_TRACE_ENDPOINT}?status=${encodeURIComponent(redemptionStatusFilter)}`;
+      const data = await apiJson<RewardRedemptionTraceListResponse>(query, {
+        token,
+      });
+      setRedemptionTrace(data.redemptions);
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : ui("No se pudo cargar la trazabilidad de canjes."),
+      );
+    } finally {
+      setLoadingRedemptions(false);
+    }
+  }, [redemptionStatusFilter, ui]);
+
+  const loadAnalytics = useCallback(async (token: string) => {
+    setLoadingAnalytics(true);
+    setError(null);
+    try {
+      const data = await apiJson<AnalyticsOverview>(ANALYTICS_ENDPOINT, { token });
+      setAnalytics(data);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : ui("No se pudo cargar la analítica."),
+      );
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  }, [ui]);
+
   useEffect(() => {
     if (!isAuthReady) return;
     if (!accessToken) {
       router.replace("/login?next=/dashboard/productos");
       return;
     }
+    if (!canManageDashboard) return;
     void Promise.all([
       loadProducts(accessToken),
       loadRewardProducts(accessToken),
-      loadOrderTrace(accessToken),
-      loadRedemptionTrace(accessToken),
       loadAnalytics(accessToken),
     ]);
-  }, [isAuthReady, accessToken, router]);
+  }, [isAuthReady, accessToken, router, canManageDashboard, loadProducts, loadRewardProducts, loadAnalytics]);
 
   const title = useMemo(
-    () => (editingId ? `Editando producto #${editingId}` : "Crear producto"),
-    [editingId],
+    () => (editingId ? `${ui("Editando producto")} #${editingId}` : ui("Crear producto")),
+    [editingId, ui],
   );
   const isShopMode = catalogMode === "shop";
   const isOrdersMode = catalogMode === "orders";
@@ -302,109 +398,14 @@ export default function DashboardProductsPage() {
   }, [redemptionPage, totalRedemptionPages]);
 
   useEffect(() => {
-    if (!accessToken || !isAuthReady) return;
+    if (!accessToken || !isAuthReady || !canManageDashboard) return;
     void loadOrderTrace(accessToken);
-  }, [orderStatusFilter]);
+  }, [accessToken, isAuthReady, canManageDashboard, loadOrderTrace]);
 
   useEffect(() => {
-    if (!accessToken || !isAuthReady) return;
+    if (!accessToken || !isAuthReady || !canManageDashboard) return;
     void loadRedemptionTrace(accessToken);
-  }, [redemptionStatusFilter]);
-
-  async function loadProducts(token: string) {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await apiJson<ProductListResponse>(
-        "/api/v1/admin/shop/products",
-        { token },
-      );
-      setProducts(data.products);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "No se pudo cargar productos.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function loadRewardProducts(token: string) {
-    setLoadingRewards(true);
-    setError(null);
-    try {
-      const data = await apiJson<RewardProductListResponse>(
-        REWARD_ADMIN_ENDPOINT,
-        { token },
-      );
-      setRewardProducts(data.products);
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "No se pudo cargar productos de canje.",
-      );
-    } finally {
-      setLoadingRewards(false);
-    }
-  }
-
-  async function loadOrderTrace(token: string) {
-    setLoadingOrders(true);
-    setError(null);
-    try {
-      const query =
-        orderStatusFilter === "ALL"
-          ? ORDER_TRACE_ENDPOINT
-          : `${ORDER_TRACE_ENDPOINT}?status=${encodeURIComponent(orderStatusFilter)}`;
-      const data = await apiJson<OrderTraceListResponse>(query, { token });
-      setOrderTrace(data.orders);
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "No se pudo cargar la trazabilidad de pedidos.",
-      );
-    } finally {
-      setLoadingOrders(false);
-    }
-  }
-
-  async function loadRedemptionTrace(token: string) {
-    setLoadingRedemptions(true);
-    setError(null);
-    try {
-      const query =
-        redemptionStatusFilter === "ALL"
-          ? REDEMPTION_TRACE_ENDPOINT
-          : `${REDEMPTION_TRACE_ENDPOINT}?status=${encodeURIComponent(redemptionStatusFilter)}`;
-      const data = await apiJson<RewardRedemptionTraceListResponse>(query, {
-        token,
-      });
-      setRedemptionTrace(data.redemptions);
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "No se pudo cargar la trazabilidad de canjes.",
-      );
-    } finally {
-      setLoadingRedemptions(false);
-    }
-  }
-
-  async function loadAnalytics(token: string) {
-    setLoadingAnalytics(true);
-    setError(null);
-    try {
-      const data = await apiJson<AnalyticsOverview>(ANALYTICS_ENDPOINT, { token });
-      setAnalytics(data);
-    } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "No se pudo cargar la analítica.",
-      );
-    } finally {
-      setLoadingAnalytics(false);
-    }
-  }
+  }, [accessToken, isAuthReady, canManageDashboard, loadRedemptionTrace]);
 
   function setField<K extends keyof ProductForm>(
     field: K,
@@ -481,7 +482,7 @@ export default function DashboardProductsPage() {
     };
 
     if (!payload.imageUrl) {
-      setError("La imagen es obligatoria.");
+      setError(ui("La imagen es obligatoria."));
       setSaving(false);
       return;
     }
@@ -493,19 +494,19 @@ export default function DashboardProductsPage() {
           token: accessToken,
           body: JSON.stringify(payload),
         });
-        setMsg("Producto actualizado.");
+        setMsg(ui("Producto actualizado."));
       } else {
         await apiJson("/api/v1/admin/shop/products", {
           method: "POST",
           token: accessToken,
           body: JSON.stringify(payload),
         });
-        setMsg("Producto creado.");
+        setMsg(ui("Producto creado."));
       }
       resetForm();
       await loadProducts(accessToken);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No se pudo guardar.");
+      setError(e instanceof Error ? e.message : ui("No se pudo guardar."));
     } finally {
       setSaving(false);
     }
@@ -533,13 +534,13 @@ export default function DashboardProductsPage() {
     };
 
     if (!payload.imageUrl) {
-      setError("La imagen es obligatoria.");
+      setError(ui("La imagen es obligatoria."));
       setSavingReward(false);
       return;
     }
 
     if (!Number.isFinite(payload.costPoints) || payload.costPoints <= 0) {
-      setError("El costo en puntos debe ser mayor a 0.");
+      setError(ui("El costo en puntos debe ser mayor a 0."));
       setSavingReward(false);
       return;
     }
@@ -550,13 +551,13 @@ export default function DashboardProductsPage() {
         !Number.isFinite(payload.itemQuantity!) ||
         payload.itemQuantity! <= 0)
     ) {
-      setError("Para ITEM debes definir itemEntry e itemQuantity válidos.");
+      setError(ui("Para ITEM debes definir itemEntry e itemQuantity válidos."));
       setSavingReward(false);
       return;
     }
 
     if (!isItem && !payload.commandTemplate) {
-      setError("Para SERVICE debes definir commandTemplate.");
+      setError(ui("Para SERVICE debes definir commandTemplate."));
       setSavingReward(false);
       return;
     }
@@ -568,14 +569,14 @@ export default function DashboardProductsPage() {
           token: accessToken,
           body: JSON.stringify(payload),
         });
-        setMsg("Producto de canje actualizado.");
+        setMsg(ui("Producto de canje actualizado."));
       } else {
         await apiJson(REWARD_ADMIN_ENDPOINT, {
           method: "POST",
           token: accessToken,
           body: JSON.stringify(payload),
         });
-        setMsg("Producto de canje creado.");
+        setMsg(ui("Producto de canje creado."));
       }
       resetRewardForm();
       await loadRewardProducts(accessToken);
@@ -583,7 +584,7 @@ export default function DashboardProductsPage() {
       setError(
         e instanceof Error
           ? e.message
-          : "No se pudo guardar el producto de canje.",
+          : ui("No se pudo guardar el producto de canje."),
       );
     } finally {
       setSavingReward(false);
@@ -602,14 +603,14 @@ export default function DashboardProductsPage() {
         body: JSON.stringify({ active: !product.active }),
       });
       setMsg(
-        product.active ? "Producto deshabilitado." : "Producto habilitado.",
+        product.active ? ui("Producto deshabilitado.") : ui("Producto habilitado."),
       );
       await loadProducts(accessToken);
     } catch (e) {
       setError(
         e instanceof Error
           ? e.message
-          : "No se pudo actualizar estado del producto.",
+          : ui("No se pudo actualizar estado del producto."),
       );
     } finally {
       setTogglingShopId(null);
@@ -627,19 +628,21 @@ export default function DashboardProductsPage() {
         token: accessToken,
         body: JSON.stringify({ active: !product.active }),
       });
-      setMsg(product.active ? "Canje deshabilitado." : "Canje habilitado.");
+      setMsg(product.active ? ui("Canje deshabilitado.") : ui("Canje habilitado."));
       await loadRewardProducts(accessToken);
     } catch (e) {
       setError(
         e instanceof Error
           ? e.message
-          : "No se pudo actualizar estado del canje.",
+          : ui("No se pudo actualizar estado del canje."),
       );
     } finally {
       setTogglingRewardId(null);
     }
   }
 
+  if (!isAuthReady || !accessToken) return <SiteShell><div className="portal-loading" role="status">{ui("Cargando…")}</div></SiteShell>;
+  if (!canManageDashboard) return <SiteShell><section className="lore-hero"><span className="lore-kicker">BLACKOUT</span><h1>{ui("Acceso restringido")}</h1><p>{ui("Esta sección está disponible para el equipo de administración.")}</p><a className="lore-button" href="/cuenta">{ui("Volver a mi cuenta")}</a></section></SiteShell>;
   return (
     <SiteShell>
       <div className="mx-auto max-w-6xl px-4 py-14">
@@ -652,10 +655,8 @@ export default function DashboardProductsPage() {
 
         <section className="mt-8 rounded-xl border border-white/10 bg-zinc-950/60 p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-zinc-400">
-              Elige el tipo de catálogo que quieres administrar.
-            </p>
-            <div className="inline-flex rounded-lg border border-white/10 bg-black/40 p-1">
+            <p className="text-sm text-zinc-400">{ui("Elige el tipo de catálogo que quieres administrar.")}{" "}</p>
+            <div className="inline-flex flex-wrap rounded-lg border border-white/10 bg-black/40 p-1">
               <button
                 type="button"
                 onClick={() => setCatalogMode("shop")}
@@ -664,8 +665,7 @@ export default function DashboardProductsPage() {
                     ? "bg-amber-500/20 text-amber-200"
                     : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                 }`}
-              >
-                Tienda compra ({products.length})
+              >{ui("Tienda compra (")}{products.length})
               </button>
               <button
                 type="button"
@@ -675,8 +675,7 @@ export default function DashboardProductsPage() {
                     ? "bg-sky-500/20 text-sky-200"
                     : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                 }`}
-              >
-                Tienda canje ({rewardProducts.length})
+              >{ui("Tienda canje (")}{rewardProducts.length})
               </button>
               <button
                 type="button"
@@ -686,8 +685,7 @@ export default function DashboardProductsPage() {
                     ? "bg-emerald-500/20 text-emerald-200"
                     : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                 }`}
-              >
-                Trazabilidad ({orderTrace.length})
+              >{ui("Trazabilidad (")}{orderTrace.length})
               </button>
               <button
                 type="button"
@@ -697,84 +695,80 @@ export default function DashboardProductsPage() {
                     ? "bg-fuchsia-500/20 text-fuchsia-200"
                     : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                 }`}
-              >
-                Analítica
-              </button>
+              >{ui("Analítica")}{" "}</button>
             </div>
           </div>
           {msg && <p className="mt-3 text-sm text-emerald-400">{msg}</p>}
           {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         </section>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr,1.9fr]">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)]">
           <section className="rounded-xl border border-white/10 bg-zinc-950/60 p-5">
             {isShopMode ? (
               <>
                 <h2 className="font-display text-xl text-zinc-100">{title}</h2>
                 <form onSubmit={onSubmit} className="mt-4 space-y-3">
-                  <input
+                  <label className="admin-field"><span>{"SKU"}</span><input
                     value={form.sku}
                     onChange={(e) => setField("sku", e.target.value)}
                     placeholder="SKU"
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("Nombre")}</span><input
                     value={form.name}
                     onChange={(e) => setField("name", e.target.value)}
-                    placeholder="Nombre"
+                    placeholder={ui("Nombre")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("Categoría")}</span><input
                     value={form.category}
                     onChange={(e) => setField("category", e.target.value)}
-                    placeholder="Categoría"
+                    placeholder={ui("Categoría")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("URL de imagen")}</span><input
                     value={form.imageUrl}
                     onChange={(e) => setField("imageUrl", e.target.value)}
-                    placeholder="URL de imagen"
+                    placeholder={ui("URL de imagen")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <textarea
+                  /></label>
+                  <label className="admin-field"><span>{ui("Descripción")}</span><textarea
                     value={form.description}
                     onChange={(e) => setField("description", e.target.value)}
-                    placeholder="Descripción"
+                    placeholder={ui("Descripción")}
                     className="h-24 w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
-                  />
+                  /></label>
                   <div className="grid grid-cols-2 gap-2">
-                    <input
+                    <label className="admin-field"><span>{ui("Precio USD")}</span><input
                       type="number"
                       step="0.01"
                       value={form.priceUsd}
                       onChange={(e) => setField("priceUsd", e.target.value)}
-                      placeholder="Precio USD"
+                      placeholder={ui("Precio USD")}
                       className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                       required
-                    />
-                    <input
+                    /></label>
+                    <label className="admin-field"><span>{ui("Puntos")}</span><input
                       type="number"
                       value={form.donationPoints}
                       onChange={(e) =>
                         setField("donationPoints", e.target.value)
                       }
-                      placeholder="Puntos"
+                      placeholder={ui("Puntos")}
                       className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                       required
-                    />
+                    /></label>
                   </div>
                   <label className="flex items-center gap-2 text-sm text-zinc-300">
                     <input
                       type="checkbox"
                       checked={form.active}
                       onChange={(e) => setField("active", e.target.checked)}
-                    />
-                    Activo
-                  </label>
+                    />{ui("Activo")}{" "}</label>
                   <div className="flex gap-2">
                     <button
                       type="submit"
@@ -782,62 +776,58 @@ export default function DashboardProductsPage() {
                       className="rounded bg-linear-to-r from-amber-600 to-orange-500 px-4 py-2 text-sm font-semibold text-black disabled:opacity-60"
                     >
                       {saving
-                        ? "Guardando..."
+                        ? ui("Guardando...")
                         : editingId
-                          ? "Actualizar"
-                          : "Crear"}
+                          ? ui("Actualizar")
+                          : ui("Crear")}
                     </button>
                     {editingId && (
                       <button
                         type="button"
                         onClick={resetForm}
                         className="rounded border border-white/20 px-4 py-2 text-sm text-zinc-200"
-                      >
-                        Cancelar
-                      </button>
+                      >{ui("Cancelar")}{" "}</button>
                     )}
                   </div>
                 </form>
               </>
             ) : catalogMode === "rewards" ? (
               <>
-                <h2 className="font-display text-xl text-zinc-100">
-                  Catálogo de canje
-                </h2>
-                <p className="mt-2 text-xs text-zinc-500">
-                  Estos productos se leen desde{" "}
+                <h2 className="font-display text-xl text-zinc-100">{ui("Catálogo de canje")}{" "}</h2>
+                <p className="mt-2 text-xs text-zinc-500">{ui("Estos productos se leen desde")}{" "}
                   <code>/api/v1/rewards/products</code>.
                 </p>
                 <form onSubmit={onRewardSubmit} className="mt-4 space-y-3">
-                  <input
+                  <label className="admin-field"><span>{"SKU"}</span><input
                     value={rewardForm.sku}
                     onChange={(e) => setRewardField("sku", e.target.value)}
                     placeholder="SKU"
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("Nombre")}</span><input
                     value={rewardForm.name}
                     onChange={(e) => setRewardField("name", e.target.value)}
-                    placeholder="Nombre"
+                    placeholder={ui("Nombre")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("Categoría (General, Monturas, Servicios...)")}</span><input
                     value={rewardForm.category}
                     onChange={(e) => setRewardField("category", e.target.value)}
-                    placeholder="Categoría (General, Monturas, Servicios...)"
+                    placeholder={ui("Categoría (General, Monturas, Servicios...)")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
-                  <input
+                  /></label>
+                  <label className="admin-field"><span>{ui("URL de imagen")}</span><input
                     value={rewardForm.imageUrl}
                     onChange={(e) => setRewardField("imageUrl", e.target.value)}
-                    placeholder="URL de imagen"
+                    placeholder={ui("URL de imagen")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
+                  /></label>
                   <select
+                    aria-label={ui("Tipo de entrega")}
                     value={rewardForm.deliveryType}
                     onChange={(e) =>
                       setRewardField(
@@ -847,68 +837,64 @@ export default function DashboardProductsPage() {
                     }
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                   >
-                    <option value="SERVICE">
-                      SERVICE (usa commandTemplate)
-                    </option>
-                    <option value="ITEM">
-                      ITEM (usa itemEntry/itemQuantity)
-                    </option>
+                    <option value="SERVICE">{ui("SERVICE (usa commandTemplate)")}{" "}</option>
+                    <option value="ITEM">{ui("ITEM (usa itemEntry/itemQuantity)")}{" "}</option>
                   </select>
-                  <textarea
+                  <label className="admin-field"><span>{ui("Descripción")}</span><textarea
                     value={rewardForm.description}
                     onChange={(e) =>
                       setRewardField("description", e.target.value)
                     }
-                    placeholder="Descripción"
+                    placeholder={ui("Descripción")}
                     className="h-24 w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
-                  />
+                  /></label>
                   {rewardForm.deliveryType === "SERVICE" ? (
-                    <input
+                    <label className="admin-field"><span>{ui("Command template (usa {character_name})")}</span><input
                       value={rewardForm.commandTemplate}
                       onChange={(e) =>
                         setRewardField("commandTemplate", e.target.value)
                       }
-                      placeholder="Command template (usa {character_name})"
+                      placeholder={ui("Command template (usa {character_name})")}
                       className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                       required
-                    />
+                    /></label>
                   ) : (
                     <div className="grid grid-cols-2 gap-2">
-                      <input
+                      <label className="admin-field"><span>{ui("Item Entry")}</span><input
                         type="number"
                         min="1"
                         value={rewardForm.itemEntry}
                         onChange={(e) =>
                           setRewardField("itemEntry", e.target.value)
                         }
-                        placeholder="Item Entry"
+                        placeholder={ui("Item Entry")}
                         className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                         required
-                      />
-                      <input
+                      /></label>
+                      <label className="admin-field"><span>{ui("Item Quantity")}</span><input
                         type="number"
                         min="1"
                         value={rewardForm.itemQuantity}
                         onChange={(e) =>
                           setRewardField("itemQuantity", e.target.value)
                         }
-                        placeholder="Item Quantity"
+                        placeholder={ui("Item Quantity")}
                         className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                         required
-                      />
+                      /></label>
                     </div>
                   )}
-                  <input
+                  <label className="admin-field"><span>{ui("Costo en puntos")}</span><input
                     type="number"
                     min="1"
                     value={rewardForm.costPoints}
                     onChange={(e) =>
                       setRewardField("costPoints", e.target.value)
                     }
-                    placeholder="Costo en puntos"
+                    placeholder={ui("Costo en puntos")}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                     required
-                  />
+                  /></label>
                   <label className="flex items-center gap-2 text-sm text-zinc-300">
                     <input
                       type="checkbox"
@@ -916,9 +902,7 @@ export default function DashboardProductsPage() {
                       onChange={(e) =>
                         setRewardField("active", e.target.checked)
                       }
-                    />
-                    Activo
-                  </label>
+                    />{ui("Activo")}{" "}</label>
                   <div className="flex gap-2">
                     <button
                       type="submit"
@@ -926,32 +910,25 @@ export default function DashboardProductsPage() {
                       className="rounded bg-linear-to-r from-sky-600 to-cyan-500 px-4 py-2 text-sm font-semibold text-black disabled:opacity-60"
                     >
                       {savingReward
-                        ? "Guardando..."
+                        ? ui("Guardando...")
                         : editingRewardId
-                          ? "Actualizar canje"
-                          : "Crear canje"}
+                          ? ui("Actualizar canje")
+                          : ui("Crear canje")}
                     </button>
                     {editingRewardId && (
                       <button
                         type="button"
                         onClick={resetRewardForm}
                         className="rounded border border-white/20 px-4 py-2 text-sm text-zinc-200"
-                      >
-                        Cancelar
-                      </button>
+                      >{ui("Cancelar")}{" "}</button>
                     )}
                   </div>
                 </form>
               </>
             ) : catalogMode === "orders" ? (
               <>
-                <h2 className="font-display text-xl text-zinc-100">
-                  Trazabilidad de pedidos
-                </h2>
-                <p className="mt-2 text-xs text-zinc-500">
-                  Revisa qué orden se envió, en qué estado quedó y si los puntos
-                  fueron entregados correctamente.
-                </p>
+                <h2 className="font-display text-xl text-zinc-100">{ui("Trazabilidad de pedidos")}{" "}</h2>
+                <p className="mt-2 text-xs text-zinc-500">{ui("Revisa qué orden se envió, en qué estado quedó y si los puntos fueron entregados correctamente.")}{" "}</p>
                 <div className="mt-4 space-y-3">
                   <div className="inline-flex rounded-lg border border-white/10 bg-black/40 p-1">
                     <button
@@ -962,9 +939,7 @@ export default function DashboardProductsPage() {
                           ? "bg-emerald-500/20 text-emerald-200"
                           : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                       }`}
-                    >
-                      Compras
-                    </button>
+                    >{ui("Compras")}{" "}</button>
                     <button
                       type="button"
                       onClick={() => setTraceViewMode("redemptions")}
@@ -973,49 +948,43 @@ export default function DashboardProductsPage() {
                           ? "bg-sky-500/20 text-sky-200"
                           : "text-zinc-300 hover:bg-white/5 hover:text-zinc-100"
                       }`}
-                    >
-                      Canjes
-                    </button>
+                    >{ui("Canjes")}{" "}</button>
                   </div>
                   {traceViewMode === "orders" ? (
                     <>
-                  <label className="block text-sm text-zinc-400">
-                    Filtrar por estado
-                  </label>
+                  <label htmlFor="order-state" className="block text-sm text-zinc-400">{ui("Filtrar por estado")}{" "}</label>
                   <select
+                    id="order-state"
                     value={orderStatusFilter}
                     onChange={(e) => setOrderStatusFilter(e.target.value)}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                   >
-                    <option value="ALL">Todos</option>
-                    <option value="PENDING_PAYPAL">Pendiente PayPal</option>
-                    <option value="PAID">Pagado / Entregado</option>
-                    <option value="FAILED">Fallido</option>
+                    <option value="ALL">{ui("Todos")}</option>
+                    <option value="PENDING_PAYPAL">{ui("Pendiente PayPal")}</option>
+                    <option value="PAID">{ui("Pagado / Entregado")}</option>
+                    <option value="FAILED">{ui("Fallido")}</option>
                   </select>
                   <button
                     type="button"
                     onClick={() => accessToken && void loadOrderTrace(accessToken)}
                     className="rounded border border-emerald-400/40 px-4 py-2 text-sm text-emerald-300 hover:bg-emerald-500/10"
-                  >
-                    Actualizar trazabilidad
-                  </button>
+                  >{ui("Actualizar trazabilidad")}{" "}</button>
                     </>
                   ) : (
                     <>
-                  <label className="block pt-2 text-sm text-zinc-400">
-                    Estado de canjes
-                  </label>
+                  <label htmlFor="redemption-state" className="block pt-2 text-sm text-zinc-400">{ui("Estado de canjes")}{" "}</label>
                   <select
+                    id="redemption-state"
                     value={redemptionStatusFilter}
                     onChange={(e) => setRedemptionStatusFilter(e.target.value)}
                     className="w-full rounded border border-white/15 bg-black/40 px-3 py-2 text-sm text-zinc-100"
                   >
-                    <option value="ALL">Todos</option>
-                    <option value="PENDING_DELIVERY">Pendiente entrega</option>
-                    <option value="DELIVERY_FAILED">Entrega fallida</option>
-                    <option value="DELIVERED">Entregado</option>
-                    <option value="POINTS_DEBIT_FAILED">Falló débito</option>
-                    <option value="COMPLETED">Completado</option>
+                    <option value="ALL">{ui("Todos")}</option>
+                    <option value="PENDING_DELIVERY">{ui("Pendiente entrega")}</option>
+                    <option value="DELIVERY_FAILED">{ui("Entrega fallida")}</option>
+                    <option value="DELIVERED">{ui("Entregado")}</option>
+                    <option value="POINTS_DEBIT_FAILED">{ui("Falló débito")}</option>
+                    <option value="COMPLETED">{ui("Completado")}</option>
                   </select>
                   <button
                     type="button"
@@ -1023,28 +992,20 @@ export default function DashboardProductsPage() {
                       accessToken && void loadRedemptionTrace(accessToken)
                     }
                     className="rounded border border-sky-400/40 px-4 py-2 text-sm text-sky-300 hover:bg-sky-500/10"
-                  >
-                    Actualizar canjes
-                  </button>
+                  >{ui("Actualizar canjes")}{" "}</button>
                     </>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <h2 className="font-display text-xl text-zinc-100">
-                  Analítica general
-                </h2>
-                <p className="mt-2 text-xs text-zinc-500">
-                  Resumen global del servidor y la economía del portal.
-                </p>
+                <h2 className="font-display text-xl text-zinc-100">{ui("Analítica general")}{" "}</h2>
+                <p className="mt-2 text-xs text-zinc-500">{ui("Resumen global del servidor y la economía del portal.")}{" "}</p>
                 <button
                   type="button"
                   onClick={() => accessToken && void loadAnalytics(accessToken)}
                   className="mt-4 rounded border border-fuchsia-400/40 px-4 py-2 text-sm text-fuchsia-200 hover:bg-fuchsia-500/10"
-                >
-                  Actualizar analítica
-                </button>
+                >{ui("Actualizar analítica")}{" "}</button>
               </>
             )}
           </section>
@@ -1052,30 +1013,30 @@ export default function DashboardProductsPage() {
           <section className="rounded-xl border border-white/10 bg-zinc-950/60 p-5">
             <h2 className="font-display text-xl text-zinc-100">
               {isShopMode
-                ? "Productos existentes"
+                ? ui("Productos existentes")
                 : catalogMode === "rewards"
-                  ? "Canjes existentes"
+                  ? ui("Canjes existentes")
                   : catalogMode === "orders"
                     ? traceViewMode === "orders"
-                      ? "Órdenes y estado de entrega"
-                      : "Canjes y débito de puntos"
-                    : "Analítica y KPIs"}
+                      ? ui("Órdenes y estado de entrega")
+                      : ui("Canjes y débito de puntos")
+                    : ui("Analítica y KPIs")}
             </h2>
             {isShopMode ? (
               loading ? (
-                <p className="mt-4 text-zinc-400">Cargando...</p>
+                <p className="mt-4 text-zinc-400">{ui("Cargando...")}</p>
               ) : (
                 <div className="mt-4 overflow-x-auto">
                   <table className="min-w-full text-left text-sm">
                     <thead className="text-zinc-500">
                       <tr>
                         <th className="pb-2 pr-4">SKU</th>
-                        <th className="pb-2 pr-4">Nombre</th>
-                        <th className="pb-2 pr-4">Categoría</th>
-                        <th className="pb-2 pr-4">Estado</th>
+                        <th className="pb-2 pr-4">{ui("Nombre")}</th>
+                        <th className="pb-2 pr-4">{ui("Categoría")}</th>
+                        <th className="pb-2 pr-4">{ui("Estado")}</th>
                         <th className="pb-2 pr-4">USD</th>
-                        <th className="pb-2 pr-4">Puntos</th>
-                        <th className="pb-2">Acción</th>
+                        <th className="pb-2 pr-4">{ui("Puntos")}</th>
+                        <th className="pb-2">{ui("Acción")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1092,7 +1053,7 @@ export default function DashboardProductsPage() {
                           <td
                             className={`py-3 pr-4 text-xs ${p.active ? "text-emerald-300" : "text-zinc-500"}`}
                           >
-                            {p.active ? "Activo" : "Inactivo"}
+                            {p.active ? ui("Activo") : ui("Inactivo")}
                           </td>
                           <td className="py-3 pr-4">${p.priceUsd}</td>
                           <td className="py-3 pr-4 text-amber-300">
@@ -1103,9 +1064,7 @@ export default function DashboardProductsPage() {
                               type="button"
                               onClick={() => startEdit(p)}
                               className="rounded border border-sky-400/40 px-3 py-1 text-xs text-sky-300"
-                            >
-                              Editar
-                            </button>
+                            >{ui("Editar")}{" "}</button>
                             <button
                               type="button"
                               disabled={togglingShopId === p.id}
@@ -1119,8 +1078,8 @@ export default function DashboardProductsPage() {
                               {togglingShopId === p.id
                                 ? "..."
                                 : p.active
-                                  ? "Desactivar"
-                                  : "Activar"}
+                                  ? ui("Desactivar")
+                                  : ui("Activar")}
                             </button>
                           </td>
                         </tr>
@@ -1128,9 +1087,7 @@ export default function DashboardProductsPage() {
                     </tbody>
                   </table>
                   {products.length === 0 && (
-                    <p className="pt-4 text-sm text-zinc-500">
-                      No hay productos creados.
-                    </p>
+                    <p className="pt-4 text-sm text-zinc-500">{ui("No hay productos creados.")}{" "}</p>
                   )}
                   {products.length > DASHBOARD_ITEMS_PER_PAGE && (
                     <div className="mt-4 flex items-center justify-center gap-3">
@@ -1139,11 +1096,8 @@ export default function DashboardProductsPage() {
                         disabled={shopPage === 1}
                         onClick={() => setShopPage((p) => Math.max(1, p - 1))}
                         className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                      >
-                        Anterior
-                      </button>
-                      <p className="text-xs text-zinc-400">
-                        Página {shopPage} de {totalShopPages}
+                      >{ui("Anterior")}{" "}</button>
+                      <p className="text-xs text-zinc-400">{ui("Página")}{" "}{shopPage}{" "}{ui("de")}{" "}{totalShopPages}
                       </p>
                       <button
                         type="button"
@@ -1152,15 +1106,13 @@ export default function DashboardProductsPage() {
                           setShopPage((p) => Math.min(totalShopPages, p + 1))
                         }
                         className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                      >
-                        Siguiente
-                      </button>
+                      >{ui("Siguiente")}{" "}</button>
                     </div>
                   )}
                 </div>
               )
             ) : catalogMode === "rewards" ? loadingRewards ? (
-              <p className="mt-4 text-zinc-400">Cargando...</p>
+              <p className="mt-4 text-zinc-400">{ui("Cargando...")}</p>
             ) : (
               <div className="mt-4 space-y-8">
                 <div className="overflow-x-auto">
@@ -1168,11 +1120,11 @@ export default function DashboardProductsPage() {
                   <thead className="text-zinc-500">
                     <tr>
                       <th className="pb-2 pr-4">SKU</th>
-                      <th className="pb-2 pr-4">Nombre</th>
-                      <th className="pb-2 pr-4">Categoría</th>
-                      <th className="pb-2 pr-4">Estado</th>
-                      <th className="pb-2 pr-4">Costo</th>
-                      <th className="pb-2">Acción</th>
+                      <th className="pb-2 pr-4">{ui("Nombre")}</th>
+                      <th className="pb-2 pr-4">{ui("Categoría")}</th>
+                      <th className="pb-2 pr-4">{ui("Estado")}</th>
+                      <th className="pb-2 pr-4">{ui("Costo")}</th>
+                      <th className="pb-2">{ui("Acción")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1187,7 +1139,7 @@ export default function DashboardProductsPage() {
                         <td
                           className={`py-3 pr-4 text-xs ${p.active ? "text-emerald-300" : "text-zinc-500"}`}
                         >
-                          {p.active ? "Activo" : "Inactivo"}
+                          {p.active ? ui("Activo") : ui("Inactivo")}
                         </td>
                         <td className="py-3 pr-4 text-amber-300">
                           {p.costPoints} pts
@@ -1197,9 +1149,7 @@ export default function DashboardProductsPage() {
                             type="button"
                             onClick={() => startRewardEdit(p)}
                             className="rounded border border-sky-400/40 px-3 py-1 text-xs text-sky-300"
-                          >
-                            Editar
-                          </button>
+                          >{ui("Editar")}{" "}</button>
                           <button
                             type="button"
                             disabled={togglingRewardId === p.id}
@@ -1213,8 +1163,8 @@ export default function DashboardProductsPage() {
                             {togglingRewardId === p.id
                               ? "..."
                               : p.active
-                                ? "Desactivar"
-                                : "Activar"}
+                                ? ui("Desactivar")
+                                : ui("Activar")}
                           </button>
                         </td>
                       </tr>
@@ -1222,9 +1172,7 @@ export default function DashboardProductsPage() {
                   </tbody>
                 </table>
                 {rewardProducts.length === 0 && (
-                  <p className="pt-4 text-sm text-zinc-500">
-                    No hay productos de canje creados.
-                  </p>
+                  <p className="pt-4 text-sm text-zinc-500">{ui("No hay productos de canje creados.")}{" "}</p>
                 )}
                 {rewardProducts.length > DASHBOARD_ITEMS_PER_PAGE && (
                   <div className="mt-4 flex items-center justify-center gap-3">
@@ -1233,11 +1181,8 @@ export default function DashboardProductsPage() {
                       disabled={rewardPage === 1}
                       onClick={() => setRewardPage((p) => Math.max(1, p - 1))}
                       className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                    >
-                      Anterior
-                    </button>
-                    <p className="text-xs text-zinc-400">
-                      Página {rewardPage} de {totalRewardPages}
+                    >{ui("Anterior")}{" "}</button>
+                    <p className="text-xs text-zinc-400">{ui("Página")}{" "}{rewardPage}{" "}{ui("de")}{" "}{totalRewardPages}
                     </p>
                     <button
                       type="button"
@@ -1246,15 +1191,13 @@ export default function DashboardProductsPage() {
                         setRewardPage((p) => Math.min(totalRewardPages, p + 1))
                       }
                       className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                    >
-                      Siguiente
-                    </button>
+                    >{ui("Siguiente")}{" "}</button>
                   </div>
                 )}
               </div>
               </div>
             ) : catalogMode === "orders" ? loadingOrders ? (
-              <p className="mt-4 text-zinc-400">Cargando...</p>
+              <p className="mt-4 text-zinc-400">{ui("Cargando...")}</p>
             ) : (
               <div className="mt-4 space-y-8">
                 {traceViewMode === "orders" ? (
@@ -1262,14 +1205,14 @@ export default function DashboardProductsPage() {
                 <table className="min-w-full text-left text-sm">
                   <thead className="text-zinc-500">
                     <tr>
-                      <th className="pb-2 pr-4">Orden</th>
-                      <th className="pb-2 pr-4">Usuario</th>
-                      <th className="pb-2 pr-4">Producto</th>
+                      <th className="pb-2 pr-4">{ui("Orden")}</th>
+                      <th className="pb-2 pr-4">{ui("Usuario")}</th>
+                      <th className="pb-2 pr-4">{ui("Producto")}</th>
                       <th className="pb-2 pr-4">PayPal</th>
-                      <th className="pb-2 pr-4">Estado</th>
-                      <th className="pb-2 pr-4">Puntos</th>
-                      <th className="pb-2 pr-4">Intentos</th>
-                      <th className="pb-2">Último check</th>
+                      <th className="pb-2 pr-4">{ui("Estado")}</th>
+                      <th className="pb-2 pr-4">{ui("Puntos")}</th>
+                      <th className="pb-2 pr-4">{ui("Intentos")}</th>
+                      <th className="pb-2">{ui("Último check")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1281,12 +1224,12 @@ export default function DashboardProductsPage() {
                         <td className="py-3 pr-4 font-mono text-xs">#{o.id}</td>
                         <td className="py-3 pr-4">
                           <div className="flex flex-col">
-                            <span>{o.portalUsername ?? "Sin username"}</span>
+                            <span>{o.portalUsername ?? ui("Sin username")}</span>
                             <span className="text-xs text-zinc-500">ID #{o.portalUserId}</span>
                           </div>
                         </td>
                         <td className="py-3 pr-4">
-                          {o.productName ?? `Producto #${o.productId}`}
+                          {o.productName ?? `${ui("Producto")} #${o.productId}`}
                         </td>
                         <td className="py-3 pr-4 font-mono text-xs">
                           {o.paypalOrderId ?? "-"}
@@ -1306,17 +1249,15 @@ export default function DashboardProductsPage() {
                         <td className="py-3 pr-4">{o.checkAttempts}</td>
                         <td className="py-3 text-xs text-zinc-400">
                           {o.lastCheckedAt
-                            ? new Date(o.lastCheckedAt).toLocaleString()
-                            : "Sin revisar"}
+                            ? new Date(o.lastCheckedAt).toLocaleString(lang)
+                            : ui("Sin revisar")}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
                 {orderTrace.length === 0 && (
-                  <p className="pt-4 text-sm text-zinc-500">
-                    No hay órdenes para el filtro seleccionado.
-                  </p>
+                  <p className="pt-4 text-sm text-zinc-500">{ui("No hay órdenes para el filtro seleccionado.")}{" "}</p>
                 )}
                 {orderTrace.length > DASHBOARD_ITEMS_PER_PAGE && (
                   <div className="mt-4 flex items-center justify-center gap-3">
@@ -1325,11 +1266,8 @@ export default function DashboardProductsPage() {
                       disabled={orderPage === 1}
                       onClick={() => setOrderPage((p) => Math.max(1, p - 1))}
                       className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                    >
-                      Anterior
-                    </button>
-                    <p className="text-xs text-zinc-400">
-                      Página {orderPage} de {totalOrderPages}
+                    >{ui("Anterior")}{" "}</button>
+                    <p className="text-xs text-zinc-400">{ui("Página")}{" "}{orderPage}{" "}{ui("de")}{" "}{totalOrderPages}
                     </p>
                     <button
                       type="button"
@@ -1338,9 +1276,7 @@ export default function DashboardProductsPage() {
                         setOrderPage((p) => Math.min(totalOrderPages, p + 1))
                       }
                       className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                    >
-                      Siguiente
-                    </button>
+                    >{ui("Siguiente")}{" "}</button>
                   </div>
                 )}
                 </div>
@@ -1348,25 +1284,23 @@ export default function DashboardProductsPage() {
 
                 {traceViewMode === "redemptions" ? (
                 <div>
-                  <h3 className="font-display text-lg text-zinc-100">
-                    Canjes de puntos
-                  </h3>
+                  <h3 className="font-display text-lg text-zinc-100">{ui("Canjes de puntos")}{" "}</h3>
                   {loadingRedemptions ? (
-                    <p className="mt-3 text-zinc-400">Cargando...</p>
+                    <p className="mt-3 text-zinc-400">{ui("Cargando...")}</p>
                   ) : (
                     <div className="mt-3 overflow-x-auto">
                       <table className="min-w-full text-left text-sm">
                         <thead className="text-zinc-500">
                           <tr>
-                            <th className="pb-2 pr-4">Canje</th>
-                            <th className="pb-2 pr-4">Usuario</th>
-                            <th className="pb-2 pr-4">Recompensa</th>
-                            <th className="pb-2 pr-4">Estado</th>
-                            <th className="pb-2 pr-4">Puntos</th>
-                            <th className="pb-2 pr-4">Débito</th>
-                            <th className="pb-2 pr-4">Intentos</th>
+                            <th className="pb-2 pr-4">{ui("Canje")}</th>
+                            <th className="pb-2 pr-4">{ui("Usuario")}</th>
+                            <th className="pb-2 pr-4">{ui("Recompensa")}</th>
+                            <th className="pb-2 pr-4">{ui("Estado")}</th>
+                            <th className="pb-2 pr-4">{ui("Puntos")}</th>
+                            <th className="pb-2 pr-4">{ui("Débito")}</th>
+                            <th className="pb-2 pr-4">{ui("Intentos")}</th>
                             <th className="pb-2 pr-4">Error</th>
-                            <th className="pb-2">Último intento</th>
+                            <th className="pb-2">{ui("Último intento")}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1380,12 +1314,12 @@ export default function DashboardProductsPage() {
                               </td>
                               <td className="py-3 pr-4">
                                 <div className="flex flex-col">
-                                  <span>{r.portalUsername ?? "Sin username"}</span>
+                                  <span>{r.portalUsername ?? ui("Sin username")}</span>
                                   <span className="text-xs text-zinc-500">ID #{r.portalUserId}</span>
                                 </div>
                               </td>
                               <td className="py-3 pr-4">
-                                {r.rewardName ?? `Recompensa #${r.rewardProductId}`}
+                                {r.rewardName ?? `${ui("Recompensa")} #${r.rewardProductId}`}
                               </td>
                               <td
                                 className={`py-3 pr-4 text-xs ${
@@ -1406,7 +1340,7 @@ export default function DashboardProductsPage() {
                                     : "text-red-300"
                                 }`}
                               >
-                                {r.pointsDebited ? "Descontado" : "Pendiente"}
+                                {r.pointsDebited ? ui("Descontado") : ui("Pendiente")}
                               </td>
                               <td className="py-3 pr-4">{r.deliveryAttempts}</td>
                               <td
@@ -1417,17 +1351,15 @@ export default function DashboardProductsPage() {
                               </td>
                               <td className="py-3 text-xs text-zinc-400">
                                 {r.lastAttemptAt
-                                  ? new Date(r.lastAttemptAt).toLocaleString()
-                                  : "Sin intento"}
+                                  ? new Date(r.lastAttemptAt).toLocaleString(lang)
+                                  : ui("Sin intento")}
                               </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                       {redemptionTrace.length === 0 && (
-                        <p className="pt-4 text-sm text-zinc-500">
-                          No hay canjes para el filtro seleccionado.
-                        </p>
+                        <p className="pt-4 text-sm text-zinc-500">{ui("No hay canjes para el filtro seleccionado.")}{" "}</p>
                       )}
                       {redemptionTrace.length > DASHBOARD_ITEMS_PER_PAGE && (
                         <div className="mt-4 flex items-center justify-center gap-3">
@@ -1438,11 +1370,8 @@ export default function DashboardProductsPage() {
                               setRedemptionPage((p) => Math.max(1, p - 1))
                             }
                             className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                          >
-                            Anterior
-                          </button>
-                          <p className="text-xs text-zinc-400">
-                            Página {redemptionPage} de {totalRedemptionPages}
+                          >{ui("Anterior")}{" "}</button>
+                          <p className="text-xs text-zinc-400">{ui("Página")}{" "}{redemptionPage}{" "}{ui("de")}{" "}{totalRedemptionPages}
                           </p>
                           <button
                             type="button"
@@ -1453,9 +1382,7 @@ export default function DashboardProductsPage() {
                               )
                             }
                             className="rounded border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-50"
-                          >
-                            Siguiente
-                          </button>
+                          >{ui("Siguiente")}{" "}</button>
                         </div>
                       )}
                     </div>
@@ -1464,51 +1391,48 @@ export default function DashboardProductsPage() {
                 ) : null}
               </div>
             ) : loadingAnalytics ? (
-              <p className="mt-4 text-zinc-400">Cargando...</p>
+              <p className="mt-4 text-zinc-400">{ui("Cargando...")}</p>
             ) : analytics ? (
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas del portal</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Cuentas del portal")}</p>
                   <p className="mt-2 text-2xl font-bold text-zinc-100">{analytics.portalUsers}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas de juego</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Cuentas de juego")}</p>
                   <p className="mt-2 text-2xl font-bold text-zinc-100">{analytics.gameAccounts}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Cuentas online</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Cuentas online")}</p>
                   <p className="mt-2 text-2xl font-bold text-emerald-300">{analytics.onlineAccounts}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Personajes totales</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Personajes totales")}</p>
                   <p className="mt-2 text-2xl font-bold text-sky-200">{analytics.totalCharacters}</p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Órdenes pagadas</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Órdenes pagadas")}</p>
                   <p className="mt-2 text-2xl font-bold text-emerald-300">{analytics.shopOrdersPaid}</p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    Totales: {analytics.shopOrdersTotal} · Pendientes: {analytics.shopOrdersPending} · Fallidas: {analytics.shopOrdersFailed}
+                  <p className="mt-1 text-xs text-zinc-500">{ui("Totales:")}{" "}{analytics.shopOrdersTotal}{ui("· Pendientes:")}{" "}{analytics.shopOrdersPending}{ui("· Fallidas:")}{" "}{analytics.shopOrdersFailed}
                   </p>
                 </div>
                 <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500">Canjes completados</p>
+                  <p className="text-xs uppercase tracking-wider text-zinc-500">{ui("Canjes completados")}</p>
                   <p className="mt-2 text-2xl font-bold text-amber-300">{analytics.redemptionsCompleted}</p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    Totales: {analytics.redemptionsTotal} · Pendientes: {analytics.redemptionsPending} · Fallidos: {analytics.redemptionsFailed}
+                  <p className="mt-1 text-xs text-zinc-500">{ui("Totales:")}{" "}{analytics.redemptionsTotal}{ui("· Pendientes:")}{" "}{analytics.redemptionsPending}{ui("· Fallidos:")}{" "}{analytics.redemptionsFailed}
                   </p>
                 </div>
                 <div className="rounded-lg border border-fuchsia-400/25 bg-fuchsia-950/20 p-4 sm:col-span-2 lg:col-span-3">
-                  <p className="text-xs uppercase tracking-wider text-fuchsia-200/80">Saldo global en wallets</p>
+                  <p className="text-xs uppercase tracking-wider text-fuchsia-200/80">{ui("Saldo global en wallets")}</p>
                   <p className="mt-2 text-3xl font-bold text-fuchsia-100">
                     {formatBigIntGrouped(analytics.totalWalletPoints)} pts
                   </p>
-                  <p className="mt-1 text-xs text-fuchsia-200/80">
-                    Vista compacta: {formatBigIntCompact(analytics.totalWalletPoints)} pts
+                  <p className="mt-1 text-xs text-fuchsia-200/80">{ui("Vista compacta:")}{" "}{formatBigIntCompact(analytics.totalWalletPoints)} pts
                   </p>
                 </div>
               </div>
             ) : (
-              <p className="mt-4 text-zinc-400">No hay datos de analítica disponibles.</p>
+              <p className="mt-4 text-zinc-400">{ui("No hay datos de analítica disponibles.")}</p>
             )}
           </section>
         </div>

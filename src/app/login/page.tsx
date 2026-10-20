@@ -14,13 +14,11 @@ import {
   IconUser,
 } from "@/components/AuthFormUi";
 import { AuthHeroLogoLink } from "@/components/AuthHeroLogoLink";
-import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
 import { ApiError } from "@/lib/api";
+import { useInterfaceCopy } from "@/lib/use-interface-copy";
 
-const LOGIN_BG_VIDEO =
-  "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
 
 function LoginPageLoading() {
   const { t } = useTranslation();
@@ -54,6 +52,7 @@ function LoginPageLoading() {
 }
 
 function LoginPageContent() {
+  const ui = useInterfaceCopy();
   const { t } = useTranslation();
   const { login, accessToken, isAuthReady } = useAuth();
   const router = useRouter();
@@ -68,7 +67,7 @@ function LoginPageContent() {
   useEffect(() => {
     if (!isAuthReady || !accessToken) return;
     const next = searchParams.get("next");
-    router.replace(next && next.startsWith("/") ? next : "/cuenta");
+    router.replace(next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") ? next : "/cuenta");
   }, [isAuthReady, accessToken, searchParams, router]);
 
   async function onSubmit(e: React.FormEvent) {
@@ -78,7 +77,7 @@ function LoginPageContent() {
     try {
       await login(username, password);
       const next = searchParams.get("next");
-      router.push(next && next.startsWith("/") ? next : "/cuenta");
+      router.push(next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\") ? next : "/cuenta");
     } catch (err) {
       if (err instanceof ApiError) {
         const rawMessage = `${err.message} ${err.detail ?? ""}`.toLowerCase();
@@ -94,10 +93,12 @@ function LoginPageContent() {
               ? "Has hecho varios intentos. Espera un momento y vuelve a intentarlo."
               : err.status >= 500
                 ? "Nuestros servidores están ocupados en este momento. Intenta de nuevo en unos minutos."
-                : "No pudimos iniciar sesión por ahora. Intenta nuevamente.";
-        setError(friendlyMessage);
+                : err.status === 0
+                  ? "No se ha podido conectar con el servidor. Inténtalo de nuevo en unos minutos."
+                  : "No pudimos iniciar sesión por ahora. Intenta nuevamente.";
+        setError(ui(friendlyMessage));
       } else {
-        setError("No pudimos iniciar sesión por ahora. Intenta nuevamente.");
+        setError(ui("No pudimos iniciar sesión por ahora. Intenta nuevamente."));
       }
     } finally {
       setLoading(false);
@@ -106,21 +107,11 @@ function LoginPageContent() {
 
   return (
     <div className="relative isolate min-h-[min(820px,calc(100dvh-180px))] overflow-hidden bg-[#030306]">
-      <video
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-90"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden
-      >
-        <source src={LOGIN_BG_VIDEO} type="video/mp4" />
-      </video>
+
       <div className="pointer-events-none absolute inset-0 z-0 bg-linear-to-br from-black/88 via-black/72 to-[#0a1628]/90" />
       <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_110%_70%_at_50%_-10%,rgba(251,191,36,0.12),transparent_52%),radial-gradient(ellipse_at_80%_70%,rgba(56,189,248,0.09),transparent_45%)]" />
       <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(105deg,transparent_0%,rgba(0,0,0,0.2)_40%,transparent_65%)]" />
-      <LoginParticlesCanvas />
+
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1fr)_min(100%,420px)] lg:gap-16 xl:grid-cols-[minmax(0,1.15fr)_440px]">
           <header className="flex flex-col justify-center space-y-8 text-center lg:text-left">

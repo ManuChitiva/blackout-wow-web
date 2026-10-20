@@ -1,0 +1,184 @@
+/* Native Warcraft textures are decoded from the supplied client, see design/warcraft-asset-sources.json. */
+:root{--portal-bg:#0b0e13;--portal-gold:#d9b578;--portal-line:#b3a17b45;--wc-ink:#0b0e13;--wc-gold:#e6be78;--wc-frost:#bce3f7}
+body{background:#0b0e13;color:#eae4d8}
+.site-shell{background:linear-gradient(#090c1299,#0a0d12dc),url('/warcraft/native/stone.png') repeat;background-size:auto,256px}
+.site-shell-home{background:linear-gradient(#0b1016e0,#090d14ed),url('/warcraft/native/stone.png') repeat}
+.site-header,.site-shell-home .site-header{height:82px;background:linear-gradient(#101722e8,#11151ef2),url('/warcraft/native/stone.png');border-bottom:1px solid #5b5244;box-shadow:0 6px 25px #0008;backdrop-filter:blur(16px)}
+.site-header:after,.site-footer:before{content:"";position:absolute;left:0;right:0;bottom:-5px;height:10px;background:url('/warcraft/native/metal-top-trim.png') repeat-x;pointer-events:none;opacity:.9}
+.site-header-inner{max-width:1520px;padding:0 3%;gap:28px}
+.site-brand img{width:88px;height:66px;mix-blend-mode:normal;filter:drop-shadow(0 2px 8px #000)}
+.site-header .site-brand img{transition:filter .25s ease}
+.site-header .site-brand:is(:hover,:focus-visible) img{filter:brightness(1.05) drop-shadow(0 2px 8px #000) drop-shadow(0 0 4px #e2a04a66)}
+.site-header .site-brand>span{transition:color .25s ease,text-shadow .25s ease}
+.site-header .site-brand:is(:hover,:focus-visible)>span{color:#f5dcb0;text-shadow:0 0 8px #e29a4033}
+@media(prefers-reduced-motion:reduce){.site-header .site-brand img,.site-header .site-brand>span{transition:none}}
+.site-brand>span{font-size:19px;letter-spacing:2px;color:#f0dfbc}
+.site-brand small{font-size:6px;letter-spacing:1.4px}
+.site-nav{gap:26px}.site-nav a{font-family:var(--font-cinzel),Georgia,serif;font-size:11px;font-weight:600;color:#d4ccbc;letter-spacing:.35px;text-transform:uppercase;padding:28px 0}
+.site-nav a:hover,.site-nav a[aria-current=page]{color:#f7d597;text-shadow:0 0 18px #bf862c}
+.site-nav a[aria-current=page]:after{bottom:15px;background:#edc583;box-shadow:0 0 10px #e7b458}
+.site-account{font-family:var(--font-cinzel),Georgia,serif;background:linear-gradient(#41332699,#1b1c22);border:1px solid #a28b5f;color:#f5dfb7;box-shadow:inset 0 0 0 3px #0b0d11;font-weight:600}
+.site-language select{font-size:11px;color:#e4d5b9}.site-language select option{background:#111823}
+.site-footer{background:linear-gradient(#0c1017f4,#070a10ed),url('/warcraft/native/stone.png');padding-top:48px;border-color:#5b5244}
+.site-footer:before{top:-4px;bottom:auto}.site-footer-top .site-brand img{width:110px;height:75px}
+.site-footer-top>p{text-align:center}
+.site-footer-top .site-brand>span{text-align:center}
+.site-footer-top .site-brand small{text-align:left;margin-top:7px;font-size:8px;line-height:1.65;letter-spacing:1.6px;font-weight:600;color:#c9ad7c}
+.site-footer-links{font-size:11px;line-height:1.6}.site-footer-bottom{color:#9b9c9f;font-size:10px;padding-bottom:15px}
+.site-footer-legal{flex:1;line-height:1.7}.site-footer-legal p+p{margin-top:4px}.site-footer-copyright{color:#d4c7ad;font-weight:500;letter-spacing:.2px}
+.wc-wrap{width:min(1240px,88%);margin-inline:auto;position:relative}
+.wc-section{position:relative;padding:104px 0;isolation:isolate}
+.wc-section h2{font-family:var(--font-cinzel),Georgia,serif;font-weight:600;font-size:clamp(32px,3.6vw,52px);line-height:1.2;letter-spacing:-1.4px;color:#eee8da;text-shadow:0 3px 12px #0009}
+.wc-section h2 em,.wc-hero h1 em{font-style:normal;color:#e5bd7f}
+.wc-kicker{font-size:10px;font-weight:600;letter-spacing:2.6px;line-height:1.8;color:#d9b577;text-transform:uppercase}
+.wc-section-intro{color:#bec0be;font-size:14px;line-height:1.9;max-width:530px;margin:24px 0 28px}
+.wc-section-heading{text-align:center;max-width:720px;margin:0 auto 50px}
+.wc-section-heading h2{margin-top:14px}.wc-section-heading>p:last-child{font-size:14px;color:#b6b9bd;line-height:1.8;max-width:570px;margin:16px auto 0}
+.wc-ornament{display:flex;align-items:center;justify-content:center;height:28px;max-width:390px;margin:17px auto 0}
+.wc-ornament img{width:105px;height:30px;object-fit:contain;filter:drop-shadow(0 2px 4px black)}
+.wc-ornament>span{height:1px;background:linear-gradient(90deg,transparent,#9b8050);flex:1}.wc-ornament>span:last-child{transform:rotate(180deg)}
+.wc-ambient{position:absolute;inset:0;overflow:hidden;pointer-events:none}.wc-ambient img,.wc-ambient video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wc-hero{min-height:730px;height:calc(100svh - 82px);max-height:960px;position:relative;isolation:isolate;background:#101c29}
+.wc-hero-video{z-index:-3}.wc-hero-video img,.wc-hero-video video{object-position:68% 46%}
+.wc-hero-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#050b13a6 0%,#040c1640 45%,#0a111500 78%),linear-gradient(0deg,#0a1019 0%,transparent 22%,#080d1720 100%)}
+.wc-hero-layout{height:100%;display:flex;align-items:center;padding-bottom:80px}
+.wc-hero-copy{width:530px;text-align:center;position:relative;margin-left:-12px}
+.wc-crest{width:330px;height:auto;margin:-10px auto -7px;filter:drop-shadow(0 10px 18px #0009)}
+.wc-soon{display:flex;gap:12px;justify-content:center;align-items:center;font-size:9px;letter-spacing:2.4px}.wc-soon span{height:1px;width:24px;background:#c49d68}
+.wc-hero h1{font-family:var(--font-cinzel),Georgia,serif;font-size:clamp(50px,5.3vw,76px);font-weight:600;line-height:1.02;letter-spacing:-1px;text-transform:uppercase;margin:18px 0 18px;color:#ece5d7;text-shadow:0 4px 25px #000,0 2px 2px #000}
+.wc-hero h1 em{background:linear-gradient(#fff1c4,#dbac65 70%,#b5834c);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 3px 2px #000)}
+.wc-hero-intro{font-size:13px;line-height:1.8;color:#d0d4d6;max-width:410px;margin:0 auto 25px;text-shadow:0 2px 6px #000}
+.wc-actions{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap}.wc-hero .wc-actions{justify-content:center}
+.wc-button{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:25px;min-height:54px;padding:13px 24px;font-family:var(--font-cinzel),Georgia,serif;font-size:11px;letter-spacing:.7px;font-weight:700;color:#fff0cd;border:1px solid #ba8d53;background:linear-gradient(#844024,#442118);box-shadow:inset 0 0 0 3px #1c1612,inset 0 0 0 4px #bf8e524d,0 6px 20px #0006;text-shadow:0 1px 3px #000;transition:filter .2s,transform .2s,box-shadow .2s}
+.wc-button:before,.wc-button:after{content:"";position:absolute;top:50%;width:5px;height:5px;background:#c7ab77;transform:translateY(-50%) rotate(45deg);border:1px solid #fae2b3}
+.wc-button:before{left:-3px}.wc-button:after{right:-3px}.wc-button>span{font-family:Arial,sans-serif;font-size:18px}
+.wc-button:hover{filter:brightness(1.2);transform:translateY(-2px);box-shadow:inset 0 0 0 3px #1c1612,inset 0 0 0 4px #bf8e5277,0 0 25px #e2882a25}
+.wc-button-ghost{background:linear-gradient(#172733de,#10141ce8);border-color:#9f9273;color:#ead5af}
+.wc-fair-line{font-size:9px;letter-spacing:.5px;color:#b8b9b7;margin:19px 0 0}
+
+
+
+.wc-scroll{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);text-align:center;font-size:8px;letter-spacing:2px;color:#b6babf}
+.wc-scroll i{display:block;font-style:normal;font-size:25px;line-height:20px;color:#cab58a}
+.wc-snow{position:absolute;inset:0;overflow:hidden;z-index:-1;pointer-events:none}.wc-snow i{position:absolute;inset:-100%;background-image:radial-gradient(1.4px 1.4px at 24px 19px,#d3edff80 60%,transparent 100%),radial-gradient(1px 1px at 78px 120px,#e9f6ff80 60%,transparent 100%);background-size:240px 220px;animation:wc-drift 30s linear infinite;opacity:.3}.wc-snow i:nth-child(2){background-size:390px 340px;animation-duration:45s;opacity:.3}.wc-snow i:nth-child(3){background-size:550px 410px;animation-duration:58s;opacity:.4;filter:blur(1px)}
+@keyframes wc-drift{to{transform:translate(180px,220px)}}
+.wc-stat-wrap{margin-top:-24px;z-index:3}
+.wc-stat-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1.25fr;position:relative;padding:28px 16px;background:linear-gradient(#121923eb,#12151bed),url('/warcraft/native/stone.png');box-shadow:0 16px 40px #0006,inset 0 0 0 5px #05070c88;border:1px solid #635b4e}
+.wc-stat-bar:before,.wc-stat-bar:after{content:"";position:absolute;left:2px;right:2px;height:10px;background:url('/warcraft/native/metal-top-trim.png') repeat-x;opacity:.8}
+.wc-stat-bar:before{top:-3px}.wc-stat-bar:after{bottom:-3px;transform:rotate(180deg)}
+.wc-stat-bar>div{text-align:center;border-left:1px solid #ae99633a;padding:5px 12px}.wc-stat-bar>div:first-of-type{border:0}.wc-stat-bar strong{display:block;font-family:var(--font-cinzel),Georgia,serif;font-size:38px;font-weight:600;line-height:1.15;color:#efdec0;text-shadow:0 3px 3px #000}.wc-stat-bar>div>span{font-size:8px;letter-spacing:1.7px;color:#aa9b80;display:block;margin-top:10px}
+.wc-corners{position:absolute;inset:-2px;pointer-events:none;z-index:4}.wc-corners i{position:absolute;width:26px;height:26px;background:url('/warcraft/native/metal-joint-trim.png') no-repeat;filter:drop-shadow(0 2px 2px #000);background-size:contain}.wc-corners i:nth-child(1){left:0;top:0;transform:rotate(180deg)}.wc-corners i:nth-child(2){right:0;top:0;transform:rotate(-90deg)}.wc-corners i:nth-child(3){left:0;bottom:0;transform:rotate(90deg)}.wc-corners i:nth-child(4){right:0;bottom:0}
+.wc-world{padding-top:86px;padding-bottom:120px;background:radial-gradient(ellipse at center,#1d2b3820,transparent 65%)}
+.wc-paths{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding-top:15px}
+.wc-path{display:block;position:relative;min-height:430px;background:#10141c;border:1px solid #6c5c42;box-shadow:0 18px 40px #0005;transition:transform .3s,border-color .3s;isolation:isolate}
+.wc-path:hover{transform:translateY(-7px);border-color:#d0ae76}
+.wc-path-art{position:absolute;inset:-24px -1px -1px;z-index:-2;overflow:hidden;mask-image:linear-gradient(0deg,#000,black 88%,transparent);transition:transform .5s}
+.wc-path-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#090d16 0%,#090d16b3 32%,#090d1600 75%)}
+.wc-path-art img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;transition:transform .6s;filter:brightness(.88)}
+.wc-path-pve .wc-path-art img{object-position:50% 27%}.wc-path-pvp .wc-path-art img{object-position:52% 30%}.wc-path:hover img{transform:scale(1.035);filter:brightness(1)}
+.wc-path-content{padding:220px 30px 30px}.wc-path-tag{font-family:var(--font-cinzel),Georgia,serif;position:absolute;top:23px;left:23px;background:#09111be6;border:1px solid #d5b16b80;padding:8px 13px;letter-spacing:2px;font-size:12px;color:#f7d69a;box-shadow:inset 0 0 0 3px #080c14}.wc-path-tag b{font-family:Arial;font-weight:400;color:#a09580;font-size:8px;margin-left:12px}
+.wc-path h3{font-family:var(--font-cinzel),Georgia,serif;font-size:26px;color:#f0dfbf;font-weight:600;line-height:1.35;text-shadow:0 3px 4px black}
+.wc-path p{color:#bec0c5;font-size:12px;line-height:1.85;margin:14px 0 22px;max-width:400px}
+.wc-text-link{font-size:9px;letter-spacing:1.5px;font-weight:600;color:#dabb83;display:inline-flex;align-items:center;gap:20px;line-height:1.8}.wc-text-link b{font-size:18px;font-weight:400;transition:transform .2s}.wc-text-link:hover b,.wc-path:hover .wc-text-link b{transform:translateX(5px)}
+.wc-path-rune{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:24px;color:#c7a46c;background:#10141b;width:36px;text-align:center;text-shadow:0 0 10px #ffb33d}
+.wc-classes{padding:60px 0 70px;min-height:750px;background:#10170f;border-block:1px solid #8f9c5740}
+.wc-class-landscape{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#0a120b77,#0c120be8 60%),url('/warcraft/native/outland-scene.webp') left center/cover;opacity:.5}
+.wc-class-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:50px}
+.wc-class-figure{position:relative;height:650px;margin:-100px -45px -70px -60px;filter:drop-shadow(0 10px 26px #0008)}
+
+
+
+.wc-character-caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--font-cinzel),serif;font-size:10px;letter-spacing:2px;color:#c9d1ac;text-align:center;white-space:nowrap;text-shadow:0 2px 4px black}
+.wc-character-caption i{display:block;font-family:var(--font-geist-sans),Arial;font-style:normal;font-size:8px;letter-spacing:3px;margin-top:7px;color:#839d62}
+.wc-class-copy{padding:15px 0 20px}.wc-class-copy h2{margin:16px 0 0}.wc-class-copy h2 em{color:#c2cf95}.wc-class-copy .wc-kicker{color:#b3c481}
+.wc-class-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0 30px}.wc-class-item{display:flex;align-items:center;gap:10px;border-block:1px solid #91a16d33;padding:18px 0}
+.wc-class-item>span{color:#a2c4b3;font-size:28px;line-height:1;filter:drop-shadow(0 0 10px #8fbc9e44)}.wc-class-item strong{font-family:var(--font-cinzel),Georgia,serif;font-size:12px;font-weight:600;color:#e2e4d3}.wc-class-item small{display:block;font-family:var(--font-geist-sans),Arial;font-size:6px;letter-spacing:.7px;color:#939b82;margin-top:7px}.wc-class-1>span{color:#ab94c7}.wc-class-2>span{color:#94c5ae}
+.wc-spell-note{display:flex;align-items:center;gap:20px;margin:20px 0 24px}.wc-spell-note>span{font-family:var(--font-cinzel),serif;font-size:45px;color:#d4dfb6;line-height:1}
+.wc-spell-note h3{font-size:12px;font-weight:600;color:#d5dcc2}.wc-spell-note p{font-size:11px;color:#a7b19c;line-height:1.8;margin-top:8px}.wc-class-copy .wc-text-link{color:#c2ce95}
+.wc-progression{overflow:hidden;background:#180e0b;padding:110px 0}
+.wc-progression-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 58%;z-index:-3;opacity:.68}
+.wc-progression:before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#120d10ee,#150e13b8 55%,#1c0f0a30),linear-gradient(0deg,#101117,transparent 45%,#10170f)}
+.wc-progression-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:90px;align-items:center}
+.wc-progression h2{margin-top:18px;font-size:clamp(32px,3.2vw,47px)}
+.wc-systems{display:grid;grid-template-columns:1fr 1fr;list-style:none;padding:0;gap:15px 20px;margin:30px 0 34px}.wc-systems li{display:flex;align-items:center;gap:10px;font-size:11px;color:#c4bbaf}.wc-systems li span{color:#b79057;font-size:6px}
+.wc-relic{position:relative;background:linear-gradient(#1c1919f2,#161516f7),url('/warcraft/native/stone.png');border:1px solid #8d6c4b;box-shadow:0 0 0 5px #110e0dc9,0 24px 70px #0009;text-align:center;padding:46px 30px 32px;transform:perspective(1000px) rotateY(-5deg)}
+.wc-relic:before{content:"";position:absolute;inset:8px;border:1px solid #c8a36824;pointer-events:none}.wc-relic-tier{font-family:var(--font-cinzel),serif;display:block;font-size:50px;font-weight:600;color:#f2d6a5;margin:19px 0 4px;text-shadow:0 2px 2px #000}.wc-relic-tier span{font-size:30px;color:#997343;margin-inline:7px}
+.wc-relic-label{font-size:8px;color:#ad9673;letter-spacing:2px}.wc-relic-stats{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;margin-top:25px}.wc-relic-stats>div{border-top:1px solid #b28d5c38;padding:20px 0 13px}.wc-relic-stats>div:first-child{grid-column:1/-1}.wc-relic-stats strong{display:block;font-family:var(--font-cinzel),serif;color:#e7c896;font-size:32px;font-weight:500}.wc-relic-stats span{display:block;font-size:7px;line-height:1.8;color:#ad9f88;letter-spacing:1px;margin-top:7px}.wc-dragon{position:absolute;top:-46px;right:-43px;width:118px;height:118px;filter:drop-shadow(0 5px 7px #000);pointer-events:none}
+.wc-join{padding:100px 0 90px;min-height:640px;background:#0e1118;overflow:hidden}
+.wc-join-film{left:43%;width:57%;z-index:-3;mask-image:linear-gradient(90deg,transparent,black 35%)}.wc-join-film img,.wc-join-film video{object-position:50% 25%;opacity:.75}
+.wc-join:before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#101117 20%,#101117a6 52%,#10111722),linear-gradient(0deg,#0b0f16 0%,transparent 35%,#101117 100%)}
+.wc-join-copy{width:54%;position:relative}.wc-join h2{margin-top:18px}.wc-join .wc-section-intro{max-width:440px}.wc-realmlist{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:460px;border:1px solid #9f8d6c50;background:#080c1299;margin:28px 0 0;padding:14px 16px}.wc-realmlist code{color:#c1c9d0;font-size:11px;overflow-wrap:anywhere}.wc-realmlist button{font-size:8px;letter-spacing:1px;color:#dfc08b;padding:7px 4px}
+.wc-copy-status{display:block;font-size:10px;color:#d8be8e;min-height:20px;margin-top:5px}.wc-announcement{font-size:10px;line-height:1.8;color:#929ba6;max-width:415px;margin-top:30px}
+
+
+.warcraft-motion-root[data-motion=paused] *,.warcraft-motion-root[data-motion=paused] *:before,.warcraft-motion-root[data-motion=paused] *:after{animation-play-state:paused!important}
+.portal-backdrop{background:#0b1017}.portal-backdrop .wc-ambient{left:30%;mask-image:linear-gradient(90deg,transparent,black 40%);opacity:.55}.portal-backdrop.portal-fel .wc-ambient{left:48%}.portal-backdrop .wc-ambient img,.portal-backdrop .wc-ambient video{object-position:70% 25%}.portal-backdrop.portal-fel .wc-ambient img,.portal-backdrop.portal-fel .wc-ambient video{object-position:50% 20%}
+.portal-shade{background:linear-gradient(0deg,#0b0f16 0%,transparent 60%),linear-gradient(90deg,#0b1018e8 0%,#0b101888 50%,#0b101800)}
+.portal-page{background:transparent}.portal-main .metal-border,.portal-main .home-card,.lore-feature,.connect-steps article,.connect-downloads article,.class-spells{background:linear-gradient(#111923ee,#0b111aec),url('/warcraft/native/stone.png');border:1px solid #8b785645;border-radius:0;box-shadow:inset 0 0 0 4px #070b1199,0 16px 40px #0004}
+.portal-main input:not([type=checkbox]):not([type=radio]),.portal-main select,.portal-main textarea{background:#080d16e6;border-color:#6e6a5c88;color:#ece6da}
+.portal-main button[type=submit]:not(:disabled){background:linear-gradient(#7c3b22,#47251a);color:#ffe4b4;border:1px solid #b59662;box-shadow:inset 0 0 0 3px #211810;border-radius:0;font-family:var(--font-cinzel),Georgia,serif}
+.lore-hero{padding-top:75px}.lore-hero h1{font-size:clamp(38px,4vw,60px);text-shadow:0 3px 12px #0008}.lore-hero>p,.lore-feature ul,.lore-fair p,.lore-community p,.connect-steps p,.connect-downloads p,.connect-tips p,.class-spells-intro>p{color:#bfc3ca}
+.lore-button{background:linear-gradient(#7c3b22,#47251a);border:1px solid #b59662;color:#ffe4b4;clip-path:none;box-shadow:inset 0 0 0 3px #211810;font-family:var(--font-cinzel),serif}
+.lore-stats{background:linear-gradient(#111923ed,#111923ed),url('/warcraft/native/stone.png');border:1px solid #82755d}.lore-stats strong{color:#ecd5ad}.lore-feature{min-height:350px;padding-top:130px;isolation:isolate;scroll-margin-top:110px}.lore-feature:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#0c121a 35%,#0c121a30),url('/warcraft/frozen-champion.jpg') center 40%/cover no-repeat;opacity:.75}.lore-feature:nth-child(2):before{background-image:linear-gradient(0deg,#0c121a 35%,#0c121a30),url('/warcraft/arena-clash.jpg');background-position:center 25%}.lore-feature:nth-child(3):before{background-image:linear-gradient(0deg,#0c121a 35%,#0c121a30),url('/warcraft/guldan.webp')}.lore-feature:nth-child(4):before{background-image:linear-gradient(0deg,#0c121a 35%,#0c121a30),url('/warcraft/dark-portal.jpg')}.lore-feature h3{color:#ead9b6}.lore-heading p{color:#b5bec8}
+.lore-coming{margin-top:40px;padding:24px 28px;border:1px solid #bd9d6555;background:#151820dd;display:flex;gap:20px;align-items:center}.lore-coming>span{color:#dcc18c;font-size:30px}.lore-coming p{font-size:12px;color:#c0c5cc;line-height:1.8}.lore-coming a{color:#e5c58e;text-decoration:underline;text-underline-offset:4px}
+.class-spells-origins p{color:#d4bf9b}.class-spells-origins em{color:#a5aeba}.connect-realmlist{background:#090f19;color:#e0ceb0}.lore-community{max-width:none;border-top:1px solid var(--portal-line);margin-top:45px}
+@media(min-width:1600px){.wc-hero-copy{margin-left:0}.wc-hero h1{font-size:80px}.wc-crest{width:370px}}
+@media(max-width:1180px){.site-header-inner{gap:14px}.site-nav{gap:17px}.site-brand>span{display:none}.site-footer .site-brand>span{display:block}.site-nav a{font-size:10px}.wc-wrap{width:89%}.wc-hero-copy{width:490px}.wc-hero h1{font-size:64px}.wc-hero{min-height:720px}.wc-class-layout{gap:25px}.wc-class-list{gap:8px}.wc-class-item{display:block}.wc-class-item>span{display:block;margin-bottom:10px}.wc-progression-layout{gap:55px}.wc-relic-tier{font-size:44px}}
+@media(max-width:900px){.site-header{height:74px}.site-brand>span{display:block;font-size:16px}.site-brand img{width:65px;height:51px}.site-nav{display:none}.site-menu-button{display:block}.site-mobile-menu:not([hidden]){background:linear-gradient(#101722f5,#11151efa),url('/warcraft/native/stone.png');border-color:#8c7656}.site-mobile-menu a{font-family:var(--font-cinzel),serif;font-size:12px}.wc-hero{height:780px;min-height:unset;max-height:none}.wc-hero-video img,.wc-hero-video video{object-position:66% 50%}.wc-hero-shade{background:linear-gradient(90deg,#06101bc7,transparent),linear-gradient(0deg,#0b1018,transparent 45%)}.wc-hero-copy{width:440px;margin-left:-15px}.wc-crest{width:300px}.wc-hero h1{font-size:60px}.wc-stat-bar strong{font-size:30px}.wc-stat-bar>div>span{font-size:7px;letter-spacing:1px}.wc-section{padding:75px 0}.wc-paths{gap:22px}.wc-path-content{padding:230px 24px 27px}.wc-path h3{font-size:22px}.wc-class-layout{gap:20px;grid-template-columns:.9fr 1.1fr}.wc-class-copy h2{font-size:36px}.wc-class-figure{height:620px;margin-left:-50px;margin-right:-50px}.wc-class-list{grid-template-columns:1fr;gap:0}.wc-class-item{display:flex;padding:12px 0}.wc-class-item>span{margin-bottom:0;width:28px;font-size:23px}.wc-class-item small{font-size:7px}.wc-spell-note>span{font-size:36px}.wc-spell-note p{font-size:10px}.wc-progression-layout{gap:35px;grid-template-columns:1.1fr 1fr}.wc-progression h2{font-size:34px}.wc-relic{padding:40px 20px 24px}.wc-relic-tier{font-size:34px}.wc-relic-tier span{font-size:22px}.wc-systems{grid-template-columns:1fr;gap:12px}.wc-join-copy{width:65%}.wc-join-film{left:40%;width:60%}.wc-join .wc-button{font-size:10px;padding:12px 18px;gap:15px}}
+@media(max-width:600px){.site-header{height:68px}.site-header-inner{padding:0 4%;gap:10px}.site-brand img{width:52px;height:45px}.site-brand>span{font-size:13px;letter-spacing:1.4px}.site-brand small{font-size:4px;letter-spacing:1px}.site-account{font-size:8px;padding:10px 9px;gap:5px}.site-account>span{display:none}.site-header-actions{gap:6px}.site-language select{font-size:9px}.wc-wrap{width:88%}.wc-hero{height:auto;min-height:770px;display:flex;align-items:center}.wc-hero-layout{height:auto;width:100%;padding:275px 6% 105px;display:block}.wc-hero-copy{width:100%;max-width:430px;margin:0 auto}.wc-hero-video img,.wc-hero-video video{object-position:78% 0%;object-fit:cover;height:520px;width:100%}.wc-hero-shade{background:linear-gradient(0deg,#0b1018 8%,#0b1018f5 35%,#0b101885 58%,#0b101800 85%)}.wc-crest{width:245px;position:absolute;left:50%;transform:translateX(-50%);top:-165px;margin:0;filter:drop-shadow(0 7px 18px #000)}.wc-soon{font-size:7px;letter-spacing:1.8px;gap:9px}.wc-soon span{width:15px}.wc-hero h1{font-size:53px;line-height:1.03;margin:20px 0}.wc-hero-intro{font-size:12px;max-width:320px;margin-bottom:24px}.wc-actions{gap:12px}.wc-button{font-size:9px;min-height:50px;padding:12px 20px;gap:14px}.wc-fair-line{font-size:7px;margin-top:18px;letter-spacing:.3px}.wc-scroll{bottom:46px;font-size:7px}.wc-stat-wrap{width:88%;margin-top:-22px}.wc-stat-bar{grid-template-columns:1fr 1fr;padding:12px 16px}.wc-stat-bar>div{padding:17px 6px}.wc-stat-bar>div:nth-of-type(3){border-left:0;border-top:1px solid #ae996326}.wc-stat-bar>div:nth-of-type(4){border-top:1px solid #ae996326}.wc-stat-bar strong{font-size:31px}.wc-stat-bar>div>span{font-size:7px;margin-top:7px;letter-spacing:1px}.wc-section{padding:65px 0}.wc-section-heading{margin-bottom:40px}.wc-section h2{font-size:33px;letter-spacing:-.7px}.wc-kicker{font-size:8px;letter-spacing:1.8px}.wc-section-heading>p:last-child{font-size:12px}.wc-ornament{max-width:270px}.wc-paths{grid-template-columns:1fr;gap:50px}.wc-path{min-height:400px}.wc-path-content{padding:240px 24px 27px}.wc-path h3{font-size:24px}.wc-path p{font-size:12px}.wc-path-art img{object-position:50% 25%}.wc-class-layout{display:flex;flex-direction:column;gap:0}.wc-classes{padding-top:0}.wc-class-figure{height:490px;width:100%;margin:-20px 0 0}.wc-character-caption{bottom:20px;font-size:9px}.wc-class-copy{padding-top:20px;width:100%}.wc-class-copy h2{font-size:39px}.wc-section-intro{font-size:12px;margin:20px 0 25px}.wc-class-list{grid-template-columns:repeat(3,1fr);gap:10px}.wc-class-item{display:block;padding:15px 0}.wc-class-item>span{margin-bottom:10px}.wc-class-item strong{font-size:10px}.wc-class-item small{font-size:6px;letter-spacing:.3px;line-height:1.6}.wc-spell-note{gap:16px}.wc-spell-note p{font-size:11px}.wc-spell-note h3{font-size:12px}.wc-text-link{font-size:8px;letter-spacing:1px;gap:15px}.wc-progression-layout{grid-template-columns:1fr;gap:65px}.wc-progression h2{font-size:35px}.wc-progression-bg{object-position:65% 50%;opacity:.35}.wc-systems{grid-template-columns:1fr 1fr;gap:16px;font-size:11px}.wc-systems li{font-size:10px;line-height:1.6;align-items:flex-start}.wc-systems li span{line-height:2.4}.wc-relic{max-width:370px;width:95%;margin:auto;transform:none;padding:38px 24px 25px}.wc-relic-tier{font-size:48px}.wc-relic-tier span{font-size:25px}.wc-dragon{width:96px;height:96px;right:-30px;top:-35px}.wc-join{padding-top:80px;padding-bottom:60px}.wc-join-copy{width:100%}.wc-join-film{left:20%;width:90%;opacity:.45}.wc-join:before{background:linear-gradient(90deg,#0f1218e8,#0f1218a6),linear-gradient(0deg,#0b0f16,transparent 50%,#101117)}.wc-join h2{font-size:38px}.wc-realmlist{padding:12px;gap:7px}.wc-realmlist code{font-size:9px}.wc-realmlist button{font-size:7px}.wc-announcement{font-size:9px}.site-footer-top .site-brand>span{font-size:18px}.site-footer-top>p{font-size:11px}.site-footer-links{gap:14px 22px}.site-footer-bottom{font-size:9px;padding-bottom:25px}.portal-backdrop .wc-ambient,.portal-backdrop.portal-fel .wc-ambient{left:10%;opacity:.3}.portal-shade{background:#0b101877}.lore-hero{padding-top:50px}.lore-feature{padding-top:150px}.lore-coming{padding:20px;gap:14px}.lore-coming>span{display:none}.lore-coming p{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.wc-snow{display:none}.wc-path:hover,.wc-button:hover,.wc-path:hover img{transform:none}.wc-relic{transform:none}}
+
+
+
+
+.lore-customization{margin-top:56px;scroll-margin-top:110px;border-top:1px solid #9e87533d;padding-top:36px}.lore-customization h2{font-family:var(--font-cinzel),Georgia,serif;font-size:clamp(26px,3vw,38px);color:#ead9b6;margin:14px 0 28px;line-height:1.25}.lore-customization-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:32px}.lore-customization article{position:relative;background:linear-gradient(#111923ed,#0b111af2),url('/warcraft/native/stone.png');border:1px solid #8b785645;padding:30px}.lore-customization-number{font-family:var(--font-cinzel),serif;color:#b29b6d;font-size:13px;letter-spacing:3px}.lore-customization h3{font-family:var(--font-cinzel),Georgia,serif;color:#dfd1b8;font-size:19px;line-height:1.5;margin:14px 0}.lore-customization p{font-size:13px;line-height:1.9;color:#bfc3ca}.lore-customization ul{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;list-style:none;padding:0}.lore-customization li{font-size:10px;line-height:1.6;border:1px solid #82755d55;padding:5px 9px;color:#d2c09e;background:#0a101999}.lore-customization li.lore-customization-more{border-color:transparent;color:#9eacbb}@media(max-width:700px){.lore-customization-grid{grid-template-columns:1fr;gap:18px}.lore-customization article{padding:24px}.lore-customization h3{font-size:18px}}
+
+/* Interactive class gallery using original Blizzard artwork. */
+.wc-class-choice{font-size:8px;letter-spacing:1.3px;color:#a9b6bd;margin:0 0 14px;line-height:1.6}.wc-class-list{gap:9px}.wc-class-item{position:relative;cursor:pointer;text-align:left;padding:15px 10px;border:1px solid #7c775b66;background:linear-gradient(#142021aa,#0a111bd9);box-shadow:inset 0 0 0 3px #070d1599;transition:border-color .2s,background .2s,box-shadow .2s;min-height:88px}.wc-class-item:hover{border-color:#d5b875;background:#24302acc}.wc-class-item[aria-selected=true]{border-color:#d2ba7c;background:linear-gradient(#344735aa,#142021dd);box-shadow:inset 0 0 0 3px #101b16,0 0 24px #8dc56b1b}.wc-class-item[aria-selected=true]:after{content:"";position:absolute;bottom:-4px;left:calc(50% - 4px);width:7px;height:7px;background:#e6d2a0;transform:rotate(45deg);box-shadow:0 0 10px #b3d3a4}.wc-class-item strong{font-size:12px}.wc-class-item small{font-size:6px;letter-spacing:.4px;line-height:1.8}.wc-class-preview{outline:none}.wc-class-preview:focus-visible{outline:1px solid #d2ba7c;outline-offset:5px}.wc-official-character{position:absolute;inset:0;overflow:hidden;mask-image:linear-gradient(0deg,transparent,black 16%,black 86%,transparent)}.wc-official-character img{position:absolute;bottom:24px;left:50%;width:650px;max-width:none;height:auto;transform:translateX(-50%);filter:drop-shadow(0 12px 28px #000b);animation:wc-character-entrance .55s ease-out both}.wc-official-evoker img{width:800px;transform:translateX(-36%);bottom:0}.wc-selected-class-0 .wc-class-landscape{background-image:linear-gradient(90deg,#12171a70,#12171af7),url('/warcraft/classes/evoker-bg.png');opacity:.4}.wc-selected-class-2 .wc-class-landscape{background-image:linear-gradient(90deg,#0e1816a8,#0c141af7),url('/warcraft/classes/monk-bg.jpg');opacity:.5}@keyframes wc-character-entrance{from{opacity:0;filter:brightness(.5) drop-shadow(0 12px 28px #000b)}to{opacity:1;filter:brightness(1) drop-shadow(0 12px 28px #000b)}}
+.lore-button,.site-account,.connect-downloads a{transition:filter .2s,border-color .2s,box-shadow .2s}.lore-button:hover,.site-account:hover,.connect-downloads a:hover{filter:brightness(1.2);border-color:#e5c58f;box-shadow:inset 0 0 0 3px #151619,0 0 22px #bf8e5226}.wc-button:active,.lore-button:active,.site-account:active{transform:translateY(1px);filter:brightness(.95)}a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid #eacb91;outline-offset:4px}.connect-downloads a{background:linear-gradient(#26323b,#121b24);border:1px solid #9e8b63;box-shadow:inset 0 0 0 3px #0a1019;min-height:46px;font-family:var(--font-cinzel),Georgia,serif;color:#ead6b2}
+@media(max-width:1180px){.wc-class-item{padding:13px 9px;display:block}.wc-class-item>span{margin-bottom:8px;display:block}.wc-class-item strong{font-size:11px}.wc-official-character img{width:590px}.wc-official-evoker img{width:730px}}
+@media(min-width:601px) and (max-width:900px){.wc-class-item{min-height:0;display:flex;align-items:center;gap:14px}.wc-class-item>span{margin:0}.wc-class-list{gap:8px}.wc-official-character img{width:530px}.wc-official-evoker img{width:700px}}
+@media(max-width:600px){.wc-class-choice{font-size:7px}.wc-class-item{padding:15px 7px;min-height:105px}.wc-class-item strong{font-size:10px}.wc-class-item small{font-size:6px}.wc-class-item>span{margin-bottom:10px}.wc-official-character{inset:0 -20px}.wc-official-character img{width:470px;bottom:32px}.wc-official-evoker img{width:610px;bottom:0}.wc-character-caption{max-width:90%;text-align:center}}
+@media(prefers-reduced-motion:reduce){.wc-official-character img{animation:none}.lore-button,.site-account,.connect-downloads a,.wc-class-item{transition:none}}
+
+.connect-downloads{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:700px){.connect-downloads{grid-template-columns:1fr}}
+
+/* Realm identity: shared highlight on the home and server pages. */
+.wc-realm-profile,.lore-hero>p.wc-realm-profile{display:table;border-block:1px solid #a77b3d55;padding:9px 0;margin:20px 0 25px;color:#dfbd83;font-size:11px;font-weight:600;line-height:1.8;letter-spacing:1.4px;text-transform:uppercase;text-wrap:balance}
+.wc-hero .wc-realm-profile{margin-inline:auto}
+
+/* Account-wide benefits, without duplicating the homepage registration CTA. */
+.wc-store-showcase .wc-join-film{height:760px;bottom:auto;mask-image:linear-gradient(0deg,transparent,black 28%),linear-gradient(90deg,transparent,black 35%);mask-composite:intersect}
+.wc-store-showcase .wc-join-copy{width:58%;max-width:650px}
+.wc-store-showcase .wc-section-intro{max-width:520px}
+.wc-store-showcase .wc-actions{gap:16px}
+.wc-store-showcase .wc-button{font-size:10px;gap:18px}
+.wc-store-plans{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px;position:relative}
+.wc-store-plan{padding:32px;border:1px solid #78859766;background:linear-gradient(135deg,#111a25f5,#0d1219f5),url('/warcraft/native/stone.png');box-shadow:inset 0 0 0 4px #080b104d}
+.wc-store-plan-plus{border-color:#ba8d4b99;background:linear-gradient(135deg,#231e16f5,#10131af5),url('/warcraft/native/stone.png')}
+.wc-store-plan>header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid #a48a5e33}
+.wc-store-plan h3{font-family:var(--font-cinzel),Georgia,serif;font-size:30px;line-height:1.3;color:#e3dcca}
+.wc-store-plan h3 em{font-style:normal;color:#d9b778}
+.wc-store-plan>header>span{font-size:9px;font-weight:600;letter-spacing:1.3px;line-height:1.7;text-align:right;color:#bea781}
+.wc-store-plan-intro{font-size:12px;line-height:1.8;color:#b0b7c1;margin:18px 0 22px}
+.wc-store-plan ul{list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.wc-store-plan li strong{font-size:13px;font-weight:500;color:#e2ded3;line-height:1.7}
+.wc-store-plan li p{font-size:12px;line-height:1.85;color:#aeb6c0;margin:5px 0 0;max-width:440px}
+.wc-store-commands{display:flex;gap:22px;flex-wrap:wrap;font-size:12px;color:#c8c4b9}
+.wc-store-commands>span{display:inline-flex;align-items:center;gap:10px}
+.wc-store-commands code{padding:5px 9px;border:1px solid #6c77874d;background:#080c11aa;color:#d8bc88;font-size:11px}
+.wc-store-equivalence{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.wc-store-equivalence>span{color:#e4bd78;font-size:12px;font-weight:600;text-align:right;white-space:nowrap}
+.wc-store-individual{display:flex;align-items:center;gap:32px;padding:27px 0;border-bottom:1px solid #a48a5e33}
+.wc-store-individual h3,.wc-store-fair h3{font-size:10px;letter-spacing:1.5px;line-height:1.8;color:#d4b682;font-weight:600}
+.wc-store-individual h3{flex-shrink:0}
+.wc-store-individual ul{display:flex;flex-wrap:wrap;gap:12px 28px;list-style:none;margin:0;padding:0;color:#b8bec7;font-size:12px;line-height:1.7}
+.wc-store-individual li{display:flex;align-items:center;gap:10px}
+.wc-store-individual li:before{content:'◆';color:#a48250;font-size:6px}
+.wc-store-fair{display:flex;align-items:center;justify-content:space-between;gap:36px;padding-top:28px}
+.wc-store-fair>div{max-width:690px}
+.wc-store-fair p{font-size:12px;line-height:1.85;color:#aeb6c0;margin-top:8px}
+.wc-store-fair .wc-text-link{font-size:9px;line-height:1.8;max-width:245px;flex-shrink:0;gap:15px}
+@media(max-width:900px){.wc-store-showcase .wc-join-copy{width:80%}.wc-store-plans{gap:18px}.wc-store-plan{padding:25px}.wc-store-plan>header{align-items:flex-start}.wc-store-plan h3{font-size:25px}.wc-store-plan>header>span{font-size:8px}.wc-store-equivalence{align-items:flex-start;flex-direction:column;gap:3px}.wc-store-individual{display:block}.wc-store-individual ul{margin-top:15px}.wc-store-fair{display:block}.wc-store-fair .wc-text-link{max-width:none;margin-top:24px}}
+@media(max-width:600px){.wc-store-showcase .wc-join-copy{width:100%}.wc-store-showcase .wc-join-film{height:600px}.wc-store-showcase .wc-actions{flex-direction:column;align-items:stretch;max-width:330px;gap:15px}.wc-store-plans{grid-template-columns:1fr;margin-top:38px;gap:20px}.wc-store-plan{padding:24px}.wc-store-plan h3{font-size:28px}.wc-store-plan>header>span{font-size:8px}.wc-store-equivalence{flex-direction:row;gap:15px}.wc-store-equivalence>span{font-size:11px}.wc-store-individual ul{display:grid;grid-template-columns:1fr;gap:12px}.wc-store-fair .wc-text-link{font-size:8px}}
+@media(max-width:600px){.wc-realm-profile,.lore-hero>p.wc-realm-profile{font-size:10px;letter-spacing:1px}}

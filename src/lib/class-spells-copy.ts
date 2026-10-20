@@ -1,0 +1,32 @@
+export const classSpellsCopy = {
+  es: {
+    eyebrow: "10 HECHIZOS CUSTOM POR CLASE",
+    title: "Tu clase.",
+    accent: "Nuevas posibilidades.",
+    description: "Nuevas habilidades para las diez clases de WotLK, adaptadas a su identidad y equilibradas para Blackout.",
+    classesLabel: "Clases de WotLK",
+    classes: ["Paladín", "Guerrero", "Caballero de la Muerte", "Mago", "Pícaro", "Sacerdote", "Chamán", "Druida", "Cazador", "Brujo"],
+    origin: "HABILIDADES DE DISTINTAS EXPANSIONES",
+    more: "y más",
+  },
+  en: {
+    eyebrow: "10 CUSTOM SPELLS PER CLASS",
+    title: "Your class.",
+    accent: "New possibilities.",
+    description: "New abilities for the ten WotLK classes, tailored to each class and balanced for Blackout.",
+    classesLabel: "WotLK classes",
+    classes: ["Paladin", "Warrior", "Death Knight", "Mage", "Rogue", "Priest", "Shaman", "Druid", "Hunter", "Warlock"],
+    origin: "ABILITIES FROM DIFFERENT EXPANSIONS",
+    more: "and more",
+  },
+  pt: {
+    eyebrow: "10 FEITIÇOS CUSTOM POR CLASSE",
+    title: "Sua classe.",
+    accent: "Novas possibilidades.",
+    description: "Novas habilidades para as dez classes de WotLK, adaptadas à identidade de cada classe e equilibradas para Blackout.",
+    classesLabel: "Classes de WotLK",
+    classes: ["Paladino", "Guerreiro", "Cavaleiro da Morte", "Mago", "Ladino", "Sacerdote", "Xamã", "Druida", "Caçador", "Bruxo"],
+    origin: "HABILIDADES DE DIFERENTES EXPANSÕES",
+    more: "e mais",
+  },
+};

@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-18",
+  "sources": [
+    "https://blackout-wow.com/",
+    "https://blackout-wow.com/como-conectarme",
+    "https://blackout-wow.com/terminos-y-condiciones"
+  ],
+  "confirmedByOwner": {
+    "raids": 35,
+    "availableDownloads": [
+      "ENUS client",
+      "ESES client",
+      "AIO addon",
+      "Druid C Fix addon"
+    ],
+    "notYetAvailable": [
+      "patches and WoW.exe"
+    ],
+    "customClasses": [
+      "Evoker",
+      "Demon Hunter",
+      "Monk"
+    ],
+    "morphs": "16 racial appearances, distinct from playable WotLK races",
+    "wotlkRaces": "Expanded customization with custom designs",
+    "requiredClientVersion": "3.3.5a",
+    "mandatoryComponents": [
+      "Blackout patches",
+      "WoW.exe",
+      "AIO",
+      "Druid C Fix"
+    ],
+    "officialClientsInclude": [
+      "Blackout realmlist",
+      "AIO",
+      "Druid C Fix"
+    ],
+    "ownClientInstallation": "3.3.5a + both addons + Blackout patches + WoW.exe + official realmlist",
+    "rulesSource": "Owner-supplied official ES/EN Discord rules on 2026-10-18; adapted for the website and translated into Portuguese.",
+    "accountSharing": "Forbidden; supersedes the old at-your-own-risk wording.",
+    "heroIdentity": "BLACKOUT; owner-supplied hooded orc replaces the Lich King.",
+    "customSpellsPerClass": 10,
+    "customSpellClasses": [
+      "Paladin",
+      "Warrior",
+      "DK",
+      "Mage",
+      "Rogue",
+      "Priest",
+      "Shaman",
+      "Druid",
+      "Hunter",
+      "Warlock"
+    ],
+    "customSpellCorrection": "Latest owner clarification replaces the previous up-to-15 announcement with 10 spells for each listed WotLK class.",
+    "highlightedSystems": [
+      "AIO systems",
+      "Custom shop",
+      "Paragon passives",
+      "Battle Pass",
+      "Transmog",
+      "Color customization for Druid forms and morphs"
+    ]
+  },
+  "contentPolicy": "Current website is the factual baseline. Owner clarifications take precedence. No online-player counters or invented live metrics."
+}

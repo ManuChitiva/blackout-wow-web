@@ -13,3 +13,6 @@ export const DISCORD_INVITE_URL =
 export const hasDiscordWidget = DISCORD_WIDGET_URL.length > 0;
 
 export const hasDiscordInvite = DISCORD_INVITE_URL.length > 0;
+
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@Blackout-WoW-255";
+export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@blackoutwow2026";

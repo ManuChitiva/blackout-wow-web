@@ -1,0 +1,10 @@
+{
+  "asset": "public/sounds/wow-interface-click.mp3",
+  "source": "Sound\\Interface\\iUiInterfaceButtonA.wav",
+  "archive": "common.MPQ",
+  "provenance": "Read-only extraction from the user-provided Blackout-WoW 3.3.5a ENUS client.",
+  "processing": "Converted to mono MP3 at 44100 Hz; no added music or speech.",
+  "durationSeconds": 0.2,
+  "bytes": 2544,
+  "sha256": "8c9d2c04921492fdb2c4e03e57ed65fcfeff608f3a5d9b97960ebc1d6c554d3d"
+}

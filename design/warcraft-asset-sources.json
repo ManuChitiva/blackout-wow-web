@@ -1,0 +1,132 @@
+[
+  {
+    "file": "public/warcraft/native/stone.png",
+    "source": "Interface\\GLUES\\MODELS\\UI_MAINMENU\\DarkPortal_stone_01.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      256,
+      256
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/panel.png",
+    "source": "Interface\\DialogFrame\\UI-DialogBox-Background.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      64,
+      64
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/panel-dark.png",
+    "source": "Interface\\DialogFrame\\UI-DialogBox-Background-Dark.blp",
+    "archive": "enUS/patch-enUS.MPQ",
+    "size": [
+      64,
+      64
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/gold-corner.png",
+    "source": "Interface\\DialogFrame\\UI-DialogBox-Gold-Corner.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      32,
+      32
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/gold-dragon.png",
+    "source": "Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      128,
+      128
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/gold-header.png",
+    "source": "Interface\\DialogFrame\\UI-DialogBox-Gold-Header.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      256,
+      64
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/metal-top.png",
+    "source": "Interface\\AchievementFrame\\UI-Achievement-MetalBorder-Top.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      512,
+      16
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/metal-joint.png",
+    "source": "Interface\\AchievementFrame\\UI-Achievement-MetalBorder-Joint.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      32,
+      32
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/button.png",
+    "source": "Interface\\GLUES\\COMMON\\Glue-Panel-Button-Up.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      256,
+      64
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/icecrown.png",
+    "source": "Interface\\Glues\\LoadingScreens\\LoadScreenIcecrownCitadel.blp",
+    "archive": "enUS/patch-enUS-2.MPQ",
+    "size": [
+      1024,
+      1024
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/pvp.png",
+    "source": "Interface\\GLUES\\LOADINGSCREENS\\LoadScreenWintergrasp.blp",
+    "archive": "enUS/patch-enUS.MPQ",
+    "size": [
+      1024,
+      1024
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/outland.png",
+    "source": "Interface\\GLUES\\LOADINGSCREENS\\LoadScreenBlackTemple.blp",
+    "archive": "enUS/locale-enUS.MPQ",
+    "size": [
+      512,
+      512
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  },
+  {
+    "file": "public/warcraft/native/ulduar.png",
+    "source": "Interface\\GLUES\\LOADINGSCREENS\\LoadScreenUlduarRaid.blp",
+    "archive": "enUS/patch-enUS.MPQ",
+    "size": [
+      1024,
+      1024
+    ],
+    "origin": "User-supplied Warcraft client; original game texture, not generated"
+  }
+]

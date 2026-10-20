@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
+import { localizedPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export function generateMetadata() { return localizedPageMetadata({
   title: "Productos y pedidos",
   description:
     "Gestión de productos de la tienda, trazabilidad de pedidos, canjes y analítica interna para el equipo BLACKOUT WOW.",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+  absoluteTitle: true,
+  pathname: "/dashboard/productos",
+  noIndex: true,
+}); }
 
 export default function DashboardProductsLayout({
   children,

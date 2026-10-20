@@ -21,7 +21,7 @@ export function LogoMark({ className }: LogoMarkProps) {
           BLACKOUT WOW
         </span>
         <span className="text-[10px] uppercase tracking-[0.35em] text-sky-200/80">
-          Wrath of the Lich King
+          BLACKOUT · CUSTOM 255
         </span>
       </div>
     );
@@ -30,7 +30,7 @@ export function LogoMark({ className }: LogoMarkProps) {
   return (
     <Image
       src="/logo-transparent.png"
-      alt="BLACKOUT WOW — Wrath of the Lich King"
+      alt="BLACKOUT WOW"
       width={280}
       height={72}
       className={logoClassName}

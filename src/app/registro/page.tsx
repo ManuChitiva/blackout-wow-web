@@ -1,8 +1,10 @@
 "use client";
 
+import {useDialogFocus} from "@/lib/use-dialog-focus";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {useInterfaceCopy} from "@/lib/use-interface-copy";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,16 +18,14 @@ import {
   IconUser,
 } from "@/components/AuthFormUi";
 import { AuthHeroLogoLink } from "@/components/AuthHeroLogoLink";
-import { LoginParticlesCanvas } from "@/components/LoginParticlesCanvas";
 import { SiteShell } from "@/components/SiteShell";
 import { publicEnv } from "@/config/public-env";
 import { useAuth } from "@/context/AuthContext";
 
-const REGISTER_BG_VIDEO =
-  "https://video.wixstatic.com/video/5dd8a0_55ab45ac60f043378dcd8805dcfc892a/720p/mp4/file.mp4";
 
 export default function RegisterPage() {
-  const { t } = useTranslation();
+  const ui=useInterfaceCopy();
+  const { t, i18n } = useTranslation();
   const { register } = useAuth();
   const router = useRouter();
   const recaptchaSiteKey = publicEnv.recaptchaSiteKey;
@@ -53,6 +53,11 @@ export default function RegisterPage() {
     isRecaptchaValid &&
     !loading;
 
+  useEffect(() => {setRecaptchaToken(null);}, [i18n.language]);
+
+  const welcomeRef=useRef<HTMLDivElement>(null);
+  useDialogFocus(showWelcomeModal,welcomeRef,()=>setShowWelcomeModal(false));
+
   function resetRecaptcha() {
     setRecaptchaToken(null);
     recaptchaRef.current?.reset();
@@ -66,7 +71,7 @@ export default function RegisterPage() {
       return;
     }
     if (recaptchaSiteKey && !recaptchaToken) {
-      setError(t("auth.register.recaptchaHint"));
+      setError(ui("Completa la verificación de seguridad para crear tu cuenta."));
       return;
     }
     setLoading(true);
@@ -84,21 +89,11 @@ export default function RegisterPage() {
   return (
     <SiteShell>
       <div className="relative isolate min-h-[min(880px,calc(100dvh-160px))] overflow-hidden bg-[#030306]">
-        <video
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-90"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden
-        >
-          <source src={REGISTER_BG_VIDEO} type="video/mp4" />
-        </video>
+
         <div className="pointer-events-none absolute inset-0 z-0 bg-linear-to-br from-black/88 via-black/72 to-[#0a1628]/90" />
         <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_110%_70%_at_50%_-10%,rgba(251,191,36,0.12),transparent_52%),radial-gradient(ellipse_at_80%_70%,rgba(56,189,248,0.09),transparent_45%)]" />
         <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(105deg,transparent_0%,rgba(0,0,0,0.2)_40%,transparent_65%)]" />
-        <LoginParticlesCanvas />
+
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:py-20">
           <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_min(100%,460px)] lg:gap-14 xl:grid-cols-[minmax(0,1.1fr)_min(100%,480px)]">
             <header className="flex flex-col justify-center space-y-8 text-center lg:sticky lg:top-8 lg:text-left">
@@ -277,19 +272,22 @@ export default function RegisterPage() {
                 ) : null}
 
                 {recaptchaSiteKey ? (
-                  <div className="flex justify-center overflow-x-auto pt-1 [&>div]:scale-[0.92] sm:[&>div]:scale-100">
+                  <div className="flex justify-center pt-1">
                     <ReCAPTCHA
                       ref={recaptchaRef}
                       sitekey={recaptchaSiteKey}
                       theme="dark"
-                      onChange={(token: string | null) => setRecaptchaToken(token)}
-                      onExpired={() => resetRecaptcha()}
-                      onErrored={() => resetRecaptcha()}
+                      size="compact"
+                      hl={i18n.language}
+                      key={i18n.language}
+                      onChange={(token: string | null) => {setRecaptchaToken(token);setError(null);}}
+                      onExpired={() => {resetRecaptcha();setError(ui("La verificación ha caducado. Complétala de nuevo."));}}
+                      onErrored={() => {resetRecaptcha();setError(ui("No se ha podido cargar la verificación de seguridad. Recarga la página e inténtalo de nuevo."));}}
                     />
                   </div>
                 ) : (
                   <div className="rounded-xl border border-amber-500/25 bg-amber-950/30 px-4 py-3 text-xs leading-relaxed text-amber-100/90">
-                    {t("auth.register.recaptchaHint")}
+                    {ui("Completa la verificación de seguridad para crear tu cuenta.")}
                   </div>
                 )}
 
@@ -337,6 +335,7 @@ export default function RegisterPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 py-8 backdrop-blur-[2px]">
           <div
             className="metal-border w-full max-w-lg rounded-2xl border border-amber-400/25 bg-zinc-950/95 p-7 shadow-[0_28px_80px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md sm:p-8"
+            ref={welcomeRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="welcome-title"

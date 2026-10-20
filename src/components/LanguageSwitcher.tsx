@@ -1,99 +1,50 @@
 "use client";
+import {useEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {useRouter} from "next/navigation";
+import {type AppLanguage, languageCookieName, isSupportedLanguage} from "@/i18n/settings";
 
-import Image from "next/image";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { supportedLngs, type AppLanguage, languageCookieName } from "@/i18n/settings";
+const languages = [{code:"es",name:"Español"},{code:"en",name:"English"},{code:"pt",name:"Português"}] as const;
 
-/**
- * ISO 3166-1 alpha-2 for https://flagcdn.com (PNG renders on all systems; emoji flags break on Windows).
- */
-const FLAG_REGION: Record<AppLanguage, string> = {
-  es: "es",
-  en: "us",
-  pt: "br",
-};
-
-const FALLBACK: Record<AppLanguage, string> = {
-  es: "ES",
-  en: "EN",
-  pt: "PT",
-};
-
-const LOCALE_LABEL_KEY: Record<AppLanguage, "lang.localeEs" | "lang.localeEn" | "lang.localePt"> =
-  {
-    es: "lang.localeEs",
-    en: "lang.localeEn",
-    pt: "lang.localePt",
-  };
-
-function FlagCircle({ language }: { language: AppLanguage }) {
-  const [broken, setBroken] = useState(false);
-  const region = FLAG_REGION[language];
-  const src = `https://flagcdn.com/w80/${region}.png`;
-
-  if (broken) {
-    return (
-      <span className="flex h-[1.65rem] w-[1.65rem] items-center justify-center rounded-full bg-zinc-800 text-[9px] font-bold uppercase tracking-wide text-amber-100/95 ring-1 ring-white/15">
-        {FALLBACK[language]}
-      </span>
-    );
-  }
-
-  return (
-    <span className="relative block h-[1.65rem] w-[1.65rem] overflow-hidden rounded-full ring-1 ring-black/35">
-      <Image
-        src={src}
-        alt=""
-        width={80}
-        height={80}
-        className="h-full w-full scale-[1.12] object-cover object-center"
-        draggable={false}
-        onError={() => setBroken(true)}
-        unoptimized
-      />
-    </span>
-  );
+function Flag({language}:{language:AppLanguage}) {
+  return <svg className="language-flag" viewBox="0 0 24 16" aria-hidden="true">
+    {language==="es"?<><path fill="#aa151b" d="M0 0h24v16H0z"/><path fill="#f1bf00" d="M0 4h24v8H0z"/></>:
+     language==="en"?<><path fill="#17356d" d="M0 0h24v16H0z"/><path stroke="#fff" strokeWidth="4" d="m0 0 24 16M24 0 0 16"/><path stroke="#c8102e" strokeWidth="1.5" d="m0 0 24 16M24 0 0 16"/><path stroke="#fff" strokeWidth="6" d="M12 0v16M0 8h24"/><path stroke="#c8102e" strokeWidth="3" d="M12 0v16M0 8h24"/></>:
+     <><path fill="#009739" d="M0 0h24v16H0z"/><path fill="#ffdf00" d="m12 2 10 6-10 6L2 8z"/><circle cx="12" cy="8" r="3.7" fill="#002776"/><path d="M8.5 6.8c2.3-.2 4.7.7 6.7 2.2" stroke="white" strokeWidth=".8" fill="none"/></>}
+  </svg>;
 }
-
 export function LanguageSwitcher() {
-  const { i18n, t } = useTranslation();
-  const current = supportedLngs.includes(i18n.language as AppLanguage)
-    ? (i18n.language as AppLanguage)
-    : "es";
-
-  function onChangeLanguage(nextLanguage: AppLanguage) {
-    document.cookie = `${languageCookieName}=${nextLanguage}; path=/; max-age=31536000; samesite=lax`;
-    void i18n.changeLanguage(nextLanguage);
-    window.location.reload();
-  }
-
-  return (
-    <div
-      role="group"
-      aria-label={t("lang.label")}
-      className="flex items-center gap-1 rounded-full border border-white/12 bg-zinc-950/70 px-1 py-1 shadow-inner shadow-black/40"
-    >
-      {supportedLngs.map((language) => {
-        const active = current === language;
-        return (
-          <button
-            key={language}
-            type="button"
-            onClick={() => onChangeLanguage(language)}
-            title={`${t("lang.label")}: ${t(LOCALE_LABEL_KEY[language])}`}
-            aria-label={t(LOCALE_LABEL_KEY[language])}
-            aria-pressed={active}
-            className={`relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full transition-all duration-200 ${
-              active
-                ? "bg-amber-500/30 shadow-[0_0_0_1px_rgba(251,191,36,0.55),0_4px_14px_rgba(251,146,60,0.25)] ring-2 ring-amber-400/45"
-                : "opacity-80 hover:bg-white/10 hover:opacity-100"
-            }`}
-          >
-            <FlagCircle language={language} />
-          </button>
-        );
-      })}
+  const router=useRouter();
+  const {i18n}=useTranslation();
+  const language=isSupportedLanguage(i18n.language)?i18n.language:"es";
+  const [open,setOpen]=useState(false);
+  const root=useRef<HTMLDivElement>(null);
+  const trigger=useRef<HTMLButtonElement>(null);
+  const label=language==="en"?"Change language":language==="pt"?"Alterar idioma":"Cambiar idioma";
+  useEffect(()=>{
+    if(!open)return;
+    const close=(event:PointerEvent)=>{if(!root.current?.contains(event.target as Node))setOpen(false);};
+    document.addEventListener("pointerdown",close);
+    return()=>document.removeEventListener("pointerdown",close);
+  },[open]);
+  const choose=(code:AppLanguage)=>{
+    document.cookie=`${languageCookieName}=${code}; path=/; max-age=31536000; samesite=lax`;
+    void i18n.changeLanguage(code);
+    router.refresh();
+    setOpen(false);trigger.current?.focus();
+  };
+  const focusItem=(index:number)=>root.current?.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')[index]?.focus();
+  return <div className="site-language language-picker" ref={root} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node))setOpen(false);}} onKeyDown={e=>{
+    if(e.key==="Escape"){setOpen(false);trigger.current?.focus();}
+  }}>
+    <button ref={trigger} type="button" className="language-trigger" aria-label={label} aria-expanded={open} aria-haspopup="menu" aria-controls="language-options" onClick={()=>setOpen(value=>!value)} onKeyDown={e=>{
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();setOpen(true);requestAnimationFrame(()=>focusItem(e.key==="ArrowUp"?2:0));}
+    }}><Flag language={language}/><span>{language.toUpperCase()}</span><span className="language-chevron" aria-hidden="true">⌄</span></button>
+    <div className="language-options" id="language-options" role="menu" aria-label={label} hidden={!open}>
+      {languages.map((item,index)=><button type="button" role="menuitemradio" aria-checked={language===item.code} key={item.code} onClick={()=>choose(item.code)} onKeyDown={e=>{
+        const next=e.key==="ArrowDown"?(index+1)%3:e.key==="ArrowUp"?(index+2)%3:e.key==="Home"?0:e.key==="End"?2:null;
+        if(next!==null){e.preventDefault();focusItem(next);}
+      }}><Flag language={item.code}/><span lang={item.code}>{item.name}</span><span aria-hidden="true">{language===item.code?"✓":""}</span></button>)}
     </div>
-  );
+  </div>;
 }

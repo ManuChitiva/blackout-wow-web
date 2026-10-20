@@ -1,13 +1,14 @@
 "use client";
+import {useInterfaceCopy} from "@/lib/use-interface-copy";
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiJson } from "@/lib/api";
 import { SiteShell } from "@/components/SiteShell";
 
-export default function ResetPage() {
+function ResetPageContent() {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,9 +49,8 @@ export default function ResetPage() {
         </p>
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm text-zinc-400">{t("auth.reset.email")}</label>
-            <input
-              type="email"
+            <label htmlFor="reset-email" className="block text-sm text-zinc-400">{t("auth.reset.email")}</label>
+            <input id="reset-email"               type="email"
               className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -58,9 +58,8 @@ export default function ResetPage() {
             />
           </div>
           <div>
-            <label className="block text-sm text-zinc-400">{t("auth.reset.otp")}</label>
-            <input
-              className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
+            <label htmlFor="reset-code" className="block text-sm text-zinc-400">{t("auth.reset.otp")}</label>
+            <input id="reset-code"               className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               autoFocus={Boolean(email)}
@@ -68,9 +67,8 @@ export default function ResetPage() {
             />
           </div>
           <div>
-            <label className="block text-sm text-zinc-400">{t("auth.reset.password")}</label>
-            <input
-              type="password"
+            <label htmlFor="reset-password" className="block text-sm text-zinc-400">{t("auth.reset.password")}</label>
+            <input id="reset-password"               type="password"
               className="mt-1 w-full rounded border border-white/15 bg-black/50 px-3 py-2 text-zinc-100 outline-none focus:border-amber-500/60"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
@@ -96,3 +94,6 @@ export default function ResetPage() {
     </SiteShell>
   );
 }
+
+export default function ResetPage(){
+ const ui=useInterfaceCopy();return <Suspense fallback={<SiteShell><div className="portal-loading">{ui("Cargando…")}</div></SiteShell>}><ResetPageContent/></Suspense>;}

@@ -1,11 +1,13 @@
 "use client";
 
+import {useDialogFocus} from "@/lib/use-dialog-focus";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BackgroundLoopVideo } from "@/components/BackgroundLoopVideo";
 import { SiteShell } from "@/components/SiteShell";
+import { LogoutButton } from "@/components/LogoutButton";
+import { StoreShowcase } from "@/components/StoreShowcase";
 import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
 
@@ -48,8 +50,6 @@ const statAccents = {
   },
 } as const;
 
-const PANEL_HERO_VIDEO_MP4 =
-  "https://video.wixstatic.com/video/5dd8a0_8f4b4a4ca3384ba19443b397721c7282/720p/mp4/file.mp4";
 
 function StatCard({
   label,
@@ -102,33 +102,7 @@ function AccountModal({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  useEffect(() => {
-    if (!open) return;
-    const t = window.setTimeout(() => {
-      panelRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      )?.focus();
-    }, 0);
-    return () => window.clearTimeout(t);
-  }, [open]);
+  useDialogFocus(open, panelRef, onClose);
 
   if (!open) return null;
 
@@ -236,7 +210,7 @@ export default function AccountPage() {
         setError(e instanceof Error ? e.message : t("common.error"));
       }
     })();
-  }, [isAuthReady, accessToken, router]);
+  }, [isAuthReady, accessToken, router, t]);
 
   async function onChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -289,19 +263,17 @@ export default function AccountPage() {
   return (
     <SiteShell>
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-12">
+        {accessToken && <div className="account-toolbar">
+          <nav className="account-shortcuts" aria-label={t("account.navShortcuts")}>
+            <Link href="/tienda" className="account-donor-link">{t("nav.store")}</Link>
+            <Link href="/tienda/puntos" className="account-donor-link">{t("nav.redeem")}</Link>
+            <a className="account-donor-link" href="#donor">VIP &amp; DONOR<span aria-hidden="true">↓</span></a>
+          </nav>
+          <LogoutButton />
+        </div>}
         {/* Sin `home-card`: su regla "> * { z-index:1 }" anulaba z-20 y `absolute`, tapando texto y vídeo */}
         <div className="metal-border relative isolate flex h-36 flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_12px_28px_rgba(2,6,23,0.4)] sm:h-40 md:h-44 md:rounded-2xl">
-          <BackgroundLoopVideo
-            startAtSec={0.05}
-            className="pointer-events-none absolute inset-0 z-0 h-full min-h-full w-full min-w-full object-cover object-[center_40%] brightness-[0.72] saturate-[1.05]"
-            autoPlay
-            muted
-            playsInline
-            preload="metadata"
-            aria-hidden
-          >
-            <source src={PANEL_HERO_VIDEO_MP4} type="video/mp4" />
-          </BackgroundLoopVideo>
+
           {/* Oscurece arriba hacia transparente abajo — texto superior legible sobre el vídeo */}
           <div
             className="pointer-events-none absolute inset-0 z-1 bg-linear-to-b from-black/70 via-black/35 via-45% to-black/55"
@@ -324,7 +296,7 @@ export default function AccountPage() {
           <p className="mt-8 text-zinc-400">{t("account.redirecting")}</p>
         )}
         {error && <p className="mt-8 text-red-400">{error}</p>}
-        {data && (
+        {accessToken && data && (
           <>
             <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
               <aside className="metal-border order-2 h-fit w-full shrink-0 rounded-2xl border border-white/10 bg-zinc-950/70 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_12px_28px_rgba(2,6,23,0.38)] lg:sticky lg:order-1 lg:top-24 lg:w-56 lg:self-start lg:p-5">
@@ -362,18 +334,6 @@ export default function AccountPage() {
                     {t("account.navShortcuts")}
                   </p>
                   <div className="flex flex-col gap-2">
-                    <Link
-                      href="/tienda"
-                      className="rounded-lg border border-sky-400/35 bg-sky-950/35 px-3 py-2 text-center text-sm font-semibold text-sky-100 transition-colors hover:bg-sky-900/45 lg:text-left"
-                    >
-                      {t("account.goStore")}
-                    </Link>
-                    <Link
-                      href="/tienda/puntos"
-                      className="rounded-lg border border-amber-400/35 bg-amber-950/30 px-3 py-2 text-center text-sm font-semibold text-amber-100 transition-colors hover:bg-amber-900/40 lg:text-left"
-                    >
-                      {t("account.redeem")}
-                    </Link>
                     <Link
                       href="/recuperar"
                       className="rounded-lg border border-white/12 px-3 py-2 text-center text-sm font-medium text-zinc-300 transition-colors hover:bg-white/5 lg:text-left"
@@ -491,11 +451,10 @@ export default function AccountPage() {
                 className="space-y-3 rounded-xl border border-white/6 bg-black/25 p-4"
               >
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  <label htmlFor="current-password" className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
                     {t("account.pwdCurrent")}
                   </label>
-                  <input
-                    type="password"
+                  <input id="current-password" type="password"
                     className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
@@ -503,11 +462,10 @@ export default function AccountPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  <label htmlFor="new-password" className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
                     {t("account.pwdNew")}
                   </label>
-                  <input
-                    type="password"
+                  <input id="new-password" type="password"
                     className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -516,11 +474,10 @@ export default function AccountPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  <label htmlFor="confirm-new-password" className="block text-xs font-medium uppercase tracking-wider text-zinc-500">
                     {t("account.pwdConfirm")}
                   </label>
-                  <input
-                    type="password"
+                  <input id="confirm-new-password" type="password"
                     className="mt-1.5 w-full rounded-lg border border-white/12 bg-black/45 px-3 py-2.5 text-zinc-100 outline-none ring-amber-500/0 transition-[border-color,box-shadow] focus:border-amber-500/55 focus:ring-2 focus:ring-amber-500/20"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -690,6 +647,7 @@ export default function AccountPage() {
           </div>
         )}
       </div>
+      <StoreShowcase />
     </SiteShell>
   );
 }

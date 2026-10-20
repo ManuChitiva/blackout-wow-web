@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SiteShell } from "@/components/SiteShell";
 import { useAuth } from "@/context/AuthContext";
@@ -12,10 +12,11 @@ function ReturnInner() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { accessToken } = useAuth();
+  const { accessToken, isAuthReady } = useAuth();
   const [status, setStatus] = useState<"working" | "ok" | "err">("working");
   const [msg, setMsg] = useState<string | null>(null);
   const [paypalToken, setPaypalToken] = useState<string | null>(null);
+  const autoCaptureKey = useRef<string | null>(null);
   const [purchaseSummary, setPurchaseSummary] = useState<{
     productName: string;
     donationPoints: number;
@@ -75,6 +76,7 @@ function ReturnInner() {
   );
 
   useEffect(() => {
+    if (!isAuthReady) return;
     const token =
       searchParams.get("token") ??
       (typeof window !== "undefined" ? sessionStorage.getItem("blackout_pending_paypal") : null);
@@ -84,8 +86,11 @@ function ReturnInner() {
       setMsg(t("store.returnPage.missingToken"));
       return;
     }
+    const key = `${accessToken ?? "guest"}:${token}`;
+    if (autoCaptureKey.current === key) return;
+    autoCaptureKey.current = key;
     void confirmPayment(token);
-  }, [searchParams, confirmPayment, t]);
+  }, [searchParams, confirmPayment, t, isAuthReady, accessToken]);
 
   return (
     <div className="mx-auto max-w-xl px-4 py-16">
