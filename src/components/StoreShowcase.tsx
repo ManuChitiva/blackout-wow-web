@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { DISCORD_INVITE_URL } from "@/lib/site-config";
 import { storeShowcaseCopy } from "@/lib/store-showcase-copy";
@@ -13,18 +12,17 @@ export function StoreShowcase() {
   if (!accessToken) return null;
 
   return (
-    <section className="wc-join wc-section wc-store-showcase" aria-labelledby="store-title">
+    <section className="wc-join wc-section wc-store-showcase" aria-labelledby="donor-title">
       <div className="wc-wrap">
         <header className="wc-join-copy" id="donor">
           <div className="wc-store-heading">
           <p className="wc-kicker">{c.eyebrow}</p>
-          <h2 id="store-title">{c.title}<br /><em>{c.accent}</em></h2>
+          <h2 id="donor-title">{c.title}<br /><em>{c.accent}</em></h2>
           </div>
           <div className="wc-store-introduction">
           <p className="wc-section-intro">{c.intro}</p>
           <div className="wc-actions">
-            <Link className="wc-button" href="/tienda">{c.store}<span aria-hidden="true">›</span></Link>
-            <a className="wc-button wc-button-ghost" href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">{c.discord}<span aria-hidden="true">↗</span></a>
+            <a className="wc-button" href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">{c.discord}<span aria-hidden="true">↗</span></a>
           </div>
           </div>
         </header>
@@ -60,7 +58,6 @@ export function StoreShowcase() {
         </div>
         <div className="wc-store-fair">
           <div><h3>{c.fairTitle}</h3><p>{c.fairText}</p></div>
-          <Link className="wc-text-link" href="/tienda/puntos">{c.redeem}<b aria-hidden="true">→</b></Link>
         </div>
         <p className="wc-store-help">{c.helpText}{" "}<a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">{c.helpLink}<span aria-hidden="true"> ↗</span></a></p>
       </div>

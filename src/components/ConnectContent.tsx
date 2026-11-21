@@ -13,31 +13,27 @@ const patchDownloadUrl = process.env.NEXT_PUBLIC_PATCH_DOWNLOAD_URL?.trim() || "
 const realmlistCommand = "set realmlist logon.blackout-wow.com";
 const links = {
   patch: [
-    { provider: "MEGA", url: "https://mega.nz/file/Ds4T0KaR#tvx9ZKoLGR2ibW2YqNHM9rjxDxkw4tQtyulxLf5YpYY" },
-    { provider: "Google Drive", url: "https://drive.google.com/file/d/18zFPYn4CBTduIFF0bO-Of_nSxX6P6nCL/view?usp=sharing" }
+    { provider: "Storage.to", url: "https://storage.to/vhvKWq4Mr" }
   ],
   aio: [
-    { provider: "MEGA", url: "https://mega.nz/file/KshwXbJZ#4v_D_CDfwYPKqNu4KgWGRhK45HSp_9yhv8sjTgDe2F4" },
     { provider: "Google Drive", url: "https://drive.google.com/file/d/1-w4jnu1TxzwASASyO-qEkN_JURE8NPk-/view?usp=sharing" }
   ],
   fix: [
     { provider: "Google Drive", url: "https://drive.google.com/file/d/1_lURvxnmrZYuwzT5L7uGLgRV4G0CzIjd/view?usp=sharing" }
   ],
-  es: "https://drive.google.com/file/d/15eqo-VXNtD-8JelsrHfoPnogeNKddJKE/view?usp=sharing",
-  en: "https://drive.google.com/file/d/1_3-KSxI1XKdsgpOJwkeKi6gboDQ1M1Mg/view?usp=sharing"
+  es: "https://storage.to/t02fgrgCn",
+  en: "https://storage.to/aBsjp0NA6"
 };
 
-function DownloadSources({ file, sources, showName = false }: {
+function DownloadSources({ file, sources }: {
   file: string;
   sources: { provider: string; url: string }[];
-  showName?: boolean;
 }) {
   return <div className="connection-sources" role="group" aria-label={file}>
-    {showName && <strong className="connection-source-name">{file}</strong>}
     <div className="connection-download-actions">
       {sources.map(({ provider, url }) =>
         <a key={url} href={url} target="_blank" rel="noopener noreferrer" aria-label={`${file} · ${provider}`}>
-          {provider}<span aria-hidden="true">↓</span>
+          {file}{sources.length > 1 && ` · ${provider}`}<span aria-hidden="true">↓</span>
         </a>
       )}
     </div>
@@ -86,8 +82,8 @@ export default function ConnectContent() {
           {step.download === "client" && <div className="connection-download-actions"><a href={links.en} target="_blank" rel="noopener noreferrer">{c.clientEn}<span aria-hidden="true">↓</span></a><a href={links.es} target="_blank" rel="noopener noreferrer">{c.clientEs}<span aria-hidden="true">↓</span></a></div>}
           {step.download === "patch" && <DownloadSources file={c.patch} sources={patchSources}/>}
           {step.download === "addons" && <>
-            <DownloadSources file="AIO" sources={links.aio} showName/>
-            <DownloadSources file="Druid C Fix" sources={links.fix} showName/>
+            <DownloadSources file="AIO" sources={links.aio}/>
+            <DownloadSources file="Druid C Fix" sources={links.fix}/>
           </>}
           {step.download === "realmlist" && <a className="connection-realm-link" href="#realmlist">{c.realmLink}<span aria-hidden="true">↑</span></a>}
         </li>)}</ol>
